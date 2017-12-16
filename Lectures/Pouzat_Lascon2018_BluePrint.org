@@ -1,0 +1,69 @@
+# -*- ispell-local-dictionary: "american" -*-
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:nil arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:nil tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: Title Here
+#+AUTHOR: Christophe Pouzat
+#+EMAIL: christophe.pouzat@parisdescartes.fr
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 25.3.1 (Org mode 9.0.9)
+#+LaTeX_CLASS: koma-article
+#+LaTeX_CLASS_OPTIONS: [koma,11pt]
+#+LaTeX_HEADER: \usepackage{cmbright}
+#+LaTeX_HEADER: \usepackage[round]{natbib}
+#+LaTeX_HEADER: \usepackage{alltt}
+#+LaTeX_HEADER: \usepackage[usenames,dvipsnames]{xcolor}
+#+LaTeX_HEADER: \renewenvironment{verbatim}{\begin{alltt} \scriptsize \color{Bittersweet} \vspace{0.2cm} }{\vspace{0.2cm} \end{alltt} \normalsize \color{black}}
+#+LaTeX_HEADER: \usepackage{listings}
+#+LaTeX_HEADER: \lstloadlanguages{C,Gnuplot,bash,sh,R}
+#+LaTeX_HEADER: \hypersetup{colorlinks=true,pagebackref=true}
+#+STARTUP: indent
+#+PROPERTY: header-args :eval no-export
+
+* Setup :noexport:
+#+NAME: org-latex-set-up
+#+BEGIN_SRC emacs-lisp :results silent :exports none 
+(setq smartparens-mode nil)
+(require 'ox-latex)
+(setq org-export-latex-listings t)
+(setq org-latex-listings 'listings)
+(setq org-latex-listings-options
+        '(("frame" "lines")
+          ("basicstyle" "\\footnotesize")
+          ("numbers" "left")
+          ("numberstyle" "\\tiny")))
+(add-to-list 'org-latex-classes
+          '("koma-article"
+             "\\documentclass{scrartcl}"
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}" . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+(setq org-latex-pdf-process
+      '("pdflatex -interaction nonstopmode -output-directory %o %f"
+	"bibtex %b" 
+	"pdflatex -interaction nonstopmode -output-directory %o %f" 
+	"pdflatex -interaction nonstopmode -output-directory %o %f"))
+#+END_SRC
+
+#+NAME: set-gnuplot-pars
+#+BEGIN_SRC gnuplot :session *gnuplot* :results silent :eval no-export :exports none 
+set terminal pngcairo size 1000,1000
+#+END_SRC
+
+#+NAME: stderr-redirection
+#+BEGIN_SRC emacs-lisp :exports none
+;; Redirect stderr output to stdout so that it gets printed correctly (found on
+;; http://kitchingroup.cheme.cmu.edu/blog/2015/01/04/Redirecting-stderr-in-org-mode-shell-blocks/
+(setq org-babel-default-header-args:sh
+      '((:prologue . "exec 2>&1") (:epilogue . ":"))
+      )
+(setq org-babel-use-quick-and-dirty-noweb-expansion t)
+#+END_SRC
+
+* First section :export:
