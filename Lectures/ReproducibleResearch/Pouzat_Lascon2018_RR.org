@@ -65,3 +65,103 @@ set terminal pngcairo size 1000,1000
       )
 (setq org-babel-use-quick-and-dirty-noweb-expansion t)
 #+END_SRC
+
+* Introduction :export:
+
+** What is reproducible research?
+#+BEGIN_QUOTE
+  An article about computational science in a scientific publication is
+  *not* the scholarship itself, it is merely *advertising* of the
+  scholarship. The actual scholarship is the complete software
+  development environment and the complete set of instructions which
+  generated the figures.
+#+END_QUOTE
+
+Thoughts of Jon Claerbout "distilled" by \cite{BuckheitDonoho_1995}.
+
+The preparation of manuscripts and reports in neuroscience often
+involves a lot of data analysis as well as a careful design and
+realization of figures and tables, in addition to the time spent on the
+bench doing experiments. The data analysis part can require the setting
+of parameters by the analyst and it often leads to the development of
+dedicated scripts and routines. Before reaching the analysis stage /per
+se/ the data frequently undergo a preprocessing which is rarely
+extensively documented in the methods section of the paper. When the
+article includes numerical simulations, key elements of the analysis,
+like the time step used for conductance based neuronal models, are often
+omitted in the description. As readers or referees of articles /
+manuscripts we are therefore often led to ask questions like:
+
+- What would happen to the analysis (or simulation) results if a given
+  parameter had another value?
+
+- What would be the effect of applying my preprocessing to the data
+  instead of the one used by the authors?
+
+- What would a given figure look like with a log scale ordinate instead
+  of the linear scale use by the authors?
+
+- What would be the result of applying that same analysis to my own data
+  set ?
+
+We can of course all think of a dozen of similar questions. The problem
+is to find a way to address them. Clearly the classical journal article
+format cannot do the job. Editors cannot publish two versions of each
+figure to satisfy different readers. Many intricate analysis and
+modeling methods would require too long a description to fit the usual
+bounds of the printed paper. This is reasonable for we all have a lot of
+different things to do and we cannot afford to systematically look at
+every piece of work as thoroughly as suggested above. Many people
+\citep{ClaerboutKarrenbach_1992,BuckheitDonoho_1995,RossiniLeisch_2003,Baggerly_2010,DiggleZeger_2010,Stein_2011}
+feel nevertheless uncomfortable with the present way of diffusing
+scientific information as a canonical (printed) journal article. We
+suggest what is needed are more systematic and more explicit ways to
+describe how the analysis (or modeling) was done.
+
+These issues are not specific to published material. Any scientist after
+a few years of activity is very likely to have experienced a situation
+similar to the one we now sketch. A project is ended after an intensive
+work requiring repeated daily long sequences of sometimes "tricky"
+analysis. After six months or one year we get to do again very similar
+analysis for a related project; but the nightmare scenario starts since
+we forgot:
+
+- The numerical filter settings we used.
+
+- The detection threshold we used.
+
+- The way to get initial guesses for our nonlinear fitting software to
+  converge reliably.
+
+In other words, given enough time, we often struggle to exactly
+reproduce /our own/ work. The same mechanisms lead to know-how being
+lost from a laboratory when a student or a postdoc leaves: the few
+parameters having to be carefully set for a successful analysis were not
+documented as such and there is nowhere to find their typical range.
+This leads to an important time loss which could ultimately culminate in
+a project abandonment.
+
+We are afraid that similar considerations sound all too familiar to most
+of our readers. It turns out that the problems described above are not
+specific to our scientific domain, and seem instead to be rather common
+at least in the following domains:
+economics \citep{DewaldEtAl_1986,AndersonDewald_1994,McCulloughEtAl_2006,McCullough_2006},
+geophysics \citep{ClaerboutKarrenbach_1992,SchwabEtAl_2000}, signal
+processing \citep{VandewalleEtAl_2009,DonohoEtAl_2009},
+statistics \citep{BuckheitDonoho_1995,Rossini_2001,Leisch_2002b},
+biostatistics \citep{GentlemanTempleLang_2007,DiggleZeger_2010},
+econometrics \citep{KoenkerZeileis_2007},
+epidemiology \citep{PengDominici_2008} and
+climatology \citep{Stein_2011,McShaneWyner_2010} where the debate on
+analysis reproducibility has reached a particularly acrimonious stage.
+The good news about this is that researchers have already worked out
+solutions to our mundane problem. In the next section we review some of
+the already available tools for reproducible research, which include
+data sharing and software solutions for mixing code, text and figures.
+
+
+\pagebreak
+
+\bibliographystyle{plainnat}
+\bibliography{Pouzat_Lascon2018_RR}
+
