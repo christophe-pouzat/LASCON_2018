@@ -4,11 +4,15 @@ This repository contains data, slides, code, everything needed to "reproduce" my
 
 # The outline (for now):
 
-- **Making one's work reproducible**.
-- **Basic statistics: sample description**.
-- **Histograms: setting the bin width**.
-- **Regressograms: setting the bin width**.
-- **Fitting models to data: least squares and maximum likelihood**.
-- **Application to Hodgkin and Huxley**.
-- **Dealing with differential equations**.
-- **Stochastic neuronal discharge models and their inference**.
+- **Lecture 1 (2018-01-19)**: 
+    + *Making one's work reproducible*.
+- **Lecture 2 (2018-01-22)**: 
+    + *Basic statistics: sample description*.
+    + *Histograms: setting the bin width*.
+    + *Regressograms: setting the bin width*.
+- **Lecture 3 (2018-01-23)**:
+    + *Fitting models to data: least squares and maximum likelihood*.
+    + *Application to Hodgkin and Huxley*.
+    + *Dealing with differential equations*.
+- **Lecture 3 (2018-01-23)**:
+    + *Stochastic neuronal discharge models and their inference*.
