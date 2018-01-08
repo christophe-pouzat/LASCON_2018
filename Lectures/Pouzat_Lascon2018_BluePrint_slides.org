@@ -1,0 +1,19 @@
+# -*- ispell-local-dictionary: "american" -*-
+#+TITLE: Title Here
+#+AUTHOR: #+AUTHOR: @@latex:{\large Christophe Pouzat} \\ \vspace{0.2cm}MAP5 Univ. Paris-Descartes and CNRS\\ \vspace{0.2cm} \texttt{christophe.pouzat@parisdescartes.fr}@@
+#+DATE: LASCON, Jan. X 2018, Lecture Y
+#+OPTIONS: H:2 tags:nil
+#+EXCLUDE_TAGS: noexport
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+#+BEAMER_HEADER: \setbeamercovered{invisible}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Where are we ?}\tableofcontents[currentsection]\end{frame}}
+#+BEAMER_HEADER: \beamertemplatenavigationsymbolsempty
+#+STARTUP: beamer
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+#+STARTUP: indent
+#+PROPERTY: header-args :eval no-export
+
+* Introduction
