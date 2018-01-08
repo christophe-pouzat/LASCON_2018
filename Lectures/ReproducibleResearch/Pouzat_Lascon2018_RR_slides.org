@@ -40,7 +40,7 @@ involves:
 Simulations involve:
 - Algorithmic choices.
 - Software choices or implementation.
-- Parameter setting (/eg/ the time step used for conductance based neuronal models).
+- Parameters setting (/e.g./, the time step used for conductance based neuronal models).
  
 Data analysis involves:
 - Some data "preprocessing" (often).
@@ -81,6 +81,37 @@ explicit ways to describe how the analysis (or modeling) was done.
 Clearly the classical journal article format cannot do the job. 
 - Editors cannot publish two versions of each figure to satisfy different readers.
 - Many intricate analysis and modeling methods would require too long a description to fit the usual bounds of the printed paper.
-- This is reasonable for we all have a lot of different things to do and we cannot afford to systematically look at every piece of work as thoroughly as suggested above.
+- We all have, moreover, a lot of different things to do and we cannot afford to systematically look at every piece of work as thoroughly as suggested above.
 \vspace{0.1cm}
 *We need are more systematic and more explicit ways to describe how the analysis (or modeling) was done*.
+
+** The solution $\rightarrow$ Reproducible Research
+
+*Reproducible Research* (=RR=) or *reproducible data analysis* is an approach aiming at complementing classical printed scientific articles with *everything* required to independently reproduce the results they present.
+
+\vspace{0.25cm}
+"Everything" covers here: 
+- the data, 
+- the computer codes,
+- a precise description of how the code was applied to the data. 
+
+\vspace{0.25cm}
+The "movement" started with what Economists have been calling *replication* since the early eighties to reach what is now called *reproducible research* in computational data analysis oriented fields like statistics and signal processing.
+
+* What is needed for Reproducible Research?
+* Note taking concerns everyone
+** The scholar annotating his book / manuscript
+** Galileo observing Jupiter's moons
+** Placcius and Leibniz cabinet
+** Beware of overabundance: Fulgence Tapir's disappearance  
+#+BEGIN_COMMENT
+Address to find the text with the preface: https://archive.org/stream/in.ernet.dli.2015.220207/2015.220207.Penguin-Island_djvu.txt
+#+END_COMMENT
+
+** A sailor's notebook
+** What should we use to take notes?
+** Avoid getting lost
+* Note taking: a quick History
+* Form text files to lightweight markup languages
+* Notes that are archived but can evolve with control version systems (CVS)
+* Finding your way in your notes: tags and indexing software
