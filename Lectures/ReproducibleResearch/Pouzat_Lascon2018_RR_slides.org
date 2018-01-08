@@ -1,0 +1,86 @@
+# -*- ispell-local-dictionary: "american" -*-
+#+TITLE: Making one's work reproducible
+#+AUTHOR: @@latex:{\large Christophe Pouzat} \\ \vspace{0.2cm}MAP5, Paris-Descartes University and CNRS\\ \vspace{0.2cm} \texttt{christophe.pouzat@parisdescartes.fr}@@
+#+DATE: LASCON, January 19 2018, Lecture 1
+#+OPTIONS: H:2 tags:nil
+#+EXCLUDE_TAGS: noexport
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,bigger]
+#+BEAMER_HEADER: \setbeamercovered{invisible}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Where are we ?}\tableofcontents[currentsection]\end{frame}}
+#+BEAMER_HEADER: \beamertemplatenavigationsymbolsempty
+#+STARTUP: beamer
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+#+STARTUP: indent
+#+PROPERTY: header-args :eval no-export
+
+* Introduction
+
+** The usual presentation of research work
+#+BEGIN_QUOTE
+  An article about computational science in a scientific publication is
+  *not* the scholarship itself, it is merely *advertising* of the
+  scholarship. The actual scholarship is the complete software
+  development environment and the complete set of instructions which
+  generated the figures.
+#+END_QUOTE
+
+\vspace{0.2cm}
+Thoughts of Jon Claerbout "distilled" by Buckheit & Donoho (1995).
+
+** What do we do as manuscript "producers"?
+The preparation of manuscripts and reports in experimental or computational neuroscience often
+involves:
+- Doing the experiments or coding and doing the simulations.
+- A lot of data analysis.
+- Careful design and realization of figures and tables.
+
+Simulations involve:
+- Algorithmic choices.
+- Software choices or implementation.
+- Parameter setting (/eg/ the time step used for conductance based neuronal models).
+ 
+Data analysis involves:
+- Some data "preprocessing" (often).
+- The development of dedicated scripts, routines and codes.
+- Setting some critical parameters.
+
+** What would we like as manuscript "readers"?
+As readers or referees of articles / manuscripts we are therefore often led to ask questions like:
+- What would happen to the analysis (or simulation) results if a given
+  parameter had another value?
+- What would be the effect of applying my preprocessing to the data
+  instead of the one used by the authors?
+- What would a given figure look like with a log scale ordinate instead
+  of the linear scale use by the authors?
+- What would be the result of applying that same analysis to my own data
+  set ?
+We can of course all think of a dozen of similar questions.
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+The problem is to find a way to address them. Clearly the classical
+journal article format cannot do the job. Editors cannot publish two
+versions of each figure to satisfy different readers. Many intricate
+analysis and modeling methods would require too long a description to
+fit the usual bounds of the printed paper. This is reasonable for we
+all have a lot of different things to do and we cannot afford to
+systematically look at every piece of work as thoroughly as suggested
+above. Many people (Claerbout & Karrenbach, 1992; Buckheit and Donoho,
+1995; Rossini & Leisch, 2003; Baggerly, 2010; Diggle & Zeger, 2010;
+Stein, 2011) feel nevertheless uncomfortable with the present way of
+diffusing scientific information as a canonical (printed) journal
+article. We suggest what is needed are more systematic and more
+explicit ways to describe how the analysis (or modeling) was done.
+
+** The dilemma
+Clearly the classical journal article format cannot do the job. 
+- Editors cannot publish two versions of each figure to satisfy different readers.
+- Many intricate analysis and modeling methods would require too long a description to fit the usual bounds of the printed paper.
+- This is reasonable for we all have a lot of different things to do and we cannot afford to systematically look at every piece of work as thoroughly as suggested above.
+\vspace{0.1cm}
+*We need are more systematic and more explicit ways to describe how the analysis (or modeling) was done*.
