@@ -14,5 +14,5 @@ This repository contains data, slides, code, everything needed to "reproduce" my
     + *Fitting models to data: least squares and maximum likelihood*.
     + *Application to Hodgkin and Huxley*.
     + *Dealing with differential equations*.
-- **Lecture 3 (2018-01-23)**:
+- **Lecture 4 (2018-01-24)**:
     + *Stochastic neuronal discharge models and their inference*.
