@@ -101,8 +101,48 @@ The "movement" started with what Economists have been calling *replication* sinc
 * What is needed for Reproducible Research?
 * Note taking concerns everyone
 ** The scholar annotating his book / manuscript
+
+[[./imgs/ManuscritAnnoteEtCoupe.png]]
+
+\vspace{0.25cm}
+A XIVth  century manuscript with the works of Aristotle owned by Nicasius de Planca (gallica.bnf.fr / Bibliothèque nationale de France).
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+We see a manuscript from the XIVth century heavily annotated by its owner Nicasius de Planca. This kind of notes taking was and remains extremely common. You should nevertheless avoid it when reading books from a library or from your friends!
+
+The next two slides show a case of paramount importance for the History of Science.
+ 
 ** Galileo observing Jupiter's moons
+
+[[./imgs/GalileoManuscriptCoupe.png]]
+
+\vspace{0.25cm}
+Galileo Galilei's notes while observing Jupiter in January 1610 with his telescope (Wikimedia Commons).
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+The first observation was done on January 7 1610. Galileo Galilei first thought that he found new stars close to Jupiter (see the [[https://en.wikipedia.org/wiki/Galileo_Galilei#Jupiter's_moons][Wikipedia page]]). But after several nights of observation, he realized that these "stars" were in fact circling around the planet, *they are satellites*! He named the group of four the Medicean stars, in honour of his future patron, Cosimo II de' Medici, Grand Duke of Tuscany, and Cosimo's three brothers (Wikipedia).
+
+** 
+[[./imgs/GalileoManuscriptZoom.png]]
+
+\vspace{0.25cm}
+The small "stars" are in fact orbiting around Jupiter, *they are doing what the Moon does around the Earth* (Wikimedia Commons).
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+These observations lead Galileo to reject the geocentric hypothesis in favor of the heliocentric one. This brought him much later, and after a somewhat tortuous path that I don't have the space to describe now, in front of the Inquisition that sentences him on June 22 1633 to house arrest, which he remained under for the rest of his life. 
+
 ** Placcius and Leibniz cabinet
+
+
 ** Beware of overabundance: Fulgence Tapir's disappearance  
 #+BEGIN_COMMENT
 Address to find the text with the preface: https://archive.org/stream/in.ernet.dli.2015.220207/2015.220207.Penguin-Island_djvu.txt
