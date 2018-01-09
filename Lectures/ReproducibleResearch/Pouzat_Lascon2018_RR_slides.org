@@ -181,10 +181,128 @@ This cabinet had many columns that could rotate about their (vertical) axis. The
 
 Notice the advantage of these paper slips over Galileo's codex: with the former, notes can be reorganized.
   
-** Beware of overabundance: Fulgence Tapir's disappearance  
-#+BEGIN_COMMENT
-Address to find the text with the preface: https://archive.org/stream/in.ernet.dli.2015.220207/2015.220207.Penguin-Island_djvu.txt
-#+END_COMMENT
+** Beware of overabundance: Fulgence Tapir's disappearance
+*** 
+:PROPERTIES:
+:BEAMER_COL: 0.48
+:BEAMER_ENV: block
+         :END:
+
+#+BEGIN_SRC shell :exports none :results hide
+cd imgs && wget https://upload.wikimedia.org/wikipedia/commons/c/c1/Anatole_France_young_years.jpg
+#+END_SRC
+
+#+RESULTS:
+
+#+ATTR_LATEX: :width 0.9\textwidth
+[[./imgs/Anatole_France_young_years.jpg]]
+
+*** 
+:PROPERTIES:
+:BEAMER_COL: 0.48
+:BEAMER_ENV: block
+         :END:
+
+In 1908, [[https://en.wikipedia.org/wiki/Anatole_France][Anatole France]] (1844-1924) published "[[https://archive.org/stream/in.ernet.dli.2015.220207/2015.220207.Penguin-Island_djvu.txt][Penguin Island]]" a parody of French history. 
+
+By Photographer : Wilhelm Benque. Tucker Collection - New York Public Library Archives, Public Domain, https://commons.wikimedia.org/w/index.php?curid=16240632.  
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+The text can be found /legally/ at several places, the [[https://en.wikipedia.org/wiki/Project_Gutenberg][Project Gutenberg]] one is missing the "Preface", so don't use it, go to one of the versions available on [[https://archive.org/search.php?query=title%3Apenguin%20island%20AND%20-contributor%3Agutenberg%20AND%20mediatype%3Atexts][Internet Archive]]. The importance of the preface in illustrated by the following two quotations:
+
+#+BEGIN_QUOTE
+One word more if you want your book to be well 
+received, lose no opportunity for exalting the virtues on 
+which society is based — attachment to wealth, pious senti- 
+ments, and especially resignation on the part of the poor, 
+which latter is the very foundation of order. Proclaim, sir, 
+that the origins of property — nobility and police — are treat- 
+ed in your history with the respect which these institutions 
+deserve. Make it known that you admit the supernatural 
+when it presents itself. On these conditions you will succeed 
+in good society.
+#+END_QUOTE
+
+And more importantly for our present subject:
+
+#+BEGIN_QUOTE
+The idea occurred to me, in the month of June last year, to 
+go and consult on the origins and progress of Penguin art, 
+the lamented M. Fulgence Tapir, the learned author of the 
+‘Universal Annals of Painting, Sculpture and Architecture’ 
+
+Having been shown into his study, I found seated before a 
+roll-top desk, beneath a frightful mass of papers, an amaz- 
+ingly short-sighted little man whose eyelids blinked behind 
+his gold-mounted spectacles. 
+
+To make up for the defect of his eyes his long and mobile 
+nose, endowed with an exquisite sense of touch, explored the 
+sensible world. By means of this organ Fulgence Tapir put 
+himself in contact with art and beauty. It is observed that in 
+France, as a general rule, musical critics are deaf and art 
+critics are blind. This allows them the collectedness neces- 
+sary for æsthetic ideas. Do you imagine that with eyes capable 
+of perceiving the forms and colours with which mysterious 
+nature envelops herself, Fulgence Tapir would have raised 
+himself, on a mountain of printed and manuscript docu- 
+ments, to the summit of doctrinal spiritualism, or that he
+would have conceived that mighty theory which makes the 
+arts of all tunes and countries converge towards the Institute 
+of France, their supreme end? 
+
+The walls of the study, the floor, and even the ceiling were 
+loaded with overflowing bundles, pasteboard boxes swollen 
+beyond measure, boxes in which were compressed an in- 
+numerable multitude of small cards covered with writing. I 
+beheld in admiration minted with terror the cataracts of 
+erudition that threatened to burst forth. 
+
+‘Master,’ said I in feeling tones, ‘I throw myself upon 
+your kindness and your knowledge, both of which are 
+inexhaustible. Would you consent to guide me in my 
+arduous researches into the origins of Penguin art?’ 
+
+‘Sir,’ answered the Master, ‘I possess all art, you under- 
+stand me, all art, on cards classed alphabetically and in 
+order of subjects. I consider it my duty to place at your dis- 
+posal all that relates to the Penguins. Get on that ladder and 
+take out that box you see above. You will find in it every- 
+thing you require.’ 
+
+I tremblingly obeyed. But scarcely had I opened the fatal 
+box than some blue cards escaped from it, and slipping 
+through my fingers, began to rain down. Almost immediate- 
+ly, acting in sympathy, the neighbouring boxes opened, and 
+there flowed streams of pink, green, and white cards, and by 
+degrees, from all the boxes, differently coloured cards were 
+poured out murmuring like a waterfall on a mountain side 
+in April. In a minute they covered the floor with a thick 
+layer of paper. Issuing from their inexhaustible reservoirs 
+with a roar that continually grew in force, each second in- 
+creased the vehemence of their torrential fall. Swamped up 
+to the knees in cards, Fulgence Tapir observed the cataclysm 
+with attentive nose. He recognised its cause and grew pale 
+with fright 
+
+‘What a mass of art !’ he exclaimed. 
+
+I called to him and leaned forward to help him mount the 
+ladder which bent under the shower. It was too late. Over- 
+whelmed, desperate, pitiable, his velvet smoking-cap and his 
+gold-mounted spectacles having fallen from him, he vainly 
+opposed his short arms to the flood which had now mounted 
+to his arm-pits. Suddenly a terrible spurt of cards arose and 
+enveloped him in a gigantic whirlpool. During the space of a 
+second I could see in the gulf the shining skull and little fat 
+hands of the scholar, then it closed up and the deluge kept 
+on pouring over what was silence and immobility. In dread 
+lest I in my turn should be swallowed up ladder and all I 
+maae my escape through the topmost pane of the window.  
+#+END_QUOTE
 
 ** A sailor's notebook
 ** What should we use to take notes?
