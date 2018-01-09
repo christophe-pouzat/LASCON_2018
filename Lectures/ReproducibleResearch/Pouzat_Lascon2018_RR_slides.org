@@ -142,7 +142,45 @@ These observations lead Galileo to reject the geocentric hypothesis in favor of 
 
 ** Placcius and Leibniz cabinet
 
+[[./imgs/Placcius_cabinet_TabIV.png]]
 
+\vspace{0.25cm}
+Organizing notes Placcius' way (Placcius, Vincent, 1642-1699. /De arte excerpendi vom gelahrten Buchhalten/, 1689. Houghton Library, Harvard University.)
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+With printing appearance, demand for paper increased and paper's price ended up decreasing (after a large production increase). In addition to the use of the /codex/ with pages made of paper, many scholars started using paper slips.
+
+But taking abundant notes on paper slips is good only if one can find efficiently retrieve this stored information when needed. Vincent Placcius (1642-1699) and Gottfried Leibniz (1646-1716) had a custom made cabinet to solve this retrieval problem.
+
+**  
+*** 
+:PROPERTIES:
+:BEAMER_COL: 0.48
+:BEAMER_ENV: block
+         :END:
+
+#+ATTR_LATEX: :width 0.6\textwidth
+[[./imgs/Placcius_cabinet_TabIVzoom.png]]
+
+*** 
+:PROPERTIES:
+:BEAMER_COL: 0.48
+:BEAMER_ENV: block
+         :END:
+
+Zoom on the columns of Paccius' cabinet. You can see the "front" (left column), the "side" (second from left) and the "back" (fourth from left).
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+This cabinet had many columns that could rotate about their (vertical) axis. The column's front was used to write what we would now call keywords relating to the content of the notes that were hooked on the column's back side.
+
+Notice the advantage of these paper slips over Galileo's codex: with the former, notes can be reorganized.
+  
 ** Beware of overabundance: Fulgence Tapir's disappearance  
 #+BEGIN_COMMENT
 Address to find the text with the preface: https://archive.org/stream/in.ernet.dli.2015.220207/2015.220207.Penguin-Island_djvu.txt
