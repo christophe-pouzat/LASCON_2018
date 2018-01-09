@@ -415,6 +415,52 @@ cd imgs & \
 #+ATTR_LATEX: :width 1.0\textwidth
 [[./imgs/Figure_W1_S2_1.jpg]]
 
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+All illustrations are taken from Wikimedia Commons
+- Top left: A clay tablet (pre-cuneiform period, -3000).
+- Top center: A fresco from Pompeii with the portrait of [[https://en.wikipedia.org/wiki/Portrait_of_Paquius_Proculo][Terentius Neo and his wife]]. She carries a [[https://en.wikipedia.org/wiki/Wax_tablet][wax tablet]] and a /stylus/ (the main medium of note-takers up to the 19th century); he carries a /volumen/ or [[https://en.wikipedia.org/wiki/History_of_scrolls][scroll]], the stuff of books until the beginning of the Common Era.
+- Top right: a notebook made of paper from the 17th century with [[https://en.wikipedia.org/wiki/Commonplace_book][commonplaces]]. "Commonplace" is a translation of the Latin term locus communis (from Greek tópos koinós, see literary topos) which means "a theme or argument of general application", such as a statement of proverbial wisdom (Wikipedia).
+- Bottom left: An [[https://en.wikipedia.org/wiki/Index_card][index card]], a notes medium whose use exploded with bureaucratization and the development of libraries. Still heavily used in the humanities. Apparently first used (if not created) by the father of taxonomy, [[https://en.wikipedia.org/wiki/Carl_Linnaeus][Carl Linneaus]]. You can find his cards at: [[http://linnean-online.org/61332/#/0]].
+- Bottom center: A [[https://en.wikipedia.org/wiki/Post-it_note][Post-it note]] as most of us use every day.
+- Bottom right: A "modern days" numerical tablet.    
+
+** Wax tablet and stylus
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/tabula_stilus.jpg]]
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+From the [[https://en.wikipedia.org/wiki/Wax_tablet][Wikipedia page]]:
+ 
+A wax tablet is a tablet made of wood and covered with a layer of wax, often linked loosely to a cover tablet, as a "double-leaved" diptych. It was used as a reusable and portable writing surface in Antiquity and throughout the Middle Ages.
+
+Writing on the wax surface was performed with a pointed instrument, a stylus. Writing by engraving in wax required the application of much more pressure and traction than would be necessary with ink on parchment or papyrus,[1] and the scribe had to lift the stylus in order to change the direction of the stroke. Therefore, the stylus could not be applied with the same degree of dexterity as a pen. A straight-edged, spatula-like implement (often placed on the opposite end of the stylus tip) would be used in a razor-like fashion to serve as an eraser. The entire tablet could be erased for reuse by warming it to about 50 °C and smoothing the softened wax surface. The modern expression of "a clean slate" equates to the Latin expression "tabula rasa".
+
+** From the /scroll/ to the /codex/ 
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Figure_W1_S2_3.jpg]]
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+
+The shift from the /scroll/ to the /codex/ is fundamental for development of written civilization.
+
+A scroll (from the Old French escroe or escroue), is a roll of papyrus, parchment, or paper containing writing.
+
+From [[https://en.wikipedia.org/wiki/History_of_scrolls#Replacement_by_the_Codex][Wikipedia]]:
+
+The codex was a new format for reading the written word, consisting of individual pages loosely attached to each other at one side and bound with boards or cloth. It came to replace the scroll thanks to several problems that limited the scroll's function and readability. For one, scrolls were very long, sometimes as long as ten meters. This made them hard to hold open and read, a difficulty not helped by the fact that most scrolls in that era were read horizontally, instead of vertically as scrolling virtual documents are read now. The text on a scroll was continuous, without page breaks, which made indexing and bookmarking impossible. Conversely, the codex was easier to hold open, separate pages made it possible to index sections and mark a page, and the protective covers kept the fragile pages intact better than scrolls generally stayed. This last made it particularly attractive for important religious texts.
+
+As explained by Frédéric Barbier (/Histoire du Livre/): "The scroll / volumen imposes a complex reading practice: one must unroll (/explicare/) and roll at the same time; that forbids working on several scrolls (the original text and its commentary) at the same time or to take notes. It imposes a continuous reading and making consultation impossible."
 
 
 * Form text files to lightweight markup languages
