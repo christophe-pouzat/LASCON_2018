@@ -372,6 +372,51 @@ Notes are necessarily heterogeneous---because of their subject matter as well as
 
 In the sequel we are going to give /tentative/ answers to the questions raised in the last two slides. 
 * Note-taking: a quick History
+** Since note-taking concerns everyone...
+
+- Since we are all "note-takers", our predecessors also were note-takers.
+- This elementary observation will lead us to "study" how our brilliant ancestors took notes.
+- Hopefully, we can learn some useful techniques on the way and put them on daily use.
+- Hopefully, we can avoid thinking that we are the first to face the kind of problem we are now facing: "information overload".
+
+** What are we going to talk about?  
+
+- The practical aspect of note-taking---what Historians dub "materiality---.
+- The books and notes organization.
+- The link between the concrete and organizational aspects.
+
+*** Clarification
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+We are going to discuss a lot books organization since the "navigation devices" designed for the latter: 
+- table of content,
+- index,
+- etc,
+also applies to notes.
+
+We will mostly refer to the "Western" part of this History, with a single slide on Chinese contributions and nothing on Muslim, Indian or pre-Colombian contributions. This bias must be clearly understood as a *reflection of my ignorance* (I'm actively learning on the subject) and because it's easier, as always, to find illustrative material for "Western" contributions...
+
+** The concrete aspects summarized on a single slide 
+
+#+NAME: Making-concrete-summary-of-material aspect
+#+BEGIN_SRC shell :exports none :results hide
+# This requires imagemagick
+cd imgs & \
+    wget https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Clay_Tablet_-_Louvre_-_AO29562.jpg/1024px-Clay_Tablet_-_Louvre_-_AO29562.jpg -O Tablette_argile.jpg \
+	 wget https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg/651px-Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg -O Proculus.jpg \
+	 wget https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Commonplace_book_mid_17th_century.jpg/878px-Commonplace_book_mid_17th_century.jpg -O Carnet.jpg \
+	 wget https://upload.wikimedia.org/wikipedia/commons/6/6e/Lhfhospitalsstatehospital001.jpg -O Carte.jpg \
+	 wget https://upload.wikimedia.org/wikipedia/commons/e/ef/Fait_cnv.jpg -O Post_it.jpg \
+	 wget https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lenovo_Yoga_3_Pro.jpg/1024px-Lenovo_Yoga_3_Pro.jpg -O Tablette_ordi.jpg \
+	 montage -mode concatenate -tile 3x2 Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg Figure_W1_S2_1.jpg
+#+END_SRC
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Figure_W1_S2_1.jpg]]
+
+
+
 * Form text files to lightweight markup languages
 * Notes that are archived but can evolve with control version systems (CVS)
 * Finding your way in your notes: tags and indexing software
