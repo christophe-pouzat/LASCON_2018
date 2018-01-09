@@ -99,7 +99,13 @@ Clearly the classical journal article format cannot do the job.
 The "movement" started with what Economists have been calling *replication* since the early eighties to reach what is now called *reproducible research* in computational data analysis oriented fields like statistics and signal processing.
 
 * What is needed for Reproducible Research?
-* Note taking concerns everyone
+* Note-taking concerns everyone
+** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+The purpose of this section is remind the reader / auditor that *note-taking concerns everyone*. Few examples are used to that end. 
+
 ** The scholar annotating his book / manuscript
 
 [[./imgs/ManuscritAnnoteEtCoupe.png]]
@@ -111,7 +117,7 @@ A XIVth  century manuscript with the works of Aristotle owned by Nicasius de Pla
 :PROPERTIES:
 :BEAMER_ENV: note
 :END:
-We see a manuscript from the XIVth century heavily annotated by its owner Nicasius de Planca. This kind of notes taking was and remains extremely common. You should nevertheless avoid it when reading books from a library or from your friends!
+We see a manuscript from the XIVth century heavily annotated by its owner Nicasius de Planca. This kind of note-taking was and remains extremely common. You should nevertheless avoid it when reading books from a library or from your friends!
 
 The next two slides show a case of paramount importance for the History of Science.
  
@@ -304,10 +310,68 @@ lest I in my turn should be swallowed up ladder and all I
 maae my escape through the topmost pane of the window.  
 #+END_QUOTE
 
-** A sailor's notebook
-** What should we use to take notes?
+** A sailor's logbook
+
+[[./imgs/LivredebordpenduickV.JPG]]
+
+\vspace{0.25cm}
+The logbook of Eric Tabarly during the San-Francisco / Tokyo transpacific ocean race in 1969.
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+This example is only superficially anecdotal. Information about the source can be found at: [[https://commons.wikimedia.org/wiki/File:LivredebordpenduickV.JPG]].
+
+** 
+#+ATTR_LATEX: :width 0.9\textwidth
+[[./imgs/LivredebordpenduickVzoom1.png]]
+
+\vspace{0.25cm}
+On the left side, Tabarly reports salient events like a ripped jib on March 21 at 11 pm. 
+
+** 
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/LivredebordpenduickVzoom2.png]]
+
+\vspace{0.25cm}
+On the right side, he computes his position (that was before GPS time!).
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+This example is only superficially anecdotal. Ten years ago, a European project was aiming at estimating the Atlantic and Indian Oceans climates during the 18th century using logbooks from ships of the West- and East-India companies from the Kingdoms of Portugal, Spain, Holland, Britain and France. See the [[http://webs.ucm.es/info/cliwoc/][Climatological Database for the World's Oceans 1750-1850]].
+   
+In the same vein, logbooks from slave ships give a lot of quantitative information about the slave trade between Africa and the "New World".
+
+
+** So, what should we use to take notes?
+- The object of study (like the annotated book)?
+- One or several notebooks?
+- Paper slips or cards?
+- Computer files?
+- Drawings, Pictures?
+- Films?
+- ...?
+
 ** Avoid getting lost
-* Note taking: a quick History
+Notes generate an organizational problem:
+\vspace{0.25cm}
+- How can we structure our notes?
+- Can we index them, if yes, how?
+- How can we archive them while keeping the capability to make them evolve?
+
+*** Notes 
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+Notes are necessarily heterogeneous---because of their subject matter as well as, often, their material support---and that creates a *serious* organizational problem.
+
+*Without organization, notes usability barely exceeds our capability of memorizing facts and events*.
+
+In the sequel we are going to give /tentative/ answers to the questions raised in the last two slides. 
+* Note-taking: a quick History
 * Form text files to lightweight markup languages
 * Notes that are archived but can evolve with control version systems (CVS)
 * Finding your way in your notes: tags and indexing software
