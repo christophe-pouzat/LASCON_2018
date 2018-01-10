@@ -146,7 +146,7 @@ The small "stars" are in fact orbiting around Jupiter, *they are doing what the 
 :END:
 These observations lead Galileo to reject the geocentric hypothesis in favor of the heliocentric one. This brought him much later, and after a somewhat tortuous path that I don't have the space to describe now, in front of the Inquisition that sentences him on June 22 1633 to house arrest, which he remained under for the rest of his life. 
 
-** Placcius and Leibniz cabinet
+** Placcius and Leibniz closet
 
 [[./imgs/Placcius_cabinet_TabIV.png]]
 
@@ -159,7 +159,7 @@ Organizing notes Placcius' way (Placcius, Vincent, 1642-1699. /De arte excerpend
 :END:
 With printing appearance, demand for paper increased and paper's price ended up decreasing (after a large production increase). In addition to the use of the /codex/ with pages made of paper, many scholars started using paper slips.
 
-But taking abundant notes on paper slips is good only if one can find efficiently retrieve this stored information when needed. Vincent Placcius (1642-1699) and Gottfried Leibniz (1646-1716) had a custom made cabinet to solve this retrieval problem.
+But taking abundant notes on paper slips is good only if one can find efficiently retrieve this stored information when needed. Vincent Placcius (1642-1699) and Gottfried Leibniz (1646-1716) had a custom made closet to solve this retrieval problem. This example is discussed in Ann Blair's book /TOO MUCH TO KNOW/, Yale Univ. Press, 2010 (pp. 93-95). 
 
 **  
 *** 
@@ -400,20 +400,6 @@ We will mostly refer to the "Western" part of this History, with a single slide 
 
 ** The concrete aspects summarized on a single slide 
 
-#+NAME: Making-concrete-summary-of-material aspect
-#+BEGIN_SRC shell :exports none :results hide
-# This requires imagemagick
-cd imgs 
-wget https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Clay_Tablet_-_Louvre_-_AO29562.jpg/1024px-Clay_Tablet_-_Louvre_-_AO29562.jpg -O Tablette_argile.jpg 
-wget https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg/651px-Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg -O Proculus.jpg 
-wget https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Commonplace_book_mid_17th_century.jpg/878px-Commonplace_book_mid_17th_century.jpg -O Carnet.jpg 
-wget https://upload.wikimedia.org/wikipedia/commons/6/6e/Lhfhospitalsstatehospital001.jpg -O Carte.jpg 
-wget https://upload.wikimedia.org/wikipedia/commons/e/ef/Fait_cnv.jpg -O Post_it.jpg 
-wget https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lenovo_Yoga_3_Pro.jpg/1024px-Lenovo_Yoga_3_Pro.jpg -O Tablette_ordi.jpg 
-montage -mode concatenate -tile 3x2 Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg Figure_W1_S2_1.jpg
-rm Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg
-#+END_SRC
-
 #+ATTR_LATEX: :width 1.0\textwidth
 [[./imgs/Figure_W1_S2_1.jpg]]
 
@@ -428,6 +414,23 @@ All illustrations are taken from Wikimedia Commons
 - Bottom left: An [[https://en.wikipedia.org/wiki/Index_card][index card]], a notes medium whose use exploded with bureaucratization and the development of libraries. Still heavily used in the humanities. Apparently first used (if not created) by the father of taxonomy, [[https://en.wikipedia.org/wiki/Carl_Linnaeus][Carl Linneaus]]. You can find his cards at: [[http://linnean-online.org/61332/#/0]].
 - Bottom center: A [[https://en.wikipedia.org/wiki/Post-it_note][Post-it note]] as most of us use every day.
 - Bottom right: A "modern days" numerical tablet.    
+
+The code generating the figure:
+
+#+NAME: Making-concrete-summary-of-material aspect
+#+BEGIN_SRC shell :results hide
+# This requires imagemagick
+cd imgs 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Clay_Tablet_-_Louvre_-_AO29562.jpg/1024px-Clay_Tablet_-_Louvre_-_AO29562.jpg -O Tablette_argile.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg/651px-Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg -O Proculus.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Commonplace_book_mid_17th_century.jpg/878px-Commonplace_book_mid_17th_century.jpg -O Carnet.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/6/6e/Lhfhospitalsstatehospital001.jpg -O Carte.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/e/ef/Fait_cnv.jpg -O Post_it.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lenovo_Yoga_3_Pro.jpg/1024px-Lenovo_Yoga_3_Pro.jpg -O Tablette_ordi.jpg 
+montage -mode concatenate -tile 3x2 Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg Figure_W1_S2_1.jpg
+rm Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg
+#+END_SRC
+
 
 ** Wax tablet and stylus
 
@@ -489,7 +492,7 @@ Notice the red letters used on the codex (bottom right), an example of [[https:/
 :PROPERTIES:
 :BEAMER_ENV: note
 :END:
-Illustrations from Wikimedia Commons.
+Illustrations from Wikimedia Commons. The code generating the figure:
 
 #+BEGIN_SRC sh :results silent 
 cd imgs 
@@ -522,7 +525,7 @@ Fol. 10v and 11r of the Egmond Gospels. Canon tables (900 CE).
 :BEAMER_ENV: note
 :END:
 
-Source: https://commons.wikimedia.org/wiki/File:Fol._10v-11r_Egmond_Gospels.jpg. Public Domain.
+Source: https://commons.wikimedia.org/wiki/File:Fol._10v-11r_Egmond_Gospels.jpg. Public Domain. The code generating the figure:
 
 #+BEGIN_SRC sh :results silent
 cd imgs
@@ -583,6 +586,8 @@ The leishu are composed of sometimes lengthy citations from other works and ofte
 The efficient use of the leishu requires an indexing system, a table of content, etc. Very interestingly, the scroll will be abandoned and the codex will generalize in China around that time, as observed by Ann Blair in her book /TOO MUCH TO KNOW/, Yale Univ. Press, 2010 (pp. 28-31).
  
 Most of the leishus *were printed* (from the IXth century on!). The picture on the right side (a banknote printing plate) is there to remind us of who was (by far) the most advanced at that time. The Chinese were of course printing their leishus on paper that they discovered in the VIIIth century BCE.
+
+The code generating the figure:
  
 #+BEGIN_SRC sh :results silent
 cd imgs
@@ -592,6 +597,33 @@ convert Yongle_Dadian_Encyclopedia_1403.jpg Matrice_billet_song.jpg +append -fon
 rm Yongle_Dadian_Encyclopedia_1403.jpg Matrice_billet_song.jpg
 #+END_SRC
 
+** Getting organized by using the right slot
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Placcius_cabinet_TabIV.png]]
+
+\vspace{0.25cm}
+Placcius' closet again (Placcius, Vincent, 1642-1699. /De arte excerpendi vom gelahrten Buchhalten/, 1689. Houghton Library, Harvard University.)
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+Now that we briefly reviewed the timeline of the main navigation elements of the books---navigation elements that can of course be applied to our lab/note-books---we come back to the paper slips and cards as notes media.
+
+We see (again) Placcius' and Leibniz's closet since it displays both the benefits and the shortcomings of media that hold *a single note*.
+
+Obvious shortcomings are:
+- Paper slips and cards get easily lost.
+- They are essentially useless if they are not *classified* in addition to being filed.
+These problems are solved by Placcius' cabinet, the content of which is fundamentally accessed through the index.
+
+Clear benefits are:
+- Paper slips can be easily reorganized when they contain information on several subjects.
+- Paper slips can be directly pasted in a book when composing an anthology or a compendium.
+
+This last technique (pasting when making an anthology) was systematically used by the Renaissance polymath [[https://en.wikipedia.org/wiki/Conrad_Gessner][Conrad Gessner]] (1516-1565) who even got his paper slips by cutting parts of pages from books (don't do that with library books)!
+    
 * Form text files to lightweight markup languages
 * Notes that are archived but can evolve with control version systems (CVS)
 * Finding your way in your notes: tags and indexing software
