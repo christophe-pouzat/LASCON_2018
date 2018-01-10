@@ -623,7 +623,63 @@ Clear benefits are:
 - Paper slips can be directly pasted in a book when composing an anthology or a compendium.
 
 This last technique (pasting when making an anthology) was systematically used by the Renaissance polymath [[https://en.wikipedia.org/wiki/Conrad_Gessner][Conrad Gessner]] (1516-1565) who even got his paper slips by cutting parts of pages from books (don't do that with library books)!
-    
+
+** Constructing a notebook index the John Locke way    
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/MethodeLocke1.jpg]]
+
+\vspace{0.25cm}
+My own notebook is used here for illustration.
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+We will now learn about an index construction technique due to [[https://en.wikipedia.org/wiki/John_Locke][John Locke]] (1632-1704), the grand-father of liberalism and a major investor in the /Royal African Company/, the largest company in the [[https://en.wikipedia.org/wiki/John_Locke#Constitution_of_Carolina][slave-trade]] business at that time...
+
+The indexing method is here illustrated using my own notebook. The two pages that are displayed describe the structure of a dataset in the [[https://www.hdfgroup.org/][HDF5]] format on the left side and the corresponding structure (designed to map the former one) of a =data frame= object of the [[https://www.r-project.org/][R]] language. This dataset contain *calcium* concentration measurements made in *neurons*. This notes were taken while writing some computer *code* to analyze the data.
+
+The precise content of the pages does not matter here in order to understand how Locke's method works. The important points are:
+- The pages are numbered (we are seeing here pages 86 and 87).
+- Keywords are written at the bottom of the page: *code*; *neuro*; *calcium*.
+
+This method can be applied after note-taking, you just need to have few pages left at the end of your notebook. That's in fact what I did since I had started filling my notebook before learning about the method (I learned about while preparing the French version of this lecture last September).
+
+** Locke's method continued  
+
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/MethodeLocke2.jpg]]
+
+\vspace{0.25cm}
+The last pages of my notebook with the index.
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+We now the index. It is located at the end of the notebook although Locke recommends placing it at the beginning. Since I did not know about the method when I started the notebook, I had to place it at the end...
+
+The idea is to enter the keywords used in the notebook based on their *first letter* and the *first vowel following the first letter*.
+
+The index is therefore made of the 26 letters (you see letters "A" to "R" here, the remaining ones are on the next page) subdivided the five most common vowels ("y" goes together with "i" in that case).
+
+Pages 86 and 87 contained the keyword *code* that goes into the entry "Co" of the index (you see "86-89" because the following pages also concern code for the same project). The keyword *Neuro* giving an entry on line "Ne", while the keyword *Calcium* gives an entry on line "Ca".
+
+The keyword *Criquet* (not shown above) gives an entry on line "Ci".
+
+It is also a good idea to list the set of keywords used in the notebook on the page preceding or following the index.
+
+** Conclusions of the historical overview   
+
+Since it is hard (for me at least) to use paper as a medium for note-taking, learning from "Newton's giants" should save us from reinventing the wheel (and getting it square).
+
+\vspace{0.25cm}
+We should nevertheless use numerical medium as much as possible (while keeping in mind what we just learned) since it provides:
+- more organizational and structural flexibility,
+- reliable archiving tools,
+- powerful indexing tools. 
+
 * Form text files to lightweight markup languages
 * Notes that are archived but can evolve with control version systems (CVS)
 * Finding your way in your notes: tags and indexing software
