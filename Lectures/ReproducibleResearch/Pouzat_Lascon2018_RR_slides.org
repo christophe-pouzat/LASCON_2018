@@ -104,7 +104,7 @@ The "movement" started with what Economists have been calling *replication* sinc
 :PROPERTIES:
 :BEAMER_ENV: note
 :END:
-The purpose of this section is remind the reader / auditor that *note-taking concerns everyone*. Few examples are used to that end. 
+This section discusses a much wider issue than /reproducible research/ (RR). Implementing RR requires thorough note-taking and note-taking concerns everyone. The purpose of this section is therefore to remind the reader / auditor that he/she already knows: *note-taking concerns everyone*. Few examples are used to that end. 
 
 ** The scholar annotating his book / manuscript
 
@@ -374,27 +374,28 @@ In the sequel we are going to give /tentative/ answers to the questions raised i
 * Note-taking: a quick History
 ** Since note-taking concerns everyone...
 
-- Since we are all "note-takers", our predecessors also were note-takers.
+- Since we are all "note-takers", our predecessors were also note-takers.
 - This elementary observation will lead us to "study" how our brilliant ancestors took notes.
 - Hopefully, we can learn some useful techniques on the way and put them on daily use.
 - Hopefully, we can avoid thinking that we are the first to face the kind of problem we are now facing: "information overload".
 
 ** What are we going to talk about?  
 
-- The practical aspect of note-taking---what Historians dub "materiality---.
+- The practical aspect of note-taking---what Historians dub "materiality"---.
 - The books and notes organization.
 - The link between the concrete and organizational aspects.
 
-*** Clarification
-:PROPERTIES:
-:BEAMER_ENV: note
-:END:
+\vspace{0.2cm}
 We are going to discuss a lot books organization since the "navigation devices" designed for the latter: 
 - table of content,
 - index,
 - etc,
 also applies to notes.
 
+*** Clarification
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
 We will mostly refer to the "Western" part of this History, with a single slide on Chinese contributions and nothing on Muslim, Indian or pre-Colombian contributions. This bias must be clearly understood as a *reflection of my ignorance* (I'm actively learning on the subject) and because it's easier, as always, to find illustrative material for "Western" contributions...
 
 ** The concrete aspects summarized on a single slide 
@@ -454,14 +455,29 @@ Writing on the wax surface was performed with a pointed instrument, a stylus. Wr
 
 The shift from the /scroll/ to the /codex/ is fundamental for development of written civilization.
 
-A scroll (from the Old French escroe or escroue), is a roll of papyrus, parchment, or paper containing writing.
+A scroll (from the Old French escroe or escroue), is a roll of papyrus, [[https://en.wikipedia.org/wiki/Parchment][parchment]], or paper containing writing.
 
 From [[https://en.wikipedia.org/wiki/History_of_scrolls#Replacement_by_the_Codex][Wikipedia]]:
 
 The codex was a new format for reading the written word, consisting of individual pages loosely attached to each other at one side and bound with boards or cloth. It came to replace the scroll thanks to several problems that limited the scroll's function and readability. For one, scrolls were very long, sometimes as long as ten meters. This made them hard to hold open and read, a difficulty not helped by the fact that most scrolls in that era were read horizontally, instead of vertically as scrolling virtual documents are read now. The text on a scroll was continuous, without page breaks, which made indexing and bookmarking impossible. Conversely, the codex was easier to hold open, separate pages made it possible to index sections and mark a page, and the protective covers kept the fragile pages intact better than scrolls generally stayed. This last made it particularly attractive for important religious texts.
 
+The bottom left mosaic shows Virgil seating (70-19 BCE) holding a scroll of the /Aeneid/, with Clio, muse of history, also holding a scroll.
+
 As explained by Frédéric Barbier (/Histoire du Livre/): "The scroll / volumen imposes a complex reading practice: one must unroll (/explicare/) and roll at the same time; that forbids working on several scrolls (the original text and its commentary) at the same time or to take notes. It imposes a continuous reading and making consultation impossible."
 
+Scrolls are clearly unsuited to "nomadic reading"; can you imagine Ulysses embarking for his Odyssey carrying the 24 scrolls/volumen of the Iliad?
+
+The term /volumen/ is the origin of our modern /volumes/ (a book in several volumes) as of the word for the geometrical concept.
+
+Switching from scroll to codices required two innovations:
+- The collection of wax tablets bound together with leather strands.
+- The generalization of [[https://en.wikipedia.org/wiki/Parchment][parchment]] (usually sheep skin specially processed) as a replacement for [[https://en.wikipedia.org/wiki/Papyrus][papyrus]]. This generalization could be due (according to Pliny the Elder) to a rivalry between the cities of Pergamon and Alexandria for cultural hegemony: [[https://en.wikipedia.org/wiki/Ptolemy_V_Epiphanes][Ptolemy V Epiphanes]] King of Egypt wanted to block [[https://en.wikipedia.org/wiki/Eumenes_II][Eumenes II]] from developing in Pergamon a library that could compete with the one of Alexandria; he therefore imposed an embargo on papyrus export (Egypt was the sole papyrus producer). Eumenes looked for an alternative and fostered parchment development. The link between Pergamon and parchment is much clearer in German where Pergamon is written in the way as in English but where parchment is written /Pergament/.
+
+Switching from scrolls to codices will have major consequences on books organization as well as on the reading practices, it will later on allow printing development.
+
+The main revolution brought by the codex is the /page/. Thanks to this structural element, the reader can access directly to a specific chapter or a specific part of the text, while scrolls imposed continuous reading *at a time when there were no blanks between words*. According to Collette Sirat: "Twenty centuries will be necessary to realize the paramount importance of the codex for our civilization through the *selective reading* it made possible as opposed to the continuous reading. It opened room for the elaboration of mental structures where the text is dissociated from the speech and its rythm."
+
+Notice the red letters used on the codex (bottom right), an example of [[https://en.wikipedia.org/wiki/Rubrication][rubrication]] used by scribes to mark paragraphs. With printing and the high cost of colors it entailed, an empty space started to be used to that end. Thinking about it, colors don't cost anything on a numerical support and could perfectly be used again in the same way.  
 
 * Form text files to lightweight markup languages
 * Notes that are archived but can evolve with control version systems (CVS)
