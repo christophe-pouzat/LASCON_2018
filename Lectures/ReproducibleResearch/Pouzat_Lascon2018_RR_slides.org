@@ -403,14 +403,15 @@ We will mostly refer to the "Western" part of this History, with a single slide 
 #+NAME: Making-concrete-summary-of-material aspect
 #+BEGIN_SRC shell :exports none :results hide
 # This requires imagemagick
-cd imgs & \
-    wget https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Clay_Tablet_-_Louvre_-_AO29562.jpg/1024px-Clay_Tablet_-_Louvre_-_AO29562.jpg -O Tablette_argile.jpg \
-	 wget https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg/651px-Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg -O Proculus.jpg \
-	 wget https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Commonplace_book_mid_17th_century.jpg/878px-Commonplace_book_mid_17th_century.jpg -O Carnet.jpg \
-	 wget https://upload.wikimedia.org/wikipedia/commons/6/6e/Lhfhospitalsstatehospital001.jpg -O Carte.jpg \
-	 wget https://upload.wikimedia.org/wikipedia/commons/e/ef/Fait_cnv.jpg -O Post_it.jpg \
-	 wget https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lenovo_Yoga_3_Pro.jpg/1024px-Lenovo_Yoga_3_Pro.jpg -O Tablette_ordi.jpg \
-	 montage -mode concatenate -tile 3x2 Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg Figure_W1_S2_1.jpg
+cd imgs 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Clay_Tablet_-_Louvre_-_AO29562.jpg/1024px-Clay_Tablet_-_Louvre_-_AO29562.jpg -O Tablette_argile.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg/651px-Meister_des_Portr%C3%A4ts_des_Paquius_Proculus_001.jpg -O Proculus.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Commonplace_book_mid_17th_century.jpg/878px-Commonplace_book_mid_17th_century.jpg -O Carnet.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/6/6e/Lhfhospitalsstatehospital001.jpg -O Carte.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/e/ef/Fait_cnv.jpg -O Post_it.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Lenovo_Yoga_3_Pro.jpg/1024px-Lenovo_Yoga_3_Pro.jpg -O Tablette_ordi.jpg 
+montage -mode concatenate -tile 3x2 Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg Figure_W1_S2_1.jpg
+rm Tablette_argile.jpg Proculus.jpg Carnet.jpg Carte.jpg Post_it.jpg Tablette_ordi.jpg
 #+END_SRC
 
 #+ATTR_LATEX: :width 1.0\textwidth
@@ -479,6 +480,86 @@ The main revolution brought by the codex is the /page/. Thanks to this structura
 
 Notice the red letters used on the codex (bottom right), an example of [[https://en.wikipedia.org/wiki/Rubrication][rubrication]] used by scribes to mark paragraphs. With printing and the high cost of colors it entailed, an empty space started to be used to that end. Thinking about it, colors don't cost anything on a numerical support and could perfectly be used again in the same way.  
 
+** Eusebius and the invention of cross-references
+
+#+BEGIN_SRC sh :exports none :results silent 
+cd imgs 
+wget https://upload.wikimedia.org/wikipedia/commons/b/ba/Eusebius_of_Caesarea.jpg 
+wget https://upload.wikimedia.org/wikipedia/commons/1/1f/Romia_Imperio.png 
+convert Romia_Imperio.png Eusebius_of_Caesarea.jpg -gravity northeast -composite Eusebius.jpg 
+convert Eusebius.jpg -font FreeSans -pointsize 75 -gravity southwest -annotate 0 'Roman Empire' Eusebius_leg.jpg 
+convert Eusebius_leg.jpg -font FreeSans -pointsize 75 -annotate +700+75 'Eusebius of\nCaeserea\n(265-340)' Eusebius_leg2.jpg 
+convert Eusebius_leg2.jpg -font FreeSans -pointsize 30 -annotate +1150+900 'Caeserea' Eusebius_final.jpg 
+rm Romia_Imperio.png Eusebius_of_Caesarea.jpg Eusebius.jpg Eusebius_leg.jpg Eusebius_leg2.jpg
+#+END_SRC
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Eusebius_final.jpg]]
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+Illustrations from Wikimedia Commons.
+From the Wikipedia page on [[https://en.wikipedia.org/wiki/Eusebius][Eusebius]]:
+#+BEGIN_QUOTE
+Eusebius of Caesarea (ad 260/265 – 339/340), also known as Eusebius Pamphili, was a historian of Christianity, exegete, and Christian polemicist. He became the bishop of Caesarea Maritima about 314 AD. Together with Pamphilus, he was a scholar of the Biblical canon and is regarded as an extremely learned Christian of his time. He wrote Demonstrations of the Gospel, Preparations for the Gospel, and On Discrepancies between the Gospels, studies of the Biblical text.
+#+END_QUOTE
+
+According to Anthony Grafton and Megan Williams (2006) /Christianity and the Transformation of the Book/, The Belknap Press of Harvard University Press, his writings are crucial for our knowledge of the first three centuries of Christian history. /He brought several essential innovations to the book's organization like the cross-references/.
+  
+** Eusebian canons
+
+#+BEGIN_SRC sh :exports none :results silent
+cd imgs
+wget https://upload.wikimedia.org/wikipedia/commons/0/0e/Fol._10v-11r_Egmond_Gospels.jpg
+#+END_SRC
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Fol._10v-11r_Egmond_Gospels.jpg]]
+
+\vspace{0.2cm}
+Fol. 10v and 11r of the Egmond Gospels. Canon tables (900 CE). 
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+
+Source: https://commons.wikimedia.org/wiki/File:Fol._10v-11r_Egmond_Gospels.jpg. Public Domain.
+
+Quote from [[https://en.wikipedia.org/wiki/Eusebius#Biblical_text_criticism][Wikipedia]]:
+#+BEGIN_QUOTE
+For an easier survey of the material of the four Evangelists, Eusebius divided his edition of the New Testament into paragraphs and provided it with a synoptical table so that it might be easier to find the pericopes that belong together. These canon tables or "Eusebian canons" remained in use throughout the Middle Ages, and illuminated manuscript versions are important for the study of early medieval art, as they are the most elaborately decorated pages of many Gospel books.
+#+END_QUOTE
+ 
+** /Codex/ significance
+
+Following Frédéric Barbier (/HISTOIRE DU LIVRE/, Armand Colin, 2009):
+- /Codex/ invention is crucial for the development of written civilization.
+- The /codex/ lends itself to *consultation reading*.
+- We can add to the /codex/ a "navigation system" making consultation easier.
+- We can take notes while consulting a /codex/.
+- The combination of the /codex/ with the /Carolingian minuscule/ constitutes an extremely powerful intellectual tools, never seen before.
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+
+Example of /Carolingian minuscule/ can be found on the corresponding [[https://en.wikipedia.org/wiki/Carolingian_minuscule][Wikipedia page]].
+
+Over centuries, /codices/---that we often call /manuscripts/---will slowly evolve and gain modern days book attributes:
+- separation between words (VIIth century),
+- start of punctuation (VIIIth century),
+- table of content,
+- running title,
+- paragraph marks (rubrication, XIth century),
+- pagination,
+- index (XIIIth century).
+
+An interesting point: Torah's content got "fixed" before the /codex/ generalization and today Torah scrolls are still used.  
+   
 * Form text files to lightweight markup languages
 * Notes that are archived but can evolve with control version systems (CVS)
 * Finding your way in your notes: tags and indexing software
