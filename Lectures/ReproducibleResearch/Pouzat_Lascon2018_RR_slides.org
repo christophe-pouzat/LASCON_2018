@@ -482,7 +482,16 @@ Notice the red letters used on the codex (bottom right), an example of [[https:/
 
 ** Eusebius and the invention of cross-references
 
-#+BEGIN_SRC sh :exports none :results silent 
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Eusebius_final.jpg]]
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+Illustrations from Wikimedia Commons.
+
+#+BEGIN_SRC sh :results silent 
 cd imgs 
 wget https://upload.wikimedia.org/wikipedia/commons/b/ba/Eusebius_of_Caesarea.jpg 
 wget https://upload.wikimedia.org/wikipedia/commons/1/1f/Romia_Imperio.png 
@@ -493,14 +502,6 @@ convert Eusebius_leg2.jpg -font FreeSans -pointsize 30 -annotate +1150+900 'Caes
 rm Romia_Imperio.png Eusebius_of_Caesarea.jpg Eusebius.jpg Eusebius_leg.jpg Eusebius_leg2.jpg
 #+END_SRC
 
-#+ATTR_LATEX: :width 1.0\textwidth
-[[./imgs/Eusebius_final.jpg]]
-
-*** Details
-:PROPERTIES:
-:BEAMER_ENV: note
-:END:
-Illustrations from Wikimedia Commons.
 From the Wikipedia page on [[https://en.wikipedia.org/wiki/Eusebius][Eusebius]]:
 #+BEGIN_QUOTE
 Eusebius of Caesarea (ad 260/265 – 339/340), also known as Eusebius Pamphili, was a historian of Christianity, exegete, and Christian polemicist. He became the bishop of Caesarea Maritima about 314 AD. Together with Pamphilus, he was a scholar of the Biblical canon and is regarded as an extremely learned Christian of his time. He wrote Demonstrations of the Gospel, Preparations for the Gospel, and On Discrepancies between the Gospels, studies of the Biblical text.
@@ -509,11 +510,6 @@ Eusebius of Caesarea (ad 260/265 – 339/340), also known as Eusebius Pamphili, 
 According to Anthony Grafton and Megan Williams (2006) /Christianity and the Transformation of the Book/, The Belknap Press of Harvard University Press, his writings are crucial for our knowledge of the first three centuries of Christian history. /He brought several essential innovations to the book's organization like the cross-references/.
   
 ** Eusebian canons
-
-#+BEGIN_SRC sh :exports none :results silent
-cd imgs
-wget https://upload.wikimedia.org/wikipedia/commons/0/0e/Fol._10v-11r_Egmond_Gospels.jpg
-#+END_SRC
 
 #+ATTR_LATEX: :width 1.0\textwidth
 [[./imgs/Fol._10v-11r_Egmond_Gospels.jpg]]
@@ -527,6 +523,12 @@ Fol. 10v and 11r of the Egmond Gospels. Canon tables (900 CE).
 :END:
 
 Source: https://commons.wikimedia.org/wiki/File:Fol._10v-11r_Egmond_Gospels.jpg. Public Domain.
+
+#+BEGIN_SRC sh :results silent
+cd imgs
+wget https://upload.wikimedia.org/wikipedia/commons/0/0e/Fol._10v-11r_Egmond_Gospels.jpg
+#+END_SRC
+
 
 Quote from [[https://en.wikipedia.org/wiki/Eusebius#Biblical_text_criticism][Wikipedia]]:
 #+BEGIN_QUOTE
@@ -559,7 +561,37 @@ Over centuries, /codices/---that we often call /manuscripts/---will slowly evolv
 - index (XIIIth century).
 
 An interesting point: Torah's content got "fixed" before the /codex/ generalization and today Torah scrolls are still used.  
-   
+
+** Let us not forget China   
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Figure_W1_S2_6.jpg]]
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+The link between the /codex/ generalization, on the one hand, and the apparition of "navigation guides" like the table of content, the index, the running title, on the other hand as a counterpart in the Chinese civilization.
+
+In China, competitive examinations to become a high ranking state employee developed in the IXth century (CE). The main part of these exam was a paper on what we would now call general knowledge of the Classics where the students were asked to demonstrate their knowledge through appropriate quotations.
+
+To fulfill the need of "textbook" appropriate for this kind of examination what is called [[https://en.wikipedia.org/wiki/Leishu][leishus]] were produced. They are described as follows on Wikipedia: 
+#+BEGIN_QUOTE
+The leishu are composed of sometimes lengthy citations from other works and often contain copies of entire works, not just excerpts. The works are classified by a systematic set of categories, which are further divided into subcategories. Leishu may be considered anthologies, but are encyclopedic in the sense that they may comprise the entire realm of knowledge at the time of compilation.
+#+END_QUOTE   
+
+The efficient use of the leishu requires an indexing system, a table of content, etc. Very interestingly, the scroll will be abandoned and the codex will generalize in China around that time, as observed by Ann Blair in her book /TOO MUCH TO KNOW/, Yale Univ. Press, 2010 (pp. 28-31).
+ 
+Most of the leishus *were printed* (from the IXth century on!). The picture on the right side (a banknote printing plate) is there to remind us of who was (by far) the most advanced at that time. The Chinese were of course printing their leishus on paper that they discovered in the VIIIth century BCE.
+ 
+#+BEGIN_SRC sh :results silent
+cd imgs
+wget https://upload.wikimedia.org/wikipedia/commons/e/e5/Yongle_Dadian_Encyclopedia_1403.jpg
+wget https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Beijing.China_printing_museum.Plate_of_Paper_money.Northern_Song_Dynasty.jpg/615px-Beijing.China_printing_museum.Plate_of_Paper_money.Northern_Song_Dynasty.jpg -O Matrice_billet_song.jpg
+convert Yongle_Dadian_Encyclopedia_1403.jpg Matrice_billet_song.jpg +append -font FreeSans -pointsize 30 -gravity southwest -annotate +25-150 "Top: Yongle Dadian (1403) contains\n370 millions Chinese characters.\n\nRight: Banknote printing plate from\nNorthern Song Dynasty (960 – 1279)." Figure_W1_S2_6.jpg
+rm Yongle_Dadian_Encyclopedia_1403.jpg Matrice_billet_song.jpg
+#+END_SRC
+
 * Form text files to lightweight markup languages
 * Notes that are archived but can evolve with control version systems (CVS)
 * Finding your way in your notes: tags and indexing software
