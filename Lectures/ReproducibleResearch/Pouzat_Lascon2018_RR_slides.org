@@ -8,6 +8,7 @@
 #+SELECT_TAGS: export
 #+LATEX_CLASS: beamer
 #+LATEX_CLASS_OPTIONS: [presentation,bigger]
+#+LATEX_HEADER: \usepackage[normalem]{ulem}
 #+BEAMER_HEADER: \setbeamercovered{invisible}
 #+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Where are we ?}\tableofcontents[currentsection]\end{frame}}
 #+BEAMER_HEADER: \beamertemplatenavigationsymbolsempty
@@ -27,7 +28,9 @@
   generated the figures.
 #+END_QUOTE
 
+#+BEGIN_EXPORT latex
 \vspace{0.2cm}
+#+END_EXPORT
 Thoughts of Jon Claerbout "distilled" by Buckheit & Donoho (1995).
 
 ** What do we do as manuscript "producers"?
@@ -82,20 +85,26 @@ Clearly the classical journal article format cannot do the job.
 - Editors cannot publish two versions of each figure to satisfy different readers.
 - Many intricate analysis and modeling methods would require too long a description to fit the usual bounds of the printed paper.
 - We all have, moreover, a lot of different things to do and we cannot afford to systematically look at every piece of work as thoroughly as suggested above.
+#+BEGIN_EXPORT latex
 \vspace{0.1cm}
+#+END_EXPORT
 *We need are more systematic and more explicit ways to describe how the analysis (or modeling) was done*.
 
 ** The solution $\rightarrow$ Reproducible Research
 
 *Reproducible Research* (=RR=) or *reproducible data analysis* is an approach aiming at complementing classical printed scientific articles with *everything* required to independently reproduce the results they present.
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 "Everything" covers here: 
 - the data, 
 - the computer codes,
 - a precise description of how the code was applied to the data. 
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 The "movement" started with what Economists have been calling *replication* since the early eighties to reach what is now called *reproducible research* in computational data analysis oriented fields like statistics and signal processing.
 
 * What is needed for Reproducible Research?
@@ -110,7 +119,9 @@ This section discusses a much wider issue than /reproducible research/ (RR). Imp
 
 [[./imgs/ManuscritAnnoteEtCoupe.png]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 A XIVth  century manuscript with the works of Aristotle owned by Nicasius de Planca (gallica.bnf.fr / Bibliothèque nationale de France).
 
 *** Notes 
@@ -125,7 +136,9 @@ The next two slides show a case of paramount importance for the History of Scien
 
 [[./imgs/GalileoManuscriptCoupe.png]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 Galileo Galilei's notes while observing Jupiter in January 1610 with his telescope (Wikimedia Commons).
 
 *** Notes 
@@ -137,7 +150,9 @@ The first observation was done on January 7 1610. Galileo Galilei first thought 
 ** 
 [[./imgs/GalileoManuscriptZoom.png]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 The small "stars" are in fact orbiting around Jupiter, *they are doing what the Moon does around the Earth* (Wikimedia Commons).
 
 *** Notes 
@@ -150,7 +165,9 @@ These observations lead Galileo to reject the geocentric hypothesis in favor of 
 
 [[./imgs/Placcius_cabinet_TabIV.png]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 Organizing notes Placcius' way (Placcius, Vincent, 1642-1699. /De arte excerpendi vom gelahrten Buchhalten/, 1689. Houghton Library, Harvard University.)
 
 *** Notes 
@@ -314,7 +331,9 @@ maae my escape through the topmost pane of the window.
 
 [[./imgs/LivredebordpenduickV.JPG]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 The logbook of Eric Tabarly during the San-Francisco / Tokyo transpacific ocean race in 1969.
 
 *** Notes 
@@ -327,14 +346,18 @@ This example is only superficially anecdotal. Information about the source can b
 #+ATTR_LATEX: :width 0.9\textwidth
 [[./imgs/LivredebordpenduickVzoom1.png]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 On the left side, Tabarly reports salient events like a ripped jib on March 21 at 11 pm. 
 
 ** 
 #+ATTR_LATEX: :width 0.8\textwidth
 [[./imgs/LivredebordpenduickVzoom2.png]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 On the right side, he computes his position (that was before GPS time!).
 
 *** Notes 
@@ -357,7 +380,9 @@ In the same vein, logbooks from slave ships give a lot of quantitative informati
 
 ** Avoid getting lost
 Notes generate an organizational problem:
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 - How can we structure our notes?
 - Can we index them, if yes, how?
 - How can we archive them while keeping the capability to make them evolve?
@@ -385,7 +410,9 @@ In the sequel we are going to give /tentative/ answers to the questions raised i
 - The books and notes organization.
 - The link between the concrete and organizational aspects.
 
+#+BEGIN_EXPORT latex
 \vspace{0.2cm}
+#+END_EXPORT
 We are going to discuss a lot books organization since the "navigation devices" designed for the latter: 
 - table of content,
 - index,
@@ -517,7 +544,9 @@ According to Anthony Grafton and Megan Williams (2006) /Christianity and the Tra
 #+ATTR_LATEX: :width 1.0\textwidth
 [[./imgs/Fol._10v-11r_Egmond_Gospels.jpg]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.2cm}
+#+END_EXPORT
 Fol. 10v and 11r of the Egmond Gospels. Canon tables (900 CE). 
 
 *** Details
@@ -602,7 +631,9 @@ rm Yongle_Dadian_Encyclopedia_1403.jpg Matrice_billet_song.jpg
 #+ATTR_LATEX: :width 1.0\textwidth
 [[./imgs/Placcius_cabinet_TabIV.png]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 Placcius' closet again (Placcius, Vincent, 1642-1699. /De arte excerpendi vom gelahrten Buchhalten/, 1689. Houghton Library, Harvard University.)
 
 *** Details
@@ -629,7 +660,9 @@ This last technique (pasting when making an anthology) was systematically used b
 #+ATTR_LATEX: :width 1.0\textwidth
 [[./imgs/MethodeLocke1.jpg]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 My own notebook is used here for illustration.
 
 *** Details
@@ -651,7 +684,9 @@ This method can be applied after note-taking, you just need to have few pages le
 #+ATTR_LATEX: :width 0.8\textwidth
 [[./imgs/MethodeLocke2.jpg]]
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 The last pages of my notebook with the index.
 
 *** Details
@@ -674,12 +709,166 @@ It is also a good idea to list the set of keywords used in the notebook on the p
 
 Since it is hard (for me at least) to use paper as a medium for note-taking, learning from "Newton's giants" should save us from reinventing the wheel (and getting it square).
 
+#+BEGIN_EXPORT latex
 \vspace{0.25cm}
+#+END_EXPORT
 We should nevertheless use numerical medium as much as possible (while keeping in mind what we just learned) since it provides:
 - more organizational and structural flexibility,
 - reliable archiving tools,
 - powerful indexing tools. 
 
 * Form text files to lightweight markup languages
+** Section introduction
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+We now start the "technical" part of this lecture with the tools that computers provide for note-taking like [[https://en.wikipedia.org/wiki/Text_file][text files]] and [[https://en.wikipedia.org/wiki/Lightweight_markup_language][lightweight markup languages]].
+
+** What is a /text file/ or /text format/? 
+- From a practical viewpoint, a [[https://en.wikipedia.org/wiki/Text_file][text files]] /gives something readable/ when opened with a [[https://en.wikipedia.org/wiki/Text_editor][text editor]].
+- A [[https://en.wikipedia.org/wiki/Text_editor][text editor]] enables us to create and modify text files (nice circular definition!). It's a software like:
+  + [[https://notepad-plus-plus.org/][Notepad++]] for =Windows=,
+  + [[https://wiki.gnome.org/Apps/Gedit][gedit]] for =Unix/Linux= systems (but it also runs on the other two),
+  + [[https://en.wikipedia.org/wiki/TextEdit][TextEdit]] for =MacOS=.
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT 
+- I'm mentioning only open source software since it is hard to do genuinely reproducible research with anything else.
+- A [[https://en.wikipedia.org/wiki/Word_processor][word precessor]] is more sophisticated than a /text editor/.
+- *Warning* the native format used by word processor is rarely a /text format/. =Word='s =doc= and =docx= files and =Libreoffice= =odt= files /are not text files/.
+
+** Example of a file that cannot be read with a text editor   
+
+#+ATTR_LATEX: :width 0.9\textwidth
+[[./imgs/pdf_opened_with_gedit.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+A =pdf= file (the file shown right now with a pdf reader) opened with =gedit=.
+
+** A text file opened with a text editor
+
+#+ATTR_LATEX: :width 0.9\textwidth
+[[./imgs/source_file_opened_with_gedit.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+A =markdown= file (a source file for this lecture) opened with =gedit=.
+
+** Why should we use text files?
+
+Characters contained in text files are now typically encoded in [[https://en.wikipedia.org/wiki/UTF-8][UTF-8]].
+
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+*This implies that*:
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+- It is "always" possible to read these files with a text editor /even years after their creation/.
+- [[https://en.wikipedia.org/wiki/Desktop_search][Desktop search]] and [[https://en.wikipedia.org/wiki/Concurrent_Versions_System][Concurrent Versions Systems]] (CVS) software work /very efficiently/ with them. 
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+*Unless you run into serious memory problems, use text files, always.*
+
+** Problems with simple text files
+
+- The "simple" text file precludes the use of nice navigation tools like [[https://en.wikipedia.org/wiki/Hyperlink][hyperlinks]].
+- It is not possible to emphasize a word with a *bold* or an /italic/ font.
+- If several persons work on the same text, they can't correct each other by \sout{striking through} text.
+
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+These limitations, combined to the benefits of text files led computer scientists to develop [[https://en.wikipedia.org/wiki/Markup_language][markup languages]]. 
+
+** A trivial example is the HTML language.
+#+ATTR_LATEX: :width 0.9\textwidth
+[[./imgs/HTML_viewed_with_qutebrowser.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+Wikipedia [[https://en.wikipedia.org/wiki/HTML][HTML]] page viewed with [[http://www.qutebrowser.org/][qutebrowser]] [[https://en.wikipedia.org/wiki/Web_browser][web browser]]. 
+
+** An HTML file opened with a text editor
+#+ATTR_LATEX: :width 0.9\textwidth
+[[./imgs/HTML_opened_with_gedit.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+The Wikipedia HTML page opened with =gedit=. Markup languages were not designed to be read by humans.
+
+*** Note   
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+The content of files written with a markup language are typically processed by a dedicated software like a web browser or converted into a format for which readers are available like \LaTeX{} files that get "compiled" into PDF files.
+
+If you look carfuly the last figure, you can find the text of the first main paragraph of the previous figure.
+
+**   
+We can summarize our problem as follows:
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+- Text files are attractive for note-taking.
+- Markup languages provide a much better "reading experience" when viewed with the proper "browser".
+- Markup language files are text files, *but* require usually a dedicated editing software if we want to modify them.
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+Is it possible to combine the benefits of "simple" text files with the reading comfort of markup languages?
+   
+** Lightweight markup languages: the idea
+
+A [[https://en.wikipedia.org/wiki/Lightweight_markup_language][lightweight markup language]] is:
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+- A /markup language/ with a *simple syntax*.
+- A language designed to be *easily edited* with a /text editor/.
+- A language *easily read* without a browser.
+
+** =Markdown='s example 
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Markdown_syntax.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+The syntax basics from [[https://en.wikipedia.org/wiki/Markdown][Wikipedia]], see also "Mastering Markdown" (a 3 min read) from [[https://guides.github.com/features/mastering-markdown/][GitHub]].
+
+** =Markdown= is not the only lightweight markup language 
+
+Among the "most popular":
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+- [[https://en.wikipedia.org/wiki/MediaWiki#Markup][MediaWiki]] used by Wikipedia (but files are not stored in text format!).
+- [[https://www.dokuwiki.org/dokuwiki#][DokuWiki]] like =MediaWiki= but stored in text format.
+- [[http://docutils.sourceforge.net/rst.html][reStructuredText]] used for the [[https://www.python.org/][python]] documentation.
+- [[http://www.methods.co.nz/asciidoc/][AsciiDoc]].
+- [[https://orgmode.org/][Org mode]], my favorite, but it requires learning [[https://www.gnu.org/software/emacs/][emacs]] (a good thing to do, if you have time for it).
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+The good news is that you don't need to be too nervous about choosing the "right" language, thanks to [[https://pandoc.org/][pandoc]] you can convert one into any other!
+
+** Section's summary
+
+Thanks to lightweight markup languages we will be able to:
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+- Work mostly with text files.
+- Write our notes quickly with any editor.
+- Organize our notes.
+
 * Notes that are archived but can evolve with control version systems (CVS)
 * Finding your way in your notes: tags and indexing software
