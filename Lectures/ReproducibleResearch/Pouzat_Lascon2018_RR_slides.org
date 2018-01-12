@@ -870,5 +870,104 @@ Thanks to lightweight markup languages we will be able to:
 - Write our notes quickly with any editor.
 - Organize our notes.
 
-* Notes that are archived but can evolve with control version systems (CVS)
+* Notes that are archived but can evolve with concurrent version systems (CVS)
+** Introduction of this section
+- The tools we are going to discuss should appeal to a much wider audience than the reproducible research community. 
+- Anyone working on a text is concerned, even more so when this work is done in collaboration.
+- *The longevity issue of notes and texts is in noway new*.
+- The humanists and scholars of the early modern period who specialized in text compilations were literally obsessed by this problem and used it to justify their work.
+- Their solution was to use multiple copies, as we now do with a different medium.
+- We should nevertheless remain humble, the paper (and parchment) medium used by humanists as demonstrated its capability to last.
+- When it comes to making notes evolve, I think we can say that some real progress was recently made.
+ 
+** The nightmare: changing a text on paper medium
+
+*** 
+:PROPERTIES:
+:BEAMER_COL: 0.48
+:BEAMER_ENV: block
+         :END:
+
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Pierre_Ambroise_Choderlos_de_Laclos_Les_Liaisons_dangereuses.png]]
+
+*** 
+:PROPERTIES:
+:BEAMER_COL: 0.48
+:BEAMER_ENV: block
+         :END:
+
+Manuscript of /Dangerous Liaisons/ (/Les liaisons dangereuses/) by Pierre Choderlos de Laclos (p. 258, BNF Gallica).
+
+There is clearly a very limited number of changes one can bring in that way!
+
+** Changing a text with a word processor
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/LibreOffice_notes_pour_CLOM_diff_origine.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+An early version of this lecture (in French) edited with =LibreOffice=.
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+We see a way of working in collaboration on a text: most word processing software have a way to follow changes brought to the text.
+
+This is not the solution I recommend but this is probably the most widely known concurrent version facility.
+
+Notice the buttons at the bottom left. They appear when you navigate in /view/ -> /Toolbars/ -> /track changes/.
+
+This "solution":
+- is easy to implement,
+- /does not generate text files/
+- does not take care of archiving the files.
+
+** Making change with a "wiki engine"
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Dokuwiki_notes_pour_CLOM.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+The personal wiki (using the [[https://www.dokuwiki.org/dokuwiki#][dokuwiki]] engine) I experienced while preparing the French version of this lecture.
+
+*** Details
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+I started using [[https://www.dokuwiki.org/dokuwiki#][dokuwiki]] for this lecture, it is therefore simple enough to learn.
+
+=Dokuwiki= uses a test format.
+
+**  
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Dokuwiki_notes_pour_CLOM_historique2.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+Clicking /previous versions/ (/anciennes révisions/) gives access to the list of changes done when and by whom. If I know select two versions...
+
+** 
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/Dokuwiki_notes_pour_CLOM_diff.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+I see the differences between the two versions. You obtain the same thing on Wikipedia by clicking on /View History/.
+
+** Pros and cons
+
+- A solution with a strong record for collaborative projects (Wikipedia).
+- A text format is used when working with =Dokuwiki=.
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+
+- A single page can be modified at a time.
+
 * Finding your way in your notes: tags and indexing software
