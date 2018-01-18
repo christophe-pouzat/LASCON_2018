@@ -90,7 +90,7 @@ Clearly the classical journal article format cannot do the job.
 #+END_EXPORT
 *We need are more systematic and more explicit ways to describe how the analysis (or modeling) was done*.
 
-** The solution $\rightarrow$ Reproducible Research
+** The solution: Reproducible Research
 
 *Reproducible Research* (=RR=) or *reproducible data analysis* is an approach aiming at complementing classical printed scientific articles with *everything* required to independently reproduce the results they present.
 
@@ -870,7 +870,7 @@ Thanks to lightweight markup languages we will be able to:
 - Write our notes quickly with any editor.
 - Organize our notes.
 
-* Notes that are archived but can evolve with concurrent version systems (CVS)
+* Notes that are archived but can evolve with version control systems
 ** Introduction of this section
 - The tools we are going to discuss should appeal to a much wider audience than the reproducible research community. 
 - Anyone working on a text is concerned, even more so when this work is done in collaboration.
@@ -949,7 +949,7 @@ I started using [[https://www.dokuwiki.org/dokuwiki#][dokuwiki]] for this lectur
 #+BEGIN_EXPORT latex
 \vspace{0.25cm}
 #+END_EXPORT
-Clicking /previous versions/ (/anciennes révisions/) gives access to the list of changes done when and by whom. If I know select two versions...
+Clicking /previous versions/ (/anciennes révisions/) gives access to the list of changes done when and by whom. If I now select two versions...
 
 ** 
 #+ATTR_LATEX: :width 1.0\textwidth
@@ -970,4 +970,10 @@ I see the differences between the two versions. You obtain the same thing on Wik
 
 - A single page can be modified at a time.
 
+** Version Control Systems
+I now come to the most "sophisticated" solution:
+- A dedicated software, [[https://git-scm.com/][git]], is used to manage the successive versions of a *set* of files in *different formats* (text, images, etc.). In fact files arborizations can be managed.
+- =git= like software require a repository, that can be built on the user's computer, but that is usually on a dedicated server like [[https://github.com/][GitHub]] or [[https://gitlab.com/][GitLab]].
+- The repository allows several people to work on the same project and to exchange their modifications. Each project member has a *full copy* of the repository (dating back to his/her last /synchronization/).
+  
 * Finding your way in your notes: tags and indexing software
