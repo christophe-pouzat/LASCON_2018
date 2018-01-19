@@ -892,7 +892,7 @@ Thanks to lightweight markup languages we will be able to:
 - Write our notes quickly with any editor.
 - Organize our notes.
 
-* Notes that are archived but can evolve with version control systems
+* Notes (and codes) that are archived but can evolve with version control systems
 ** Introduction of this section
 - The tools we are going to discuss should appeal to a much wider audience than the reproducible research community. 
 - Anyone working on a text is concerned, even more so when this work is done in collaboration.
@@ -1015,4 +1015,23 @@ The [[https://gitlab.com/][GitLab]] interface containing the files of this prese
 #+END_EXPORT
 Modifications are easily visualized...
 
+** 
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/GitLab_Formating.png]]
 
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+Text files entered with a lightweight markup language get automatically formatted (an example with =org=).
+
+** Pros and cons
+
+- A "sophisticated" approach that takes a bit more time to learn and master than the other two.
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+
+- A strong record for collaborative projects (Linux kernel,...).
+- Can manage modifications on several files at once.
+- A centralized version *copied* by each member of the project.
+ 
