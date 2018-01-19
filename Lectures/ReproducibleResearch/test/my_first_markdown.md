@@ -1,9 +1,24 @@
+Typing:
+
+> It's very easy to make some words **bold** and other words *italic* with Markdown. 
+> You can even [link to Lascon's program!](http://sisne.org/lascon-vii/program/?lang=en)
+
+Gives:
+
 It's very easy to make some words **bold** and other words *italic* with Markdown. 
 You can even [link to Lascon's program!](http://sisne.org/lascon-vii/program/?lang=en)
 
-# This is an <h1> tag
-## This is an <h2> tag
-###### This is an <h6> tag
+Typing:
+
+> # This is an `<h1>` tag
+> ## This is an `<h2>` tag
+> ###### This is an `<h6>` tag
+
+Gives:
+
+# This is an `<h1>` tag
+## This is an `<h2>` tag
+###### This is an `<h6>` tag
 
 *This text will be italic*
 _This will also be italic_
