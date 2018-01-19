@@ -213,3 +213,16 @@ To add a comment (or a tag within a comment) use:
 <!-- This is a comment -->
 <!-- :tutorial: -->
 #+END_EXAMPLE 
+* Finding your way in your files :export:
+** Desktop search software
+Use a desktop search software like [[http://docfetcher.sourceforge.net/en/index.html][DocFetcher]] (platform independent) or [[https://wiki.gnome.org/Projects/Tracker][Tracker]] (Unix/Linux) or anyone you like.
+** Add tags
+Add tags especially to files that are not in text format. There is an ISO standard called [[https://en.wikipedia.org/wiki/Extensible_Metadata_Platform][Extensible Metadata Platform]] that specifies how one can add meta-data to image and PDF files. Software like:
+- [[https://sno.phy.queensu.ca/~phil/exiftool/][exiftool]]
+- [[http://www.exiv2.org/getting-started.html][Exiv2]]
+allow us to access and modify images metadata.
+* Nice general data formats
+We will come back to that but:
+- The Flexible Image Transport System ([[https://fits.gsfc.nasa.gov/][FITS]]) formats with the [[https://pythonhosted.org/pyfits/][PyFITS]] Python module.
+- The [[https://support.hdfgroup.org/HDF5/][HDF5]] formats with the [[https://github.com/h5py/h5py][h5py]] Python module.
+Work well.
