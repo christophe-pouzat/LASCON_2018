@@ -134,10 +134,11 @@ _You **can** combine them_
 
 ** Images
 
-Start by downloading the Markdown logo from Wikipedia with, for instance:
+Start by downloading the Markdown logo from Wikipedia with, for instance (this requires [[https://www.gnu.org/software/wget/][wget]] and [[http://www.imagemagick.org/script/index.php][ImageMagick]]):
 
 #+BEGIN_SRC bash :eval never
 wget https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg
+convert Markdown-mark.svg Markdown-mark.png
 #+END_SRC
 
 Then add in you file a command inserting the image with a caption:
@@ -195,3 +196,11 @@ First Header | Second Header
 Content from cell 1 | Content from cell 2
 Content in the first column | Content in the second column
 #+END_EXAMPLE
+
+** Convert Markdown to (almost) anything else
+
+Download and install [[https://pandoc.org/][Pandoc]]!
+
+** Edit Markdown files
+
+Most text editors have now a Markdown mode.
