@@ -94,9 +94,9 @@ Keep going by opening the file and...
 ** Headers
 
 #+BEGIN_EXAMPLE
-# This is an <h1> tag
-## This is an <h2> tag
-###### This is an <h6> tag
+# This is a section heading
+## This is a sub-section heading
+###### This is a 6th order section heading
 #+END_EXAMPLE 
 
 ** Emphasis
