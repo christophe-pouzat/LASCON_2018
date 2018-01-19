@@ -24,7 +24,7 @@ _You **can** combine them_
    1. Item 3a
    1. Item 3b
 
-![Markdown Logo](./Markdown-mark.svg)
+![Markdown Logo](./Markdown-mark.png)
 
 https://daringfireball.net/projects/markdown/ - automatic!
 [Official Markdown website](https://daringfireball.net/projects/markdown/)
