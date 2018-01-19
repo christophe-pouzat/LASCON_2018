@@ -108,6 +108,28 @@ Clearly the classical journal article format cannot do the job.
 The "movement" started with what Economists have been calling *replication* since the early eighties to reach what is now called *reproducible research* in computational data analysis oriented fields like statistics and signal processing.
 
 * What is needed for Reproducible Research?
+** The key "ingredients"
+In my view:
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+- Good note-taking.
+- Tools and tricks making good note-taking "easy".
+- Thorough code documentation.
+- "General" data formats.
+- Ending with a "fully algorithmic" description of the data analysis (and simulation).
+- Use software that are likely to still be around 15 to 20 years from now.
+- *Use free software*.
+
+** Learn from Unix "philosophy"  
+Before looking for the last "fancy stuff", try solutions with a serious record like what Arnold Robins exposes in "[[http://www.linuxjournal.com/article/2762][What's GNU]]":
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+- Break down "complex" analysis into simple steps (/avoid monolithic codes/).
+- Implement each step as a separate program that takes its input from the /standard input/ (=stdin=) and sends its output to the /standard output/ (=stdout=); a *filter* in Unix jargon.
+- Try to stick to the *KISS* (Keep It Simple Stupid) approach for each program.
+ 
 * Note-taking concerns everyone
 ** Notes 
 :PROPERTIES:
@@ -975,5 +997,22 @@ I now come to the most "sophisticated" solution:
 - A dedicated software, [[https://git-scm.com/][git]], is used to manage the successive versions of a *set* of files in *different formats* (text, images, etc.). In fact files arborizations can be managed.
 - =git= like software require a repository, that can be built on the user's computer, but that is usually on a dedicated server like [[https://github.com/][GitHub]] or [[https://gitlab.com/][GitLab]].
 - The repository allows several people to work on the same project and to exchange their modifications. Each project member has a *full copy* of the repository (dating back to his/her last /synchronization/).
-  
-* Finding your way in your notes: tags and indexing software
+
+**   
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/GitLab_Commits.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+The [[https://gitlab.com/][GitLab]] interface containing the files of this presentation.
+** 
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/GitLab_Diff.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+Modifications are easily visualized...
+
+
