@@ -204,3 +204,12 @@ Download and install [[https://pandoc.org/][Pandoc]]!
 ** Edit Markdown files
 
 Most text editors have now a Markdown mode.
+
+** Add a comment (or a tag)
+
+To add a comment (or a tag within a comment) use:
+
+#+BEGIN_EXAMPLE
+<!-- This is a comment -->
+<!-- :tutorial: -->
+#+END_EXAMPLE 
