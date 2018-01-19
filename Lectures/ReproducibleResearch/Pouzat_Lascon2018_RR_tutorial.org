@@ -77,3 +77,121 @@ How do you guys take notes? When you listen to a talk / lecture, when you read a
 Does anyone use PDF annotation on a regular basis?
 
 * Excercise with Markdown :export:
+What follows is an adaptation of [[https://guides.github.com/features/mastering-markdown/][Mastering Markdown]].
+
+** Let's start our first Markdown file!
+Open a text file, that you can call =my_first_markdown.md= or anything else you like, with your favorite text editor and type:
+
+#+BEGIN_EXAMPLE
+It's very easy to make some words **bold** and other words *italic* with Markdown. 
+You can even [link to Lascon's program!](http://sisne.org/lascon-vii/program/?lang=en)
+#+END_EXAMPLE
+
+Save the file, upload it (commit it) to you GitHub repository and visualize it with GitHub.
+
+Keep going by opening the file and...
+
+** Headers
+
+#+BEGIN_EXAMPLE
+# This is an <h1> tag
+## This is an <h2> tag
+###### This is an <h6> tag
+#+END_EXAMPLE 
+
+** Emphasis
+
+#+BEGIN_EXAMPLE
+*This text will be italic*
+_This will also be italic_
+
+**This text will be bold**
+__This will also be bold__
+
+_You **can** combine them_
+#+END_EXAMPLE
+
+** Lists
+
+*** Unordered 
+
+#+BEGIN_EXAMPLE
+- Item 1
+- Item 2
+  - Item 2a
+  - Item 2b
+#+END_EXAMPLE
+
+*** Ordered
+
+#+BEGIN_EXAMPLE
+1. Item 1
+1. Item 2
+1. Item 3
+   1. Item 3a
+   1. Item 3b
+#+END_EXAMPLE
+
+** Images
+
+Start by downloading the Markdown logo from Wikipedia with, for instance:
+
+#+BEGIN_SRC bash :eval never
+wget https://upload.wikimedia.org/wikipedia/commons/4/48/Markdown-mark.svg
+#+END_SRC
+
+Then add in you file a command inserting the image with a caption:
+
+#+BEGIN_EXAMPLE
+![Markdown Logo](Markdown-mark.svg)
+#+END_EXAMPLE
+
+** Links
+
+To insert a link, add:
+
+#+BEGIN_EXAMPLE
+https://daringfireball.net/projects/markdown/ - automatic!
+[Official Markdown website](https://daringfireball.net/projects/markdown/)
+#+END_EXAMPLE
+
+** Blockquotes
+
+If you want to site a famous statement of [[http://cristal.inria.fr/~weis/info/commandline.html][In the Beginning was the Command Line]] by Neal Stepheson (a must read):
+
+#+BEGIN_EXAMPLE
+> emacs outshines all other editing software in approximately the same 
+> way that the noonday sun does the stars. It is not just bigger and 
+> brighter; it simply makes everything else vanish.
+#+END_EXAMPLE
+
+** Inline code
+
+#+BEGIN_EXAMPLE
+In [Python 3](https://docs.python.org/3/tutorial/index.html) tutorial
+the first Python expression is `the_world_is_flat = True`.  
+#+END_EXAMPLE
+
+** Some Markdown flavors (like the GitHub one) provide many additional features
+
+*** Syntax highlighting
+
+#+BEGIN_EXAMPLE
+Section [5.1.3 of Python's tutorial](https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions)
+introduces the _list comprehension_ with:
+
+```python
+squares = [x**2 for x in range(10)]
+``` 
+#+END_EXAMPLE
+
+*** Tables
+
+You can create tables by assembling a list of words and dividing them with hyphens =-= (for the first row), and then separating each column with a pipe =|=:
+
+#+BEGIN_EXAMPLE
+First Header | Second Header
+------------ | -------------
+Content from cell 1 | Content from cell 2
+Content in the first column | Content in the second column
+#+END_EXAMPLE
