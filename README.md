@@ -2,17 +2,14 @@
 
 This repository contains data, slides, code, everything needed to "reproduce" my LASCON 2018 lectures and practical work.
 
-# The outline (for now):
+# The outline:
 
 - **Lecture 1 (2018-01-19)**: 
     + *Making one's work reproducible*.
 - **Lecture 2 (2018-01-22)**: 
     + *Basic statistics: sample description*.
-    + *Histograms: setting the bin width*.
-    + *Regressograms: setting the bin width*.
+    + *Maximum Likelihood*.
 - **Lecture 3 (2018-01-23)**:
-    + *Fitting models to data: least squares and maximum likelihood*.
-    + *Application to Hodgkin and Huxley*.
-    + *Dealing with differential equations*.
+    + *Spike Sorting*.
 - **Lecture 4 (2018-01-24)**:
     + *Stochastic neuronal discharge models and their inference*.
