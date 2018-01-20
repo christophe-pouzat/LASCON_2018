@@ -7,8 +7,7 @@ This repository contains data, slides, code, everything needed to "reproduce" my
 - **Lecture 1 (2018-01-19)**: 
     + *Making one's work reproducible*.
 - **Lecture 2 (2018-01-22)**: 
-    + *Basic statistics: sample description*.
-    + *Maximum Likelihood*.
+    + *A glimpse of the Statistician's toolbox*.
 - **Lecture 3 (2018-01-23)**:
     + *Spike Sorting*.
 - **Lecture 4 (2018-01-24)**:
