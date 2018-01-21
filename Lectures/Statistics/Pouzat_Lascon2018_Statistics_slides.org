@@ -23,6 +23,19 @@
 set terminal pngcairo size 1000,1000
 #+END_SRC
 
+#+NAME: stderr-redirection
+#+BEGIN_SRC emacs-lisp :exports none
+;; Redirect stderr output to stdout so that it gets printed correctly (found on
+;; http://kitchingroup.cheme.cmu.edu/blog/2015/01/04/Redirecting-stderr-in-org-mode-shell-blocks/
+(setq org-babel-default-header-args:sh
+      '((:prologue . "exec 2>&1") (:epilogue . ":"))
+      )
+(setq org-babel-use-quick-and-dirty-noweb-expansion t)
+#+END_SRC
+
+#+RESULTS: stderr-redirection
+: t
+
 * Introduction :export:
 ** What are we going to talk about? 
 - Descriptive statistics that are *robust*: =median=, =median absolute deviation=, =five-number summary=.
@@ -99,7 +112,7 @@ If we remove the *outlier*, 28.95, we get:
 
 #+NAME: copper-fig
 #+HEADERS: :file imgs/copper_fig.png 
-#+BEGIN_SRC gnuplot :exports both :var data=copper-table :cache no
+#+BEGIN_SRC gnuplot :var data=copper-table :cache no
 unset key
 unset border
 unset label
@@ -193,3 +206,4 @@ These observations quickly lead to the *quantal release* model of synaptic trans
 - The data can be found in the appendix of a book by David Cox and Peter Lewis (1966) /The Statistical Analysis of Series of Events/ who thank Katz and Miledi for providing the data and who wrongly describe them as measurements between /nerve impulses/ (this is at least what I concluded when I tried to figure out how intervals between nerve impulses--from a single axon--could follow so perfectly a Poisson distribution).
 - The data reappear in two recent and excellent books by Larry Wasserman (/All of Statistics/, 2004 and /All of Nonparametric Statistics/, 2006).
 - They can be downloaded from L. Wasserman website: [[http://www.stat.cmu.edu/~larry/all-of-nonpar/]].
+
