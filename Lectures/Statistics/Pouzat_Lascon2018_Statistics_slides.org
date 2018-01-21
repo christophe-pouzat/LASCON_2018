@@ -35,7 +35,7 @@ set terminal pngcairo size 1000,1000
 - Robust statistics are "well behaved" even when something goes wrong.
 - We will illustrate what that means with robust versions of the classical /location/ and /scale/ parameters:
   + the *median* instead of the  /mean/,
-  + the *median absolute deviation* instead of the /standard deviation/.  
+  + the *median absolute deviation* (MAD) instead of the /standard deviation/.  
 
 ** An example
 24 determinations of the copper content in the wholemeal floor (in parts per million) sorted in ascending order (example 1.1 of Maronna, Martin & Yohai, /Robust Statistics. Theory and Methods./ 2006 J. Wiley):
@@ -98,14 +98,64 @@ If we remove the *outlier*, 28.95, we get:
 
 #+NAME: copper-fig
 #+HEADERS: :file imgs/copper_fig.png 
-#+BEGIN_SRC gnuplot :exports both :var data=copper-table :cache yes
+#+BEGIN_SRC gnuplot :exports both :var data=copper-table :cache no
 unset key
 unset border
-unset labels
+unset label
 set zeroaxis lt -1
 set ytics (-1,1)
+set arrow from 4.28,-0.04 to 4.28,0.0 lc 'red' lw 2
+set arrow from 3.21,0.04 to 3.21,0.0 lc 'red' lw 2
+set arrow from 3.38,-0.04 to 3.38,0.0 lc 'blue' lw 2
+set arrow from 3.37,0.04 to 3.37,0.0 lc 'blue' lw 2
 plot [2:7] [-0.05:0.2] data using 1:(0.05*$2) pt 6 ps 2 lc 'black'
 #+END_SRC
 
-#+RESULTS[47cd48839e6ae6d23451dbd40b79a6705342ec9a]: copper-fig
+#+RESULTS: copper-fig
 [[file:imgs/copper_fig.png]]
+
+
+** 
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/copper_fig.png]]
+
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+The data with the outlier out of scale. Bottom: mean (red) and median (blue) computed with the outlier. Top: mean (red) and median (blue) computed /without/ the outlier.
+
+** What is the MAD?
+
+- We have just seen that using a median instead of a mean "stabilizes" the results (understand: make the result look the same when some observations are removed).
+- We want to adapt this idea to the statistics characterizing the /scale/ or /spread/ of the data for which the /standard deviation/ (SD) is usually used.
+- The SD is moreover obtained from the square root of a mean of *squared differences* (the difference between each individual observation and the sample mean). If one observation is a genuine outlier /it will dominate the estimate/.
+** 
+- The /Median Absolute Deviation/ addresses both issues.
+- It is proportional to the median of the absolute deviations with respect to the median:\[\mathtt{MAD} = \frac{1}{0.67449} \, \mathtt{median}\left(|X_i - \mathtt{median}(X)|\right)\, ,\] where $X=\{X_1,\ldots,X_n\}$ is the sample.
+- The division by 0.67449 makes the MAD equal to the SD (on average) when the sample is drawn from a Gaussian.
+- For the copper data, the SD is 5.30 with the complete sample and becomes 0.69 when the outlier is removed.
+- *For the same sample, the MAD is 0.53 with the complete sample and becomes 0.50 when the outlier is removed*.
+ 
+** 
+- *When you work with real data use the median instead of the mean and the MAD instead of the SD* unless you are pretty sure that your sample contains no "pathological" observations.
+- We will see that at work on neurophysiological data when we will discuss spike sorting.
+
+** The five-numbers summary
+This is a set of statistics that turns out to be very useful to summarize large data set. It is:
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+- The /minimum/ of the sample.
+- The /first quartile/.
+- The /median/ (second /quartile/).
+- The /third quartile/
+- The /maximum/ of the sample.
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+The /inter quartile range/ (IQR), the difference between the third and first quartile is another robust estimator of the spread of the data.
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+
+*When working with large datasets my recommendation is to compute systematically the five-numbers summary and the MAD. That should appear in your lab-book.* 
