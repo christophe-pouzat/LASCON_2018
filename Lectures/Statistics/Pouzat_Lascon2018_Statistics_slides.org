@@ -8,6 +8,7 @@
 #+SELECT_TAGS: export
 #+LATEX_CLASS: beamer
 #+LATEX_CLASS_OPTIONS: [presentation]
+#+LATEX_HEADER: \usepackage{dsfont}
 #+BEAMER_HEADER: \setbeamercovered{invisible}
 #+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Where are we ?}\tableofcontents[currentsection]\end{frame}}
 #+BEAMER_HEADER: \beamertemplatenavigationsymbolsempty
@@ -158,4 +159,37 @@ The /inter quartile range/ (IQR), the difference between the third and first qua
 \vspace{0.25cm}
 #+END_EXPORT
 
-*When working with large datasets my recommendation is to compute systematically the five-numbers summary and the MAD. That should appear in your lab-book.* 
+*When working with large datasets my recommendation is to compute systematically the five-numbers summary and the MAD. These statistics should appear in your lab-book.* 
+
+** The Empirical Cumulative Distribution Function (ECDF) 
+- The /Cumulative Distribution Function/ (CDF) of a random variable $X$ is by definition:\[F_X(x) \equiv \mathbb{P}(X \le x) \, ,\] where $\mathbb{P}(X \le x)$ stands for "the probability of the event $X \le x$".  
+- Let $X_1,\ldots,X_n \stackrel{\mathrm{IID}}{\sim} F_X$, the /Empirical Cumulative Distribution Function/ (ECDF) of the sample $\{X_1,\ldots,X_n\}$ is (by definition): \[\widehat{\mathrm{F}} \equiv \frac{1}{n} \sum_{i=1}^n \mathds{1}(X_i \le x) \, ,\] where \[\mathds{1}(X_i \le x) = \left\{ \begin{array}{lr} 1 & \mathrm{if}\quad X_i \le x\\ 0 & \mathrm{if}\quad X_i > x.\end{array} \right. \] 
+
+** 
+- The ECDF is a function that makes a "jump" of size 1/n at each observation $X_i$.
+- If we write $X_{(i)}$ the /order statistics/, that is:
+  + $X_{(1)} = \min \{X_1,\ldots,X_n\}$
+  + $X_{(2)} = \min \{X_1,\ldots,X_n\} \setminus \{X_{(1)}\}$ 
+  + $X_{(k)} = \min \{X_1,\ldots,X_n\} \setminus \{X_{(1)},\ldots,X_{(k-1)}\}$ 
+  + $X_{(n)} = \max \{X_1,\ldots,X_n\}$
+  the ECDF graph is piecewise constant, continuous on the right side with a limit of the left side (the function's value at a jump site, $X_{(k)}$, is the staircase's height on the right side of $X_{(k)}$).
+
+** An example with historical data 
+
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/FattKatz1952.png]]
+
+In 1952, Fatt and Katz reported the first observation at the frog neuro-muscular junction of *miniature end-plate potentials* (mEPPs).
+
+**  
+#+ATTR_LATEX: :width 1.0\textwidth
+[[./imgs/FattKatz1952Fig2.png]]
+
+These observations quickly lead to the *quantal release* model of synaptic transmission. Katz got the Nobel Prize for that (Paul Fatt was forgotten...).
+
+** The data
+
+- In their 1952 paper, Fatt and Katz study the time intervals between two successive mEPPs (the results are shown on their Figs. 11 & 12).
+- The data can be found in the appendix of a book by David Cox and Peter Lewis (1966) /The Statistical Analysis of Series of Events/ who thank Katz and Miledi for providing the data and who wrongly describe them as measurements between /nerve impulses/ (this is at least what I concluded when I tried to figure out how intervals between nerve impulses--from a single axon--could follow so perfectly a Poisson distribution).
+- The data reappear in two recent and excellent books by Larry Wasserman (/All of Statistics/, 2004 and /All of Nonparametric Statistics/, 2006).
+- They can be downloaded from L. Wasserman website: [[http://www.stat.cmu.edu/~larry/all-of-nonpar/]].
