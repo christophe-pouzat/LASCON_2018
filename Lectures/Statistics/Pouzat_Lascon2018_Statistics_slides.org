@@ -207,3 +207,31 @@ These observations quickly lead to the *quantal release* model of synaptic trans
 - The data reappear in two recent and excellent books by Larry Wasserman (/All of Statistics/, 2004 and /All of Nonparametric Statistics/, 2006).
 - They can be downloaded from L. Wasserman website: [[http://www.stat.cmu.edu/~larry/all-of-nonpar/]].
 
+** 
+
+#+ATTR_LATEX: :width 0.75\textwidth
+[[./imgs/Fatt_Katz_ECDF.png]]
+
+ECDF of the inter MEPP times from Fatt and Katz (1952).
+
+** Adding confidence bands
+
+- It is possible and even straightforward to add a *confidence band* to the graph of $\widehat{\mathrm{F}}$.
+- A *confidence band* is a domain that contains the *complete graph of the true CDF* with a probability set by us.
+- The Kolmogorov distribution can be used, but a simpler to compute distribution--leading to almost as tight bands--results from the *Dvoretzky-Kiefer-Wolfowitz* (DKW) inequality:\[\mathbb{P}\left(\sup_x \mid \mathrm{F}(x) - \widehat{\mathrm{F}}_{n}(x) \mid > \epsilon \right) \le 2\, e^{-2 n \epsilon^2} \, ,\] where $n$ is the sample size.
+- So if we want $\epsilon$ such that:\[\mathbb{P}\left(\sup_x \mid \mathrm{F}(x) - \widehat{\mathrm{F}}_{n}(x) \mid > \epsilon \right) \le 1-\alpha\] we find:\[\epsilon(\alpha) = \sqrt{\frac{1}{2 n}} \sqrt{\log\left(\frac{2}{1-\alpha}\right)} \, .\]
+ 
+
+** 
+#+ATTR_LATEX: :width 0.75\textwidth
+[[./imgs/Fatt_Katz_ECDF_band.png]]
+
+ECDF with 95% confidence band of the inter MEPP times from Fatt and Katz (1952).
+
+** Why use the ECDF?
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+- The only "data manipulation" involved is sorting (no bin width setting).
+- It is easy to get confidence bands making the ECDF a quantitative tool.
+- Histograms lead too easily to baseless conclusions. 

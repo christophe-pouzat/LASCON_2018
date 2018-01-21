@@ -24,6 +24,7 @@
 #+LaTeX_HEADER: \hypersetup{colorlinks=true,pagebackref=true}
 #+STARTUP: indent
 #+PROPERTY: header-args :eval no-export
+#+PROPERTY: header-args:python :session *tuto-stats* :results pp
 
 * Setup :noexport:
 #+NAME: org-latex-set-up
@@ -135,3 +136,190 @@ tail data/nerve.dat
 #+end_example
 
 We therefore see that we have 133 lines with 6 numbers (making 798 measurements) and on line, the last, with a single number, making a total of 799 measurements.
+
+** Starting =Python=
+I'm assuming from now that =Python= was started from the directory "above" data. 
+We are going to use =numpy= and many features of the =pylab= submodule of =matplotlib= so we start by importing them:
+
+#+NAME: import-numpy-pylab
+#+BEGIN_SRC python :session *tuto-stats*
+import numpy as np
+import matplotlib.pylab as plt
+#+END_SRC
+
+#+RESULTS: import-numpy-pylab
+
+To get interactive figures, type:
+
+#+NAME: set-ion
+#+BEGIN_SRC python :eval never
+plt.ion()
+#+END_SRC
+
+** Loading the data in =Python=
+
+The data are =tab= separated. We will therefore read each line one after the other and split it based on the tabs.
+
+#+NAME: load-nerve-data-into-python
+#+BEGIN_SRC python :session *tuto-stats*
+mepp = []
+for line in open("data/nerve.dat"):
+    elt = line.split('\t')
+    if elt[1] != '': # test if lines contains more than 1 element
+        mepp += [float(x) for x in line.split('\t')]
+    else:
+        mepp += [float(elt[0])]
+
+#+END_SRC
+
+#+RESULTS: load-nerve-data-into-python
+
+** Five numbers summary and median
+
+A somewhat crude way of getting the five-numbers summary of the data is to use function [[http://docs.scipy.org/doc/numpy/reference/generated/numpy.percentile.html#numpy.percentile][percentile]] from =numpy=:
+
+#+NAME: nerve-fns
+#+BEGIN_SRC python :session *tuto-stats* :exports both :results pp
+[np.round(np.percentile(mepp,q),2) for q in np.linspace(0,100,5)]
+#+END_SRC
+
+#+RESULTS: nerve-fns
+: [0.01, 0.07, 0.15, 0.3, 1.38]
+
+Since =numpy= doesn not have a =MAD= function we compute it from the formula: 
+
+#+NAME: nerve-mad
+#+BEGIN_SRC python :session *tuto-stats* :exports both :results pp
+mepp_median = np.median(mepp)
+np.median(np.abs(mepp-mepp_median))/0.67449
+#+END_SRC
+
+#+RESULTS: nerve-mad
+: 0.14826016694094796
+
+** Definition of an ECDF graph generating function
+
+We now define function =plot_ecdf=:
+
+#+NAME: plot_ecdf_definition
+#+BEGIN_SRC python :session *tuto-stats* :results silent
+def plot_ecdf(x, domain = None, color='black', lw=1):
+    """Generate a graph of the ECDF of x
+
+    Parameters
+    ----------
+    x: a list containing the sample
+    domain: a two elements list specifying the range of the abscissa
+    color: the color used for the graph
+    lw: the line width for the graph
+
+    Returns
+    -------
+    Nothing, the function is used for its side effect, a graph is
+    generated on the current device.
+    """
+    from math import floor,ceil
+    from numpy import sort, arange
+    import matplotlib.pylab as plt
+    X = sort(x)
+    n = len(x)
+    Y = arange(1,n+1)/float(n)
+    if domain is None:
+        domain = [floor(X[0]),ceil(X[n-1])]
+    for i in range(n-1):
+        plt.plot(X[i:(i+2)],[Y[i],Y[i]],color=color,lw=lw)
+    plt.xlim(domain)
+    plt.ylim([0,1])
+    plt.hlines(0,domain[0],X[0],colors=color,lw=lw)
+    plt.hlines(1,X[n-1],domain[1],colors=color,lw=lw)
+
+#+END_SRC 
+
+*** Use of the function
+
+#+NAME: nerve-data-ecdf-graph-preparation
+#+BEGIN_SRC python :session *tuto-stats* :exports none :results silent
+fig = plt.figure(figsize=(5,5))
+#+END_SRC
+
+#+NAME: nerve-data-ecdf-graph
+#+BEGIN_SRC python :session *tuto-stats* :results silent
+plot_ecdf(mepp)
+plt.xlabel("Inter MEPP Time (s)")
+plt.ylabel("Frequency")
+#+END_SRC
+
+#+NAME: nerve-data-ecdf-graph-finish
+#+BEGIN_SRC python :session *tuto-stats* :results file :exports results
+plt.savefig('imgs/Fatt_Katz_ECDF.png')
+plt.close()
+'imgs/Fatt_Katz_ECDF.png'
+#+END_SRC
+
+#+RESULTS: nerve-data-ecdf-graph-finish
+[[file:imgs/Fatt_Katz_ECDF.png]]
+
+** Definition of an ECDF band generating function
+
+#+NAME: plot_ecdf_band_definition
+#+BEGIN_SRC python :session *tuto-stats* :results silent
+def plot_ecdf_band(x, alpha = 0.95, domain = None, color='black', lw=1):
+    """Generate a graph of the ECDF of x
+
+    Parameters
+    ----------
+    x: a list containing the sample
+    alpha: the probability to have the complete true CDF within the band 
+    domain: a two elements list specifying the range of the abscissa
+    color: the color used for the graph
+    lw: the line width for the graph
+
+    Returns
+    -------
+    Nothing, the function is used for its side effect, a graph is
+    generated on the current device.
+    """
+    from math import floor,ceil,sqrt,log
+    from numpy import sort, arange, clip
+    import matplotlib.pylab as plt
+    X = sort(x)
+    n = len(x)
+    Y = arange(1,n+1)/float(n)
+    epsilon = sqrt(log(2/(1-alpha))/2/n)
+    U = clip(Y+epsilon,0,1)
+    L = clip(Y-epsilon,0,1)
+    if domain is None:
+        domain = [floor(X[0]),ceil(X[n-1])]
+    for i in range(n-1):
+        plt.plot(X[i:(i+2)],[U[i],U[i]],color=color,lw=lw)
+        plt.plot(X[i:(i+2)],[L[i],L[i]],color=color,lw=lw)
+    plt.xlim(domain)
+    plt.ylim([0,1])
+    plt.hlines(0,domain[0],X[0],colors=color,lw=lw)
+    plt.hlines(1,X[n-1],domain[1],colors=color,lw=lw)
+
+#+END_SRC 
+
+*** Use of the function
+
+#+NAME: nerve-data-ecdf-band-preparation
+#+BEGIN_SRC python :session *tuto-stats* :exports none :results silent
+fig = plt.figure(figsize=(5,5))
+#+END_SRC
+
+#+NAME: nerve-data-ecdf-band
+#+BEGIN_SRC python :session *tuto-stats* :results silent
+plot_ecdf_band(mepp)
+plt.xlabel("Inter MEPP Time (s)")
+plt.ylabel("Frequency")
+#+END_SRC
+
+#+NAME: nerve-data-ecdf-band-finish
+#+BEGIN_SRC python :session *tuto-stats* :results file :exports results
+plt.savefig('imgs/Fatt_Katz_ECDF_band.png')
+plt.close()
+'imgs/Fatt_Katz_ECDF_band.png'
+#+END_SRC
+
+#+RESULTS: nerve-data-ecdf-band-finish
+[[file:imgs/Fatt_Katz_ECDF_band.png]]
