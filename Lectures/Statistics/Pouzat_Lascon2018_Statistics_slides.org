@@ -290,7 +290,7 @@ As an example, we could assume:
 
 * The likelihood function  :export:
 ** The likelihood function 
-- In the previous section we defined a "model" as a probability (density) function depending on some parameters $\mathcal{M}(\hat{\theta})$ like \[\prod_{i=1}^n p(X_i; t_i, \theta) \quad \text{with} \quad (t_i)_{i=1,\ldots,n} \ge 0 \quad \text{fixed}\, .\]
+- In the previous section we defined a "model" as a probability (density) function depending on some parameters $\mathcal{M}(\theta)$ like \[\prod_{i=1}^n p(X_i; t_i, \theta) \quad \text{with} \quad (t_i)_{i=1,\ldots,n} \ge 0 \quad \text{fixed}\, .\]
 - Once data have been observed and "plugged-in" the probability density function: \[\prod_{i=1}^n p(x_i; t_i, \theta) \quad \text{with} \quad (t_i,\textcolor{red}{x_i})_{i=1,\ldots,n} \ge 0 \quad \text{fixed}\, ,\] we can view this object as a function of $\theta$.
 - *The likelihood function is "just" that: the probability density applied to "fixed" data, viewed as a function of the model parameters, $L(\theta)$.* 
 ** Variations

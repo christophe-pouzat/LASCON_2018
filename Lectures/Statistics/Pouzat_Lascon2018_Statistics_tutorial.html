@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-01-22 lun. 18:15 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A glimpse of the Statistician's toolbox: Tutorial</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christophe Pouzat" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">A glimpse of the Statistician's toolbox: Tutorial</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org5564cf6">1. The ECDF</a>
+<ul>
+<li><a href="#org61366ef">1.1. Getting Fatt and Katz data</a></li>
+<li><a href="#org189492a">1.2. Starting <code>Python</code></a></li>
+<li><a href="#org8518ef3">1.3. Loading the data in <code>Python</code></a></li>
+<li><a href="#org890a5fa">1.4. Five numbers summary and median</a></li>
+<li><a href="#org56e08ab">1.5. Definition of an ECDF graph generating function</a>
+<ul>
+<li><a href="#orgd1812a1">1.5.1. Use of the function</a></li>
+</ul>
+</li>
+<li><a href="#org17513e8">1.6. Definition of an ECDF band generating function</a>
+<ul>
+<li><a href="#org12d98c9">1.6.1. Use of the function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org8be6584">2. The Likelihood</a>
+<ul>
+<li><a href="#org3f00d44">2.1. Making the first illustrative figure</a></li>
+<li><a href="#org2f64fa1">2.2. Definition of a log-likelihood "constructor" function</a></li>
+<li><a href="#orgaac92d1">2.3. Make the first figure of \(r(\tau)\)</a></li>
+<li><a href="#orgb95c6c9">2.4. Do that with 9 other samples and plot all the \(r(\tau)\) together</a></li>
+<li><a href="#orgbe69106">2.5. Do that with the same samples but using 8 observatoins</a></li>
+</ul>
+</li>
+<li><a href="#org67ffffd">3. MLE</a>
+<ul>
+<li><a href="#org890ecb2">3.1. Doing the simulation with the two estimators</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org5564cf6" class="outline-2">
+<h2 id="org5564cf6"><span class="section-number-2">1</span> The ECDF</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-org61366ef" class="outline-3">
+<h3 id="org61366ef"><span class="section-number-3">1.1</span> Getting Fatt and Katz data</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+To keep things "organized" I create a sub-directory that I call <code>data</code> before downloading the dataset there:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="orgac84c13">mkdir data
+<span style="color: #729fcf;">cd</span> data
+wget http://www.stat.cmu.edu/~larry/all-of-nonpar/=data/nerve.dat
+</pre>
+</div>
+
+<p>
+It then a good idea to check that there is no obvious corruption (looking at the first 10 lines with program <code>head</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="org86ab11f">head data/nerve.dat
+</pre>
+</div>
+
+<pre class="example">
+0.21	0.03	0.05	0.11	0.59	0.06
+0.18	0.55	0.37	0.09	0.14	0.19
+0.02	0.14	0.09	0.05	0.15	0.23
+0.15	0.08	0.24	0.16	0.06	0.11
+0.15	0.09	0.03	0.21	0.02	0.14
+0.24	0.29	0.16	0.07	0.07	0.04
+0.02	0.15	0.12	0.26	0.15	0.33
+0.06	0.51	0.11	0.28	0.36	0.14
+0.55	0.28	0.04	0.01	0.94	0.73
+0.05	0.07	0.11	0.38	0.21	0.49
+</pre>
+
+<p>
+The data are organized on 6 columns, the times (intervals between successive mEPPs, read from left to right and from top to bottom) are given in seconds. The number of lines in the file is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="org1b01ec3">wc -l data/nerve.dat
+</pre>
+</div>
+
+<pre class="example">
+134 data/nerve.dat
+
+</pre>
+
+<p>
+We also check the end of the file with program <code>tail</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell" id="orgb6fe708">tail data/nerve.dat
+</pre>
+</div>
+
+<pre class="example">
+0.07	0.19	0.11	0.10	0.17	0.24
+0.01	0.13	0.21	0.03	0.39	0.01
+0.27	0.19	0.02	0.21	0.04	0.10
+0.06	0.48	0.12	0.15	0.12	0.52
+0.48	0.29	0.57	0.22	0.01	0.44
+0.05	0.49	0.10	0.19	0.44	0.02
+0.72	0.09	0.04	0.02	0.02	0.06
+0.22	0.53	0.18	0.10	0.10	0.03
+0.08	0.15	0.05	0.13	0.02	0.10
+0.51					
+</pre>
+
+<p>
+We therefore see that we have 133 lines with 6 numbers (making 798 measurements) and on line, the last, with a single number, making a total of 799 measurements.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org189492a" class="outline-3">
+<h3 id="org189492a"><span class="section-number-3">1.2</span> Starting <code>Python</code></h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+I'm assuming from now that <code>Python</code> was started from the directory "above" data. 
+We are going to use <code>numpy</code> and many features of the <code>pylab</code> submodule of <code>matplotlib</code> so we start by importing them:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1d8ef59"><span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+<span style="color: #729fcf; font-weight: bold;">import</span> matplotlib.pylab <span style="color: #729fcf; font-weight: bold;">as</span> plt
+</pre>
+</div>
+
+<p>
+To get interactive figures, type:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4cc3ce3">plt.ion()
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8518ef3" class="outline-3">
+<h3 id="org8518ef3"><span class="section-number-3">1.3</span> Loading the data in <code>Python</code></h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+The data are <code>tab</code> separated. We will therefore read each line one after the other and split it based on the tabs.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org2d42611"><span style="color: #ff6347;">mepp</span> = []
+<span style="color: #729fcf; font-weight: bold;">for</span> line <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">open</span>(<span style="color: #ad7fa8; font-style: italic;">"data/nerve.dat"</span>):
+    <span style="color: #ff6347;">elt</span> = line.split(<span style="color: #ad7fa8; font-style: italic;">'\t'</span>)
+    <span style="color: #729fcf; font-weight: bold;">if</span> elt[1] != <span style="color: #ad7fa8; font-style: italic;">''</span>: <span style="color: #2c5115;"># </span><span style="color: #888a85;">test if lines contains more than 1 element</span>
+        <span style="color: #ff6347;">mepp</span> += [<span style="color: #729fcf;">float</span>(x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> line.split(<span style="color: #ad7fa8; font-style: italic;">'\t'</span>)]
+    <span style="color: #729fcf; font-weight: bold;">else</span>:
+        <span style="color: #ff6347;">mepp</span> += [<span style="color: #729fcf;">float</span>(elt[0])]
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org890a5fa" class="outline-3">
+<h3 id="org890a5fa"><span class="section-number-3">1.4</span> Five numbers summary and median</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+A somewhat crude way of getting the five-numbers summary of the data is to use function <a href="http://docs.scipy.org/doc/numpy/reference/generated/numpy.percentile.html#numpy.percentile">percentile</a> from <code>numpy</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgac3b04f">[np.<span style="color: #729fcf;">round</span>(np.percentile(mepp,q),2) <span style="color: #729fcf; font-weight: bold;">for</span> q <span style="color: #729fcf; font-weight: bold;">in</span> np.linspace(0,100,5)]
+</pre>
+</div>
+
+<pre class="example">
+[0.01, 0.07, 0.15, 0.3, 1.38]
+
+</pre>
+
+<p>
+Since <code>numpy</code> doesn not have a <code>MAD</code> function we compute it from the formula: 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org2214b73"><span style="color: #ff6347;">mepp_median</span> = np.median(mepp)
+np.median(np.<span style="color: #729fcf;">abs</span>(mepp-mepp_median))/0.67449
+</pre>
+</div>
+
+<pre class="example">
+0.14826016694094796
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org56e08ab" class="outline-3">
+<h3 id="org56e08ab"><span class="section-number-3">1.5</span> Definition of an ECDF graph generating function</h3>
+<div class="outline-text-3" id="text-1-5">
+<p>
+We now define function <code>plot_ecdf</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org280e098"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">plot_ecdf</span>(x, domain = <span style="color: #8ae234;">None</span>, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>, lw=1):
+    <span style="color: #888a85;">"""Generate a graph of the ECDF of x</span>
+
+<span style="color: #888a85;">    Parameters</span>
+<span style="color: #888a85;">    ----------</span>
+<span style="color: #888a85;">    x: a list containing the sample</span>
+<span style="color: #888a85;">    domain: a two elements list specifying the range of the abscissa</span>
+<span style="color: #888a85;">    color: the color used for the graph</span>
+<span style="color: #888a85;">    lw: the line width for the graph</span>
+
+<span style="color: #888a85;">    Returns</span>
+<span style="color: #888a85;">    -------</span>
+<span style="color: #888a85;">    Nothing, the function is used for its side effect, a graph is</span>
+<span style="color: #888a85;">    generated on the current device.</span>
+<span style="color: #888a85;">    """</span>
+    <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> floor,ceil
+    <span style="color: #729fcf; font-weight: bold;">from</span> numpy <span style="color: #729fcf; font-weight: bold;">import</span> sort, arange
+    <span style="color: #729fcf; font-weight: bold;">import</span> matplotlib.pylab <span style="color: #729fcf; font-weight: bold;">as</span> plt
+    <span style="color: #ff6347;">X</span> = sort(x)
+    <span style="color: #ff6347;">n</span> = <span style="color: #729fcf;">len</span>(x)
+    <span style="color: #ff6347;">Y</span> = arange(1,n+1)/<span style="color: #729fcf;">float</span>(n)
+    <span style="color: #729fcf; font-weight: bold;">if</span> domain <span style="color: #729fcf; font-weight: bold;">is</span> <span style="color: #8ae234;">None</span>:
+        <span style="color: #ff6347;">domain</span> = [floor(X[0]),ceil(X[n-1])]
+    <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n-1):
+        plt.plot(X[i:(i+2)],[Y[i],Y[i]],color=color,lw=lw)
+    plt.xlim(domain)
+    plt.ylim([0,1])
+    plt.hlines(0,domain[0],X[0],colors=color,lw=lw)
+    plt.hlines(1,X[n-1],domain[1],colors=color,lw=lw)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgd1812a1" class="outline-4">
+<h4 id="orgd1812a1"><span class="section-number-4">1.5.1</span> Use of the function</h4>
+<div class="outline-text-4" id="text-1-5-1">
+<div class="org-src-container">
+<pre class="src src-python" id="org22a5462">plot_ecdf(mepp)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Inter MEPP Time (s)"</span>)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"Frequency"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/Fatt_Katz_ECDF.png" alt="Fatt_Katz_ECDF.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org17513e8" class="outline-3">
+<h3 id="org17513e8"><span class="section-number-3">1.6</span> Definition of an ECDF band generating function</h3>
+<div class="outline-text-3" id="text-1-6">
+<div class="org-src-container">
+<pre class="src src-python" id="orgb5733cf"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">plot_ecdf_band</span>(x, alpha = 0.95, domain = <span style="color: #8ae234;">None</span>, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>, lw=1):
+    <span style="color: #888a85;">"""Generate a graph of the ECDF of x</span>
+
+<span style="color: #888a85;">    Parameters</span>
+<span style="color: #888a85;">    ----------</span>
+<span style="color: #888a85;">    x: a list containing the sample</span>
+<span style="color: #888a85;">    alpha: the probability to have the complete true CDF within the band </span>
+<span style="color: #888a85;">    domain: a two elements list specifying the range of the abscissa</span>
+<span style="color: #888a85;">    color: the color used for the graph</span>
+<span style="color: #888a85;">    lw: the line width for the graph</span>
+
+<span style="color: #888a85;">    Returns</span>
+<span style="color: #888a85;">    -------</span>
+<span style="color: #888a85;">    Nothing, the function is used for its side effect, a graph is</span>
+<span style="color: #888a85;">    generated on the current device.</span>
+<span style="color: #888a85;">    """</span>
+    <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> floor,ceil,sqrt,log
+    <span style="color: #729fcf; font-weight: bold;">from</span> numpy <span style="color: #729fcf; font-weight: bold;">import</span> sort, arange, clip
+    <span style="color: #729fcf; font-weight: bold;">import</span> matplotlib.pylab <span style="color: #729fcf; font-weight: bold;">as</span> plt
+    <span style="color: #ff6347;">X</span> = sort(x)
+    <span style="color: #ff6347;">n</span> = <span style="color: #729fcf;">len</span>(x)
+    <span style="color: #ff6347;">Y</span> = arange(1,n+1)/<span style="color: #729fcf;">float</span>(n)
+    <span style="color: #ff6347;">epsilon</span> = sqrt(log(2/(1-alpha))/2/n)
+    <span style="color: #ff6347;">U</span> = clip(Y+epsilon,0,1)
+    <span style="color: #ff6347;">L</span> = clip(Y-epsilon,0,1)
+    <span style="color: #729fcf; font-weight: bold;">if</span> domain <span style="color: #729fcf; font-weight: bold;">is</span> <span style="color: #8ae234;">None</span>:
+        <span style="color: #ff6347;">domain</span> = [floor(X[0]),ceil(X[n-1])]
+    <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n-1):
+        plt.plot(X[i:(i+2)],[U[i],U[i]],color=color,lw=lw)
+        plt.plot(X[i:(i+2)],[L[i],L[i]],color=color,lw=lw)
+    plt.xlim(domain)
+    plt.ylim([0,1])
+    plt.hlines(0,domain[0],X[0],colors=color,lw=lw)
+    plt.hlines(1,X[n-1],domain[1],colors=color,lw=lw)
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org12d98c9" class="outline-4">
+<h4 id="org12d98c9"><span class="section-number-4">1.6.1</span> Use of the function</h4>
+<div class="outline-text-4" id="text-1-6-1">
+<div class="org-src-container">
+<pre class="src src-python" id="org419f522">plot_ecdf_band(mepp)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Inter MEPP Time (s)"</span>)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"Frequency"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/Fatt_Katz_ECDF_band.png" alt="Fatt_Katz_ECDF_band.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org8be6584" class="outline-2">
+<h2 id="org8be6584"><span class="section-number-2">2</span> The Likelihood</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-org3f00d44" class="outline-3">
+<h3 id="org3f00d44"><span class="section-number-3">2.1</span> Making the first illustrative figure</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+We start by simulating a data set containing 51 observations between 0 and 5 times the time constant. We do not forget to set the seed of our (pseudo-)random number generator (so that we can reproduce <i>exactly</i> the simulation).
+</p>
+<div class="org-src-container">
+<pre class="src src-python" id="org67abbff"><span style="color: #ff6347;">tau_true</span> = 1.0
+<span style="color: #ff6347;">b_true</span> = 10
+<span style="color: #ff6347;">Delta_true</span> = 90
+<span style="color: #ff6347;">X</span> = np.linspace(0,5/tau_true,51)
+<span style="color: #ff6347;">Theo</span> = Delta_true*np.exp(-X/tau_true)+b_true
+np.random.seed(20061001)
+<span style="color: #ff6347;">Observations</span> = np.random.poisson(Theo)
+</pre>
+</div>
+
+<p>
+Once the simulation is done, we construct the figure:
+</p>
+<div class="org-src-container">
+<pre class="src src-python" id="org1208682">plt.plot(X,Observations,<span style="color: #ad7fa8; font-style: italic;">'o'</span>)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"Observations"</span>)
+plt.plot(X,Theo,<span style="color: #ad7fa8; font-style: italic;">'r'</span>)
+plt.plot(X[[3,30]],Observations[[3,30]],<span style="color: #ad7fa8; font-style: italic;">'sk'</span>)
+plt.plot([X[3],X[3]],[0,Observations[3]],<span style="color: #ad7fa8; font-style: italic;">'--k'</span>)
+plt.plot([0,X[3]],[Observations[3],Observations[3]],<span style="color: #ad7fa8; font-style: italic;">'--k'</span>)
+plt.plot([X[30],X[30]],[0,Observations[30]],<span style="color: #ad7fa8; font-style: italic;">'--k'</span>)
+plt.plot([0,X[30]],[Observations[30],Observations[30]],<span style="color: #ad7fa8; font-style: italic;">'--k'</span>)
+plt.xlim([0,5])
+plt.ylim([0,110])
+plt.text(0.0,75,r<span style="color: #ad7fa8; font-style: italic;">'$x_1$'</span>)
+plt.text(1.45,5,r<span style="color: #ad7fa8; font-style: italic;">'$x_2$'</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/exp-relaxation-illustration1a.png" alt="exp-relaxation-illustration1a.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2f64fa1" class="outline-3">
+<h3 id="org2f64fa1"><span class="section-number-3">2.2</span> Definition of a log-likelihood "constructor" function</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+We are constructing here a <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Closures">closure</a>, a "function" returned with its lexical environment.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orga8f40fd"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mk_model1_mloglik</span>(observations,
+                      times,
+                      b=10,
+                      Delta=90):
+    <span style="color: #888a85;">"""Returns a closure that computes the opposite of the log-likelihood</span>
+
+<span style="color: #888a85;">    Parameters</span>
+<span style="color: #888a85;">    ----------</span>
+<span style="color: #888a85;">    observations: a list or vector containing the observations.</span>
+<span style="color: #888a85;">    times: a list or vector containing the observation's times.</span>
+<span style="color: #888a85;">    b: the baseline parameter (default set to 10).</span>
+<span style="color: #888a85;">    Delta: the jump at time 0 (default set to 90).</span>
+
+<span style="color: #888a85;">    Returns</span>
+<span style="color: #888a85;">    -------</span>
+<span style="color: #888a85;">    A closure that returns the likelihood of its parameter tau.</span>
+<span style="color: #888a85;">    """</span>
+    <span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+    <span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mloglik</span>(tau):
+        <span style="color: #ff6347;">pred</span> = b+Delta*np.exp(-times/tau)
+        <span style="color: #729fcf; font-weight: bold;">return</span> -np.<span style="color: #729fcf;">sum</span>(observations*np.log(pred)-pred)
+    <span style="color: #729fcf; font-weight: bold;">return</span> mloglik
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaac92d1" class="outline-3">
+<h3 id="orgaac92d1"><span class="section-number-3">2.3</span> Make the first figure of \(r(\tau)\)</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+We start by defining the minus log-likelihood function corresponding to our first sample and we maximize it using <code>minimize_scalar</code> from the submodule <code>optimize</code> of <code>scipy</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org2be0873"><span style="color: #ff6347;">mll1</span> = mk_model1_mloglik(Observations[[3,30]],X[[3,30]])
+<span style="color: #729fcf; font-weight: bold;">from</span> scipy.optimize <span style="color: #729fcf; font-weight: bold;">import</span> minimize_scalar
+<span style="color: #ff6347;">mll1_opt</span> = minimize_scalar(mll1,bracket=(0.1,5))
+</pre>
+</div>
+
+<p>
+We then define \(r(\tau) = l(\tau) - l(\hat{\tau})\):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org35bf5a4"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">R1</span>(tau): <span style="color: #729fcf; font-weight: bold;">return</span> mll1_opt.fun-mll1(tau)
+</pre>
+</div>
+
+<p>
+And we create the graph:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge4c546b"><span style="color: #ff6347;">tau_v</span> = np.linspace(0.4,2.0,201)
+plt.plot(tau_v,[R1(x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> tau_v])
+plt.grid()
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"&#964;"</span>)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"r(&#964;)"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/exp-relaxation-illustration1a-r.png" alt="exp-relaxation-illustration1a-r.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb95c6c9" class="outline-3">
+<h3 id="orgb95c6c9"><span class="section-number-3">2.4</span> Do that with 9 other samples and plot all the \(r(\tau)\) together</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+We make here a heavy use of <a href="https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions">list comprehensions</a> (one of the most elegant <code>Python</code> features) and do sequentially:
+</p>
+<ul class="org-ul">
+<li>the simulation of the 9 additional dataset (that we organize in a list of 10 sets, the first one plus the 9 new ones).</li>
+<li>the definition of the 10 log-likelihood functions (we create a list of functions).</li>
+<li>the computation of the 10 MLE.</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgddb0ccf"><span style="color: #ff6347;">ten_sim</span> = [Observations] + [np.random.poisson(Theo) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(9)]
+<span style="color: #ff6347;">ten_mll</span> = [mk_model1_mloglik(Obs[[3,30]],X[[3,30]]) <span style="color: #729fcf; font-weight: bold;">for</span> Obs <span style="color: #729fcf; font-weight: bold;">in</span> ten_sim]
+<span style="color: #ff6347;">ten_opt</span> = [minimize_scalar(mll1,bracket=(0.1,5)) <span style="color: #729fcf; font-weight: bold;">for</span> mll1 <span style="color: #729fcf; font-weight: bold;">in</span> ten_mll] 
+</pre>
+</div>
+
+<p>
+Then we do the figure:
+</p>
+<div class="org-src-container">
+<pre class="src src-python" id="orgaec6cbf"><span style="color: #ff6347;">tau_v</span> = np.linspace(0.0,3.0,501)
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(10):
+    plt.plot(tau_v,[ten_opt[i].fun-ten_mll[i](x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> tau_v])
+
+plt.grid()
+plt.ylim([-5,0])
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"&#964;"</span>)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"r(&#964;)"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/exp-relaxation-illustration1-10a-r.png" alt="exp-relaxation-illustration1-10a-r.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbe69106" class="outline-3">
+<h3 id="orgbe69106"><span class="section-number-3">2.5</span> Do that with the same samples but using 8 observatoins</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+We just have to adapt what we wrote to use 8 observations instead of 2:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgab28293"><span style="color: #ff6347;">ten_mll2</span> = [mk_model1_mloglik(Obs[[3,10,15,20,30,40,50]],
+                              X[[3,10,15,20,30,40,50]])
+            <span style="color: #729fcf; font-weight: bold;">for</span> Obs <span style="color: #729fcf; font-weight: bold;">in</span> ten_sim]
+<span style="color: #ff6347;">ten_opt2</span> = [minimize_scalar(mll1,bracket=(0.1,5)) <span style="color: #729fcf; font-weight: bold;">for</span> mll1 <span style="color: #729fcf; font-weight: bold;">in</span> ten_mll2] 
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org5b4c847"><span style="color: #ff6347;">tau_v2</span> = np.linspace(0.5,2.0,201)
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(10):
+    plt.plot(tau_v2,[ten_opt2[i].fun-ten_mll2[i](x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> tau_v2])
+
+plt.grid()
+plt.ylim([-5,0])
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"&#964;"</span>)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"r(&#964;)"</span>)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/exp-relaxation-illustration2a-r.png" alt="exp-relaxation-illustration2a-r.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org67ffffd" class="outline-2">
+<h2 id="org67ffffd"><span class="section-number-2">3</span> MLE</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-org890ecb2" class="outline-3">
+<h3 id="org890ecb2"><span class="section-number-3">3.1</span> Doing the simulation with the two estimators</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+This should be more or less "straightforward" by now:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">np.random.seed(20110928)
+<span style="color: #ff6347;">nrep</span>=10000
+<span style="color: #ff6347;">samp_sample</span> = [np.random.poisson(Theo[[3,30]]) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nrep)]
+<span style="color: #ff6347;">samp_mle</span> = [0 <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nrep)]
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nrep):
+    <span style="color: #ff6347;">mll</span> = mk_model1_mloglik(samp_sample[i],X[[3,30]])
+    <span style="color: #ff6347;">mll_opt</span> = minimize_scalar(mll,bracket=(0.1,10))
+    <span style="color: #ff6347;">samp_mle</span>[i] = mll_opt.x
+
+<span style="color: #ff6347;">samp_rss</span> = [0 <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nrep)]
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nrep):
+    <span style="color: #ff6347;">rss_opt</span> =  minimize_scalar(<span style="color: #729fcf; font-weight: bold;">lambda</span> tau: (samp_sample[i][0]-10-90*np.exp(-X[3]/tau))**2+
+                               (samp_sample[i][1]-10-90*np.exp(-X[30]/tau))**2,
+                               bracket=(0.1,10))
+    <span style="color: #ff6347;">samp_rss</span>[i] = rss_opt.x
+
+</pre>
+</div>
+
+<p>
+We can then build classical histograms approximating the sampling distributions of the two estimators:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc24e7f5"><span style="color: #ff6347;">useless_stuff</span> = plt.hist([samp_rss,samp_mle],bins=75,normed=<span style="color: #8ae234;">True</span>,histtype=<span style="color: #ad7fa8; font-style: italic;">'step'</span>,lw=2)
+plt.xlabel(r<span style="color: #ad7fa8; font-style: italic;">'$\tau$'</span>,fontsize=25)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">'Density'</span>,fontsize=25)
+plt.title(r<span style="color: #ad7fa8; font-style: italic;">'Densities of $\widetilde{\tau}$ and $\widehat{\tau}$'</span>,fontsize=25)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/exp-relaxation-estimator-comparison.png" alt="exp-relaxation-estimator-comparison.png" height="500" />
+</p>
+</div>
+
+<p>
+But since we are now convinced that the ECDF is the way to go, we do another graph with the two ECDFs. To go quickly we do not use the <code>plot_ecdf</code> function we defined at the beginning since it draws all the steps one by one (and that takes a lot of time):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf247668">plt.plot(np.sort(samp_rss),(np.arange(nrep)+1)/nrep)
+plt.plot(np.sort(samp_mle),(np.arange(nrep)+1)/nrep)
+plt.xlabel(r<span style="color: #ad7fa8; font-style: italic;">'$\tau$'</span>,fontsize=25)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">'Frequency'</span>,fontsize=25)
+plt.title(r<span style="color: #ad7fa8; font-style: italic;">'ECDF of $\widetilde{\tau}$ and $\widehat{\tau}$'</span>,fontsize=25)
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/exp-relaxation-estimator-comparison-ecdf.png" alt="exp-relaxation-estimator-comparison-ecdf.png" height="500" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: LASCON, January 22 2018, Tutorial 2</p>
+<p class="author">Author: Christophe Pouzat</p>
+<p class="date">Created: 2018-01-22 lun. 18:15</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
