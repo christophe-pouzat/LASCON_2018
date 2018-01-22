@@ -1,0 +1,24 @@
+# -*- ispell-local-dictionary: "american" -*-
+#+TITLE: Spike Sorting
+#+AUTHOR: @@latex:{\large Christophe Pouzat} \\ \vspace{0.2cm}MAP5, Paris-Descartes University and CNRS\\ \vspace{0.2cm} \texttt{christophe.pouzat@parisdescartes.fr}@@
+#+DATE: LASCON, January 23 2018, Lecture 3
+#+OPTIONS: H:2 tags:nil
+#+EXCLUDE_TAGS: noexport
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+#+BEAMER_HEADER: \setbeamercovered{invisible}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Where are we ?}\tableofcontents[currentsection]\end{frame}}
+#+BEAMER_HEADER: \beamertemplatenavigationsymbolsempty
+#+STARTUP: beamer
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+#+STARTUP: indent
+#+PROPERTY: header-args :eval no-export
+
+* Introduction
+** What are we going to talk about?
+- Why do we need spike sorting and what is it?
+- The orgin of the extracellular signal and its consequence for spike sorting interpretation.
+- Spike sorting: a history.
+
