@@ -1,0 +1,2854 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2018-01-22 lun. 22:21 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spike Sorting: Tutorial</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Christophe Pouzat" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2017 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Spike Sorting: Tutorial</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgdd43bf6">1. Downloading the data</a></li>
+<li><a href="#org5d01356">2. Importing the required modules and loading the data</a></li>
+<li><a href="#org13d3737">3. Preliminary analysis</a>
+<ul>
+<li><a href="#orgc9c0901">3.1. Five number summary</a></li>
+<li><a href="#org3f35d25">3.2. Were the data normalized?</a></li>
+<li><a href="#org9c96a82">3.3. Discretization step amplitude</a></li>
+</ul>
+</li>
+<li><a href="#orgfd854ca">4. Plot the data</a></li>
+<li><a href="#orgf2e30a5">5. Data renormalization</a>
+<ul>
+<li><a href="#org63d6232">5.1. A quick check that the <code>MAD</code> "does its job"</a></li>
+</ul>
+</li>
+<li><a href="#orgd65791a">6. Detect peaks</a>
+<ul>
+<li><a href="#org7a5ed89">6.1. Interactive spike detection check</a></li>
+<li><a href="#org17fe807">6.2. Split the data set in two parts</a></li>
+</ul>
+</li>
+<li><a href="#org63df2ea">7. Cuts</a>
+<ul>
+<li><a href="#orgd9dcb36">7.1. Events</a></li>
+<li><a href="#orgb01f9d4">7.2. Noise</a></li>
+<li><a href="#org76b2c28">7.3. Getting "clean" events</a></li>
+</ul>
+</li>
+<li><a href="#org8ffb791">8. Dimension reduction</a>
+<ul>
+<li><a href="#orga4d42fb">8.1. Principal Component Analysis (PCA)</a></li>
+<li><a href="#org38f2d1c">8.2. Exploring <code>PCA</code> results</a></li>
+<li><a href="#orga19ec0a">8.3. Static representation of the projected data</a></li>
+<li><a href="#orga2b0507">8.4. Dynamic visualization of the data with <code>GGobi</code></a></li>
+</ul>
+</li>
+<li><a href="#orge0bcb34">9. Clustering with K-Means</a>
+<ul>
+<li><a href="#orgf463c9c">9.1. Cluster specific plots</a></li>
+<li><a href="#org615816c">9.2. Results inspection with <code>GGobi</code></a></li>
+</ul>
+</li>
+<li><a href="#org45e2c12">10. Spike "peeling": a "Brute force" superposition resolution</a>
+<ul>
+<li><a href="#org713d5a3">10.1. First peeling</a></li>
+<li><a href="#org0cddecf">10.2. Second peeling</a></li>
+<li><a href="#org4bf2e49">10.3. Third peeling</a></li>
+<li><a href="#org7ba7f3d">10.4. Fourth peeling</a></li>
+<li><a href="#org0c1c0dc">10.5. Fifth peeling</a></li>
+<li><a href="#org6c23204">10.6. General comparison</a></li>
+</ul>
+</li>
+<li><a href="#org11cd061">11. Getting the spike trains</a></li>
+<li><a href="#org6b6d8a6">12. Individual function definitions</a>
+<ul>
+<li><a href="#org43e35e1">12.1. <code>plot_data_list</code></a></li>
+<li><a href="#org892994a">12.2. <code>peak</code></a></li>
+<li><a href="#org291bb07">12.3. <code>cut_sgl_evt</code></a></li>
+<li><a href="#org5939562">12.4. <code>mk_events</code></a></li>
+<li><a href="#org23c83ce">12.5. <code>plot_events</code></a></li>
+<li><a href="#org17d651b">12.6. <code>plot_data_list_and_detection</code></a></li>
+<li><a href="#org5db650e">12.7. <code>mk_noise</code></a></li>
+<li><a href="#org2343f3b">12.8. <code>mad</code></a></li>
+<li><a href="#org7cfbad0">12.9. <code>mk_aligned_events</code></a>
+<ul>
+<li><a href="#orgd2c7804">12.9.1. The jitter: A worked out example</a></li>
+<li><a href="#org6969d8e">12.9.2. Function definition</a></li>
+</ul>
+</li>
+<li><a href="#org1331d11">12.10. <code>mk_center_dictionary</code></a></li>
+<li><a href="#org2a3d8b4">12.11. <code>classify_and_align_evt</code></a></li>
+<li><a href="#orgd931be7">12.12. <code>predict_data</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgdd43bf6" class="outline-2">
+<h2 id="orgdd43bf6"><span class="section-number-2">1</span> Downloading the data</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The data are available and can be downloaded with (watch out, you must use slightly different commands if you're using <code>Python 2</code>): 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc198a00"><span style="color: #729fcf; font-weight: bold;">from</span> urllib.request <span style="color: #729fcf; font-weight: bold;">import</span> urlretrieve <span style="color: #2c5115;"># </span><span style="color: #888a85;">Python 3</span>
+<span style="color: #2c5115;"># </span><span style="color: #888a85;">from urllib import urlretrieve # Python 2</span>
+<span style="color: #ff6347;">data_names</span> = [<span style="color: #ad7fa8; font-style: italic;">'Locust_'</span> + <span style="color: #729fcf;">str</span>(i) + <span style="color: #ad7fa8; font-style: italic;">'.dat.gz'</span> <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,5)]
+<span style="color: #ff6347;">data_src</span> = [<span style="color: #ad7fa8; font-style: italic;">'http://xtof.disque.math.cnrs.fr/data/'</span> + n
+            <span style="color: #729fcf; font-weight: bold;">for</span> n <span style="color: #729fcf; font-weight: bold;">in</span> data_names]
+[urlretrieve(data_src[i],data_names[i]) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(4)]
+</pre>
+</div>
+
+<p>
+They were stored as floats coded on 64 bits and compressed with <code>gnuzip</code>. So we decompress it:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1b416e2"><span style="color: #729fcf; font-weight: bold;">import</span> gzip
+<span style="color: #729fcf; font-weight: bold;">import</span> shutil
+<span style="color: #ff6347;">data_snames</span> = [<span style="color: #ad7fa8; font-style: italic;">'Locust_'</span> + <span style="color: #729fcf;">str</span>(i) + <span style="color: #ad7fa8; font-style: italic;">'.dat'</span> <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,5)]
+<span style="color: #729fcf; font-weight: bold;">for</span> in_name, out_name <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">zip</span>(data_names,data_snames):
+    <span style="color: #729fcf; font-weight: bold;">with</span> gzip.<span style="color: #729fcf;">open</span>(in_name,<span style="color: #ad7fa8; font-style: italic;">'rb'</span>) <span style="color: #729fcf; font-weight: bold;">as</span> f_in:
+        <span style="color: #729fcf; font-weight: bold;">with</span> <span style="color: #729fcf;">open</span>(out_name,<span style="color: #ad7fa8; font-style: italic;">'wb'</span>) <span style="color: #729fcf; font-weight: bold;">as</span> f_out:
+            shutil.copyfileobj(f_in, f_out)
+</pre>
+</div>
+
+<p>
+20 seconds of data sampled at 15 kHz are contained in these files (see <a href="http://xtof.perso.math.cnrs.fr/pdf/Pouzat+:2002.pdf">PouzatEtAl_2002</a> for details). Four
+files corresponding to the four electrodes or recording sites of a
+<i>tetrode</i> (see Sec. why-tetrode) are used. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5d01356" class="outline-2">
+<h2 id="org5d01356"><span class="section-number-2">2</span> Importing the required modules and loading the data</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The individual functions developed for this kind of analysis are defined at the end of this document (Sec. <a href="#org6b6d8a6">12</a>).
+They can also be downloaded as a single file <a href="https://raw.githubusercontent.com/christophe-pouzat/LASCON2016/master/code/sorting_with_python.py">sorting_with_python.py</a> which must then be imported with for instance:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org8bc6785"><span style="color: #729fcf; font-weight: bold;">import</span> sorting_with_python <span style="color: #729fcf; font-weight: bold;">as</span> swp
+</pre>
+</div>
+
+<p>
+where it is assumed that the working directory of your <code>python</code> session is the directory where the file <code>sorting_with_python.py</code> can be found.
+We are going to use <code>numpy</code> and <code>pylab</code> (we will also use <code>pandas</code> later on, but to generate only one figure so you can do the analysis without it). We are also going to use the interactive mode of the latter:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd137a41"><span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+<span style="color: #729fcf; font-weight: bold;">import</span> matplotlib.pylab <span style="color: #729fcf; font-weight: bold;">as</span> plt
+plt.ion()
+</pre>
+</div>
+
+<p>
+<code>Python 3</code> was used to perform this analysis but everything also works with <code>Python 2</code>. We load the data with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1c99c43"><span style="color: #2c5115;"># </span><span style="color: #888a85;">Create a list with the file names</span>
+<span style="color: #ff6347;">data_files_names</span> = [<span style="color: #ad7fa8; font-style: italic;">'Locust_'</span> + <span style="color: #729fcf;">str</span>(i) + <span style="color: #ad7fa8; font-style: italic;">'.dat'</span> <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,5)]
+<span style="color: #2c5115;"># </span><span style="color: #888a85;">Get the lenght of the data in the files</span>
+<span style="color: #ff6347;">data_len</span> = np.unique(<span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">map</span>(<span style="color: #729fcf;">len</span>, <span style="color: #729fcf;">map</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> n:
+                                       np.fromfile(n,np.double),
+                                       data_files_names))))[0]
+<span style="color: #2c5115;"># </span><span style="color: #888a85;">Load the data in a list of numpy arrays</span>
+<span style="color: #ff6347;">data</span> = [np.fromfile(n,np.double) <span style="color: #729fcf; font-weight: bold;">for</span> n <span style="color: #729fcf; font-weight: bold;">in</span> data_files_names]
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org13d3737" class="outline-2">
+<h2 id="org13d3737"><span class="section-number-2">3</span> Preliminary analysis</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+We are going to start our analysis by some "sanity checks" to make sure that nothing "weird" happened during the recording.
+</p>
+</div>
+<div id="outline-container-orgc9c0901" class="outline-3">
+<h3 id="orgc9c0901"><span class="section-number-3">3.1</span> Five number summary</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+We should start by getting an overall picture of the data like the one provided by the <code>mquantiles</code> method of module <code>scipy.stats.mstats</code> using it to output a <a href="http://en.wikipedia.org/wiki/Five-number_summary">five-number summary</a>. The five numbers are the <code>minimum</code>, the <code>first quartile</code>, the <code>median</code>, the <code>third quartile</code> and the <code>maximum</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf961f29"><span style="color: #729fcf; font-weight: bold;">from</span> scipy.stats.mstats <span style="color: #729fcf; font-weight: bold;">import</span> mquantiles
+np.set_printoptions(precision=3)
+[mquantiles(x,prob=[0,0.25,0.5,0.75,1]) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> data]
+</pre>
+</div>
+
+<pre class="example">
+[array([-9.074, -0.371, -0.029,  0.326, 10.626]),
+ array([-8.229, -0.45 , -0.036,  0.396, 11.742]),
+ array([-6.89 , -0.53 , -0.042,  0.469,  9.849]),
+ array([-7.347, -0.492, -0.04 ,  0.431, 10.564])]
+
+</pre>
+
+
+
+<p>
+In the above result, each row corresponds to a recording channel, the first column contains the minimal value; the second, the first quartile; the third, the median; the fourth, the third quartile; the fifth, the maximal value.
+We see that the data range (<code>maximum - minimum</code>) is similar (close to 20) on the four recording sites. The inter-quartiles ranges are also similar.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org3f35d25" class="outline-3">
+<h3 id="org3f35d25"><span class="section-number-3">3.2</span> Were the data normalized?</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+We can check next if some processing like a division by the <i>standard deviation</i> (SD) has been applied:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgdb4582a">[np.std(x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> data]
+</pre>
+</div>
+
+<pre class="example">
+[0.9999983333319417, 0.9999983333319362, 0.9999983333319479, 0.9999983333317428]
+
+</pre>
+
+
+
+<p>
+We see that SD normalization was indeed applied to these data…
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9c96a82" class="outline-3">
+<h3 id="org9c96a82"><span class="section-number-3">3.3</span> Discretization step amplitude</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+We can easily obtain the size of the digitization set:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf83094b">[np.<span style="color: #729fcf;">min</span>(np.diff(np.sort(np.unique(x)))) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> data]
+</pre>
+</div>
+
+<pre class="example">
+[0.006709845078411547,
+ 0.009194500187932775,
+ 0.011888432902217971,
+ 0.009614042128660572]
+
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgfd854ca" class="outline-2">
+<h2 id="orgfd854ca"><span class="section-number-2">4</span> Plot the data</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Plotting the data for interactive exploration is trivial. The only trick is to add (or subtract) a proper offest (that we get here using the maximal value of each channel from our five-number summary), this is automatically implemented in our <code>plot_data_list</code> function:
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff6347;">tt</span> = np.arange(0,data_len)/1.5e4
+swp.plot_data_list(data,tt,0.1)
+</pre>
+</div>
+
+<p>
+The first channel is drawn as is, the second is offset downward by the sum of its maximal value and of the absolute value of the minimal value of the first, etc. We then get something like Fig. \ref{fig:WholeRawData}.
+</p>
+
+
+<div id="org5f609a0" class="figure">
+<p><img src="figsL1/WholeRawData.png" alt="WholeRawData.png" />
+</p>
+<p><span class="figure-number">Figure 1: </span>The whole (20 s) Locust antennal lobe data set.</p>
+</div>
+
+<p>
+It is also good to "zoom in" and look at the data with a finer time scale (Fig. \ref{fig:First200ms}) with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.xlim([0,0.2])
+</pre>
+</div>
+
+
+<div id="orgdcd71c7" class="figure">
+<p><img src="figsL1/First200ms.png" alt="First200ms.png" />
+</p>
+<p><span class="figure-number">Figure 2: </span>First 200 ms of the Locust data set.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf2e30a5" class="outline-2">
+<h2 id="orgf2e30a5"><span class="section-number-2">5</span> Data renormalization</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+We are going to use a <a href="http://en.wikipedia.org/wiki/Median_absolute_deviation">median absolute deviation</a> (<code>MAD</code>) based renormalization. The goal of the procedure is to scale the raw data such that the <i>noise SD</i> is approximately 1. Since it is not straightforward to obtain a noise SD on data where both signal (<i>i.e.</i>, spikes) and noise are present, we use this <a href="http://en.wikipedia.org/wiki/Robust_statistics">robust</a> type of statistic for the SD:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge4c0083"><span style="color: #ff6347;">data_mad</span> = <span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">map</span>(swp.mad,data))
+data_mad
+</pre>
+</div>
+
+<pre class="example">
+[0.5172968482892563, 0.6270612350170097, 0.7402832060747951, 0.6841813852777244]
+
+</pre>
+
+
+
+<p>
+And we normalize accordingly (we also subtract the <code>median</code> which is not exactly 0):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc4140f2"><span style="color: #ff6347;">data</span> = <span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">map</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x: (x-np.median(x))/swp.mad(x), data))
+</pre>
+</div>
+
+<p>
+We can check on a plot (Fig. \ref{fig:site1-with-MAD-and-SD}) how <code>MAD</code> and <code>SD</code> compare:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4236ff4">plt.plot(tt,data[0],color=<span style="color: #ad7fa8; font-style: italic;">"black"</span>)
+plt.xlim([0,0.2])
+plt.ylim([-17,13])
+plt.axhline(y=1,color=<span style="color: #ad7fa8; font-style: italic;">"red"</span>)
+plt.axhline(y=-1,color=<span style="color: #ad7fa8; font-style: italic;">"red"</span>)
+plt.axhline(y=np.std(data[0]),color=<span style="color: #ad7fa8; font-style: italic;">"blue"</span>,linestyle=<span style="color: #ad7fa8; font-style: italic;">"dashed"</span>)
+plt.axhline(y=-np.std(data[0]),color=<span style="color: #ad7fa8; font-style: italic;">"blue"</span>,linestyle=<span style="color: #ad7fa8; font-style: italic;">"dashed"</span>)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+plt.ylim([-5,10])
+</pre>
+</div>
+
+
+<div id="org3876767" class="figure">
+<p><img src="figsL1/site1-with-MAD-and-SD.png" alt="site1-with-MAD-and-SD.png" />
+</p>
+<p><span class="figure-number">Figure 3: </span>First 200 ms on site 1 of the Locust data set. In red: +/- the <code>MAD</code>; in dashed blue +/- the <code>SD</code>.</p>
+</div>
+</div>
+
+<div id="outline-container-org63d6232" class="outline-3">
+<h3 id="org63d6232"><span class="section-number-3">5.1</span> A quick check that the <code>MAD</code> "does its job"</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+We can check that the <code>MAD</code> does its job as a robust estimate of the <i>noise</i> standard deviation by looking at <a href="http://en.wikipedia.org/wiki/Q-Q_plot">Q-Q plots</a> of the whole traces normalized with the <code>MAD</code> and normalized with the "classical" <code>SD</code> (Fig. \ref{fig:check-MAD}):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff6347;">dataQ</span> = <span style="color: #729fcf;">map</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+            mquantiles(x, prob=np.arange(0.01,0.99,0.001)),data)
+<span style="color: #ff6347;">dataQsd</span> = <span style="color: #729fcf;">map</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+              mquantiles(x/np.std(x), prob=np.arange(0.01,0.99,0.001)),
+              data)
+<span style="color: #729fcf; font-weight: bold;">from</span> scipy.stats <span style="color: #729fcf; font-weight: bold;">import</span> norm
+<span style="color: #ff6347;">qq</span> = norm.ppf(np.arange(0.01,0.99,0.001))
+plt.plot(np.linspace(-3,3,num=100),np.linspace(-3,3,num=100),
+         color=<span style="color: #ad7fa8; font-style: italic;">'grey'</span>)
+<span style="color: #ff6347;">colors</span> = [<span style="color: #ad7fa8; font-style: italic;">'black'</span>, <span style="color: #ad7fa8; font-style: italic;">'orange'</span>, <span style="color: #ad7fa8; font-style: italic;">'blue'</span>, <span style="color: #ad7fa8; font-style: italic;">'red'</span>]
+<span style="color: #729fcf; font-weight: bold;">for</span> i,y <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">enumerate</span>(dataQ):
+    plt.plt.plot(qq,y,color=colors[i])
+
+<span style="color: #729fcf; font-weight: bold;">for</span> i,y <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">enumerate</span>(dataQsd):
+    plt.plot(qq,y,color=colors[i],linestyle=<span style="color: #ad7fa8; font-style: italic;">"dashed"</span>)
+
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Normal quantiles'</span>)
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">'Empirical quantiles'</span>)
+</pre>
+</div>
+
+
+<div id="orgf1b1550" class="figure">
+<p><img src="figsL1/check-MAD.png" alt="check-MAD.png" />
+</p>
+<p><span class="figure-number">Figure 4: </span>Performances of <code>MAD</code> based vs <code>SD</code> based normalizations. After normalizing the data of each recording site by its <code>MAD</code> (plain colored curves) or its <code>SD</code> (dashed colored curves), Q-Q plot against a standard normal distribution were constructed. Colors: site 1, black; site 2, orange; site 3, blue; site 4, red.</p>
+</div>
+
+<p>
+We see that the behavior of the "away from normal" fraction is much more homogeneous for small, as well as for large in fact, quantile values with the <code>MAD</code> normalized traces than with the <code>SD</code> normalized ones. If we consider automatic rules like the three sigmas we are going to reject fewer events (<i>i.e.</i>, get fewer putative spikes) with the <code>SD</code> based normalization than with the <code>MAD</code> based one.   
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd65791a" class="outline-2">
+<h2 id="orgd65791a"><span class="section-number-2">6</span> Detect peaks</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+We are going to filter the data slightly using a "box" filter of length 5. That is, the data points of the original trace are going to be replaced by the average of themselves with their four nearest neighbors. We will then scale the filtered traces such that the <code>MAD</code> is one on each recording sites and keep only the parts of the signal above 4:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org20a2ee0"><span style="color: #729fcf; font-weight: bold;">from</span> scipy.signal <span style="color: #729fcf; font-weight: bold;">import</span> fftconvolve
+<span style="color: #729fcf; font-weight: bold;">from</span> numpy <span style="color: #729fcf; font-weight: bold;">import</span> apply_along_axis <span style="color: #729fcf; font-weight: bold;">as</span> <span style="color: #729fcf;">apply</span> 
+<span style="color: #ff6347;">data_filtered</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+                      fftconvolve(x,np.array([1,1,1,1,1])/5.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+                      1,np.array(data))
+<span style="color: #ff6347;">data_filtered</span> = (data_filtered.transpose() / \
+                 <span style="color: #729fcf;">apply</span>(swp.mad,1,data_filtered)).transpose()
+<span style="color: #ff6347;">data_filtered</span>[data_filtered &lt; 4] = 0
+</pre>
+</div>
+
+<p>
+We can see the difference between the <i>raw</i> trace and the <i>filtered and rectified</i> one (Fig. \ref{fig:compare-raw-and-filtered-data}) on which spikes are going to be detected with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(tt, data[0],color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.axhline(y=4,color=<span style="color: #ad7fa8; font-style: italic;">"blue"</span>,linestyle=<span style="color: #ad7fa8; font-style: italic;">"dashed"</span>)
+plt.plot(tt, data_filtered[0,],color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>)
+plt.xlim([0,0.2])
+plt.ylim([-5,10])
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+</pre>
+</div>
+
+
+<div id="org36b643e" class="figure">
+<p><img src="figsL1/compare-raw-and-filtered-data.png" alt="compare-raw-and-filtered-data.png" />
+</p>
+<p><span class="figure-number">Figure 5: </span>First 200 ms on site 1 of data set <code>data</code>. The raw data are shown in black, the detection threshold appears in dashed blue and the filtered and rectified trace on which spike detection is going to be preformed appears in red.</p>
+</div>
+
+<p>
+We now use function <code>peak</code> on the sum of the rows of our filtered and rectified version of the data:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgbf75b8d"><span style="color: #ff6347;">sp0</span> = swp.peak(data_filtered.<span style="color: #729fcf;">sum</span>(0))
+</pre>
+</div>
+
+<p>
+Giving <code>1795</code> spikes, a mean inter-event interval of <code>167.0</code> sampling points, a standard deviation of <code>144.0</code> sampling points, a smallest inter-event interval of <code>16</code> sampling points and a largest of <code>1157</code> sampling points.
+</p>
+</div>
+
+<div id="outline-container-org7a5ed89" class="outline-3">
+<h3 id="org7a5ed89"><span class="section-number-3">6.1</span> Interactive spike detection check</h3>
+<div class="outline-text-3" id="text-6-1">
+<p>
+We can then check the detection quality with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">swp.plot_data_list_and_detection(data,tt,sp0)
+plt.xlim([0,0.2])
+</pre>
+</div>
+
+
+<div id="org95c0788" class="figure">
+<p><img src="figsL1/check-spike-detection.png" alt="check-spike-detection.png" />
+</p>
+<p><span class="figure-number">Figure 6: </span>First 200 ms of data set <code>data</code>. The raw data are shown in black, the detected events are signaled by red dots (a dot is put on each recording site at the amplitude on that site at that time).</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org17fe807" class="outline-3">
+<h3 id="org17fe807"><span class="section-number-3">6.2</span> Split the data set in two parts</h3>
+<div class="outline-text-3" id="text-6-2">
+<p>
+As explained in the text, we want to "emulate" a long data set analysis where the model is estimated on the early part before doing template matching on what follows. We therefore get an "early" and a "late" part by splitting the data set in two:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgaf6a5a6"><span style="color: #ff6347;">sp0E</span> = sp0[sp0 &lt;= data_len/2.]
+<span style="color: #ff6347;">sp0L</span> = sp0[sp0 &gt; data_len/2.]
+</pre>
+</div>
+
+<p>
+In <code>sp0E</code>, the number of detected events is: <code>908</code> ; the mean inter-event interval is: <code>165.0</code>; the standard deviation of the inter-event intervals is: <code>139.0</code>; the smallest inter-event interval is: <code>16</code> sampling points long; the largest inter-event interval is: <code>931</code> sampling points long.
+</p>
+
+<p>
+In <code>sp0L</code>, the number of detected events is: <code>887</code>; the mean inter-event interval is: <code>169.0</code>; the standard deviation of the inter-event intervals is: <code>149.0</code>; the smallest inter-event interval is: <code>16</code> sampling points long; the largest inter-event interval is: <code>1157</code> sampling points long.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org63df2ea" class="outline-2">
+<h2 id="org63df2ea"><span class="section-number-2">7</span> Cuts</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+After detecting our spikes, we must make our cuts in order to create our events' sample. The obvious question we must first address is: How long should our cuts be? The pragmatic way to get an answer is:
+</p>
+<ul class="org-ul">
+<li>Make cuts much longer than what we think is necessary, like 50 sampling points on both sides of the detected event's time.</li>
+<li>Compute robust estimates of the "central" event (with the <code>median</code>) and of the dispersion of the sample around this central event (with the <code>MAD</code>).</li>
+<li>Plot the two together and check when does the <code>MAD</code> trace reach the background noise level (at 1 since we have normalized the data).</li>
+<li>Having the central event allows us to see if it outlasts significantly the region where the <code>MAD</code> is above the background noise level.</li>
+</ul>
+
+<p>
+Clearly cutting beyond the time at which the <code>MAD</code> hits back the noise level should not bring any useful information as far a classifying the spikes is concerned. So here we perform this task as follows:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff6347;">evtsE</span> = swp.mk_events(sp0E,np.array(data),49,50)
+<span style="color: #ff6347;">evtsE_median</span>=<span style="color: #729fcf;">apply</span>(np.median,0,evtsE)
+<span style="color: #ff6347;">evtsE_mad</span>=<span style="color: #729fcf;">apply</span>(swp.mad,0,evtsE)
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(evtsE_median, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>, lw=2)
+plt.axhline(y=0, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> np.arange(0,400,100): 
+    plt.axvline(x=i, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>, lw=2)
+
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> np.arange(0,400,10): 
+    plt.axvline(x=i, color=<span style="color: #ad7fa8; font-style: italic;">'grey'</span>)
+
+plt.plot(evtsE_median, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>, lw=2)
+plt.plot(evtsE_mad, color=<span style="color: #ad7fa8; font-style: italic;">'blue'</span>, lw=2)
+</pre>
+</div>
+
+
+<div id="org6f8e7cc" class="figure">
+<p><img src="figsL1/check-MAD-on-long-cuts.png" alt="check-MAD-on-long-cuts.png" />
+</p>
+<p><span class="figure-number">Figure 7: </span>Robust estimates of the central event (black) and of the sample's dispersion around the central event (red) obtained with "long" (100 sampling points) cuts. We see clearly that the dispersion is back to noise level 15 points before the peak and 30 points after the peak.</p>
+</div>
+
+<p>
+Fig. \ref{fig:check-MAD-on-long-cuts} clearly shows that starting the cuts 15 points before the peak and ending them 30 points after should fulfill our goals. We also see that the central event slightly outlasts the window where the <code>MAD</code> is larger than 1.
+</p>
+</div>
+
+<div id="outline-container-orgd9dcb36" class="outline-3">
+<h3 id="orgd9dcb36"><span class="section-number-3">7.1</span> Events</h3>
+<div class="outline-text-3" id="text-7-1">
+<p>
+Once we are satisfied with our spike detection, at least in a provisory way, and that we have decided on the length of our cuts, we proceed by making <code>cuts</code> around the detected events. :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7b94a12"><span style="color: #ff6347;">evtsE</span> = swp.mk_events(sp0E,np.array(data),14,30)
+</pre>
+</div>
+
+<p>
+We can visualize the first 200 events with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">swp.plot_events(evtsE,200)
+</pre>
+</div>
+
+
+<div id="org052a0f1" class="figure">
+<p><img src="figsL1/first-200-of-evtsE.png" alt="first-200-of-evtsE.png" />
+</p>
+<p><span class="figure-number">Figure 8: </span>First 200 events of <code>evtsE</code>. Cuts from the four recording sites appear one after the other. The background (white / grey) changes with the site. In red, <i>robust</i> estimate of the "central" event obtained by computing the pointwise median. In blue, <i>robust</i> estimate of the scale (SD) obtained by computing the pointwise <code>MAD</code>.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb01f9d4" class="outline-3">
+<h3 id="orgb01f9d4"><span class="section-number-3">7.2</span> Noise</h3>
+<div class="outline-text-3" id="text-7-2">
+<p>
+Getting an estimate of the noise statistical properties is an essential ingredient to build respectable goodness of fit tests. In our approach "noise events" are essentially anything that is not an "event" is the sense of the previous section. I wrote essentially and not exactly since there is a little twist here which is the minimal distance we are willing to accept between the reference time of a noise event and the reference time of the last preceding and of the first following "event". We could think that keeping a cut length on each side would be enough. That would indeed be the case if <i>all</i> events were starting from and returning to zero within a cut. But this is not the case with the cuts parameters we chose previously (that will become clear soon). You might wonder why we chose so short a cut length then. Simply to avoid having to deal with too many superposed events which are the really bothering events for anyone wanting to do proper sorting. 
+To obtain our noise events we are going to use function <code>mk_noise</code> which takes the <i>same</i> arguments as function <code>mk_events</code> plus two numbers: 
+</p>
+<ul class="org-ul">
+<li><code>safety_factor</code> a number by which the cut length is multiplied and which sets the minimal distance between the reference times discussed in the previous paragraph.</li>
+<li><code>size</code> the maximal number of noise events one wants to cut (the actual number obtained might be smaller depending on the data length, the cut length, the safety factor and the number of events).</li>
+</ul>
+
+<p>
+We cut noise events with a rather large safety factor:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgbbdea1d"><span style="color: #ff6347;">noiseE</span> = swp.mk_noise(sp0E,np.array(data),14,30,safety_factor=2.5,size=2000)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org76b2c28" class="outline-3">
+<h3 id="org76b2c28"><span class="section-number-3">7.3</span> Getting "clean" events</h3>
+<div class="outline-text-3" id="text-7-3">
+<p>
+Our spike sorting has two main stages, the first one consist in estimating a <b>model</b> and the second one consists in using this model to <b>classify</b> the data. Our <b>model</b> is going to be built out of reasonably "clean" events. Here by clean we mean events which are not due to a nearly simultaneous firing of two or more neurons; and simultaneity is defined on the time scale of one of our cuts. When the model will be subsequently used to classify data, events are going to decomposed into their (putative) constituent when they are not "clean", that is, <b>superposition are going to be looked and accounted for</b>. 
+</p>
+
+<p>
+In order to eliminate the most obvious superpositions we are going to use a rather brute force approach, looking at the sides of the central peak of our median event and checking if individual events are not too large there, that is do not exhibit extra peaks. We first define a function doing this job:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org782b809"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">good_evts_fct</span>(samp, thr=3):
+    <span style="color: #ff6347;">samp_med</span> = <span style="color: #729fcf;">apply</span>(np.median,0,samp)
+    <span style="color: #ff6347;">samp_mad</span> = <span style="color: #729fcf;">apply</span>(swp.mad,0,samp)
+    <span style="color: #ff6347;">above</span> = samp_med &gt; 0
+    <span style="color: #ff6347;">samp_r</span> = samp.copy()
+    <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(samp.shape[0]): <span style="color: #ff6347;">samp_r</span>[i,above] = 0
+    <span style="color: #ff6347;">samp_med</span>[above] = 0
+    <span style="color: #ff6347;">res</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+                np.<span style="color: #729fcf;">all</span>(<span style="color: #729fcf;">abs</span>((x-samp_med)/samp_mad) &lt; thr),
+                1,samp_r)
+    <span style="color: #729fcf; font-weight: bold;">return</span> res
+
+</pre>
+</div>
+
+<p>
+We then apply our new function to our sample using a threshold of 8 (set by trial and error):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd38efed"><span style="color: #ff6347;">goodEvts</span> = good_evts_fct(evtsE,8)
+</pre>
+</div>
+
+<p>
+Out of <code>908</code> events we get <code>858</code> "good" ones. As usual, the first 200 good ones can be visualized with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">swp.plot_events(evtsE[goodEvts,:][:200,:])
+</pre>
+</div>
+
+
+<div id="org505f86b" class="figure">
+<p><img src="figsL1/first-200-clean-of-evtsE.png" alt="first-200-clean-of-evtsE.png" />
+</p>
+<p><span class="figure-number">Figure 9: </span>First 200 "good" events of <code>evtsE</code>. Cuts from the four recording sites appear one after the other. The background (white / grey) changes with the site. In red, <i>robust</i> estimate of the "central" event obtained by computing the pointwise median. In blue, <i>robust</i> estimate of the scale (SD) obtained by computing the pointwise <code>MAD</code>.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8ffb791" class="outline-2">
+<h2 id="org8ffb791"><span class="section-number-2">8</span> Dimension reduction</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+
+<div id="outline-container-orga4d42fb" class="outline-3">
+<h3 id="orga4d42fb"><span class="section-number-3">8.1</span> Principal Component Analysis (PCA)</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+Our events are living right now in an 180 dimensional space (our cuts are 45 sampling points long and we are working with 4 recording sites simultaneously). It turns out that it hard for most humans to perceive structures in such spaces. It also hard, not to say impossible with a realistic sample size, to estimate probability densities (which is what model based clustering algorithms are actually doing) in such spaces, unless one is ready to make strong assumptions about these densities. It is therefore usually a good practice to try to reduce the dimension of the <a href="http://en.wikipedia.org/wiki/Sample_space">sample space</a> used to represent the data. We are going to that with <a href="http://en.wikipedia.org/wiki/Principal_component_analysis">principal component analysis</a> (<code>PCA</code>), using it on our "good" events. 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org46e7dd6"><span style="color: #729fcf; font-weight: bold;">from</span> numpy.linalg <span style="color: #729fcf; font-weight: bold;">import</span> svd
+<span style="color: #ff6347;">varcovmat</span> = np.cov(evtsE[goodEvts,:].T)
+<span style="color: #ff6347;">u</span>, <span style="color: #ff6347;">s</span>, <span style="color: #ff6347;">v</span> = svd(varcovmat)
+</pre>
+</div>
+
+<p>
+With this "back to the roots" approach, <code>u</code> should be an orthonormal matrix whose column are made of the <code>principal components</code> (and <code>v</code> should be the transpose of <code>u</code> since our matrix <code>varcovmat</code> is symmetric and real by construction). <code>s</code> is a vector containing the amount of sample variance explained by each principal component.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org38f2d1c" class="outline-3">
+<h3 id="org38f2d1c"><span class="section-number-3">8.2</span> Exploring <code>PCA</code> results</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+<code>PCA</code> is a rather abstract procedure to most of its users, at least when they start using it. But one way to grasp what it does is to plot the <code>mean event</code> plus or minus, say five times, each principal components like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff6347;">evt_idx</span> = <span style="color: #729fcf;">range</span>(180)
+<span style="color: #ff6347;">evtsE_good_mean</span> = np.mean(evtsE[goodEvts,:],0)
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(4):
+    plt.subplot(2,2,i+1)
+    plt.plot(evt_idx,evtsE_good_mean, <span style="color: #ad7fa8; font-style: italic;">'black'</span>,evt_idx,
+             evtsE_good_mean + 5 * u[:,i],
+             <span style="color: #ad7fa8; font-style: italic;">'red'</span>,evt_idx,evtsE_good_mean - 5 * u[:,i], <span style="color: #ad7fa8; font-style: italic;">'blue'</span>)
+    plt.title(<span style="color: #ad7fa8; font-style: italic;">'PC'</span> + <span style="color: #729fcf;">str</span>(i) + <span style="color: #ad7fa8; font-style: italic;">': '</span> + <span style="color: #729fcf;">str</span>(<span style="color: #729fcf;">round</span>(s[i]/<span style="color: #729fcf;">sum</span>(s)*100)) +<span style="color: #ad7fa8; font-style: italic;">'%'</span>)
+
+</pre>
+</div>
+
+
+<div id="org42264ae" class="figure">
+<p><img src="figsL1/explore-evtsE-PC0to3.png" alt="explore-evtsE-PC0to3.png" />
+</p>
+<p><span class="figure-number">Figure 10: </span>PCA of <code>evtsE</code> (for "good" events) exploration (PC 1 to 4). Each of the 4 graphs shows the mean waveform (black), the mean waveform + 5 x PC (red), the mean - 5 x PC (blue) for each of the first 4 PCs. The fraction of the total variance "explained" by the component appears in the title of each graph.</p>
+</div>
+
+<p>
+We can see on Fig. \ref{fig:explore-evtsE-PC0to3} that the first 3 PCs correspond to pure amplitude variations. An event with a large projection (<code>score</code>) on the first PC is smaller than the average event on recording sites 1, 2 and 3, but not on 4. An event with a large projection on PC 1 is larger than average on site 1, smaller than average on site 2 and 3 and identical to the average on site 4. An event with a large projection on PC 2 is larger than the average on site 4 only. PC 3 is the first principal component corresponding to a change in <i>shape</i> as opposed to <i>amplitude</i>. A large projection on PC 3 means that the event as a shallower first valley and a deeper second valley than the average event on all recording sites.  
+</p>
+
+<p>
+We now look at the next 4 principal components:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(4,8):
+    plt.subplot(2,2,i-3)
+    plt.plot(evt_idx,evtsE_good_mean, <span style="color: #ad7fa8; font-style: italic;">'black'</span>,
+             evt_idx,evtsE_good_mean + 5 * u[:,i], <span style="color: #ad7fa8; font-style: italic;">'red'</span>,
+             evt_idx,evtsE_good_mean - 5 * u[:,i], <span style="color: #ad7fa8; font-style: italic;">'blue'</span>)
+    plt.title(<span style="color: #ad7fa8; font-style: italic;">'PC'</span> + <span style="color: #729fcf;">str</span>(i) + <span style="color: #ad7fa8; font-style: italic;">': '</span> + <span style="color: #729fcf;">str</span>(<span style="color: #729fcf;">round</span>(s[i]/<span style="color: #729fcf;">sum</span>(s)*100)) +<span style="color: #ad7fa8; font-style: italic;">'%'</span>)
+
+</pre>
+</div>
+
+
+<div id="orgef87839" class="figure">
+<p><img src="figsL1/explore-evtsE-PC4to7.png" alt="explore-evtsE-PC4to7.png" />
+</p>
+<p><span class="figure-number">Figure 11: </span>PCA of <code>evtsE</code> (for "good" events) exploration (PC 4 to 7). Each of the 4 graphs shows the mean waveform (black), the mean waveform + 5 x PC (red), the mean - 5 x PC (blue). The fraction of the total variance "explained" by the component appears in between parenthesis in the title of each graph.</p>
+</div>
+
+<p>
+An event with a large projection on PC 4 (Fig. \ref{fig:explore-evtsE-PC4to7}) tends to be "slower" than the average event. An event with a large projection on PC 5 exhibits a slower kinetics of its second valley than the average event. PC 4 and 5 correspond to effects shared among recording sites. PC 6 correspond also to a "change of shape" effect on all sites except the first. Events with a large projection on PC 7 rise slightly faster and decay slightly slower than the average event on all recording site. Notice also that PC 7 has a "noisier" aspect than the other suggesting that we are reaching the limit of the "events extra variability" compared to the variability present in the background noise.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orga19ec0a" class="outline-3">
+<h3 id="orga19ec0a"><span class="section-number-3">8.3</span> Static representation of the projected data</h3>
+<div class="outline-text-3" id="text-8-3">
+<p>
+We can build a <code>scatter plot matrix</code> showing the projections of our "good" events sample onto the plane defined by pairs of the few first PCs:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org8aeb54f"><span style="color: #ff6347;">evtsE_good_P0_to_P3</span> = np.dot(evtsE[goodEvts,:],u[:,0:4])
+<span style="color: #729fcf; font-weight: bold;">from</span> pandas.tools.plotting <span style="color: #729fcf; font-weight: bold;">import</span> scatter_matrix
+<span style="color: #729fcf; font-weight: bold;">import</span> pandas <span style="color: #729fcf; font-weight: bold;">as</span> pd
+<span style="color: #ff6347;">df</span> = pd.DataFrame(evtsE_good_P0_to_P3)
+scatter_matrix(df,alpha=0.2,s=4,c=<span style="color: #ad7fa8; font-style: italic;">'k'</span>,figsize=(6,6),
+               diagonal=<span style="color: #ad7fa8; font-style: italic;">'kde'</span>,marker=<span style="color: #ad7fa8; font-style: italic;">"."</span>)
+ 
+</pre>
+</div>
+
+
+<div id="org9f5a51d" class="figure">
+<p><img src="figsL1/Fig4.png" alt="Fig4.png" />
+</p>
+<p><span class="figure-number">Figure 12: </span>Scatter plot matrix of the projections of the good events in <code>evtsE</code> onto the planes defined by the first 4 PCs. The diagonal shows a smooth (Gaussian kernel based) density estimate of the projection of the sample on the corresponding PC. Using the first 8 PCs does not make finner structure visible.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga2b0507" class="outline-3">
+<h3 id="orga2b0507"><span class="section-number-3">8.4</span> Dynamic visualization of the data with <code>GGobi</code></h3>
+<div class="outline-text-3" id="text-8-4">
+<p>
+The best way to discern structures in "high dimensional" data is to dynamically visualize them. To this end, the tool of choice is <a href="http://www.ggobi.org/">GGobi</a>, an open source software available on <code>Linux</code>, <code>Windows</code> and <code>MacOS</code>. We start by exporting our data in <code>csv</code> format to our disk:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org24950ea"><span style="color: #729fcf; font-weight: bold;">import</span> csv
+<span style="color: #ff6347;">f</span> = <span style="color: #729fcf;">open</span>(<span style="color: #ad7fa8; font-style: italic;">'evtsE.csv'</span>,<span style="color: #ad7fa8; font-style: italic;">'w'</span>)
+<span style="color: #ff6347;">w</span> = csv.writer(f)
+w.writerows(np.dot(evtsE[goodEvts,:],u[:,:8]))
+f.close()
+</pre>
+</div>
+
+<p>
+The following terse procedure should allow the reader to get going with <code>GGobi</code>:
+</p>
+<ul class="org-ul">
+<li>Launch <code>GGobi</code></li>
+<li>In menu: <code>File</code> -&gt; <code>Open</code>, select <code>evtsE.csv</code>.</li>
+<li>Since the glyphs are rather large, start by changing them for smaller ones:
+<ul class="org-ul">
+<li>Go to menu: <code>Interaction</code> -&gt; <code>Brush</code>.</li>
+<li>On the Brush panel which appeared check the <code>Persistent</code> box.</li>
+<li>Click on <code>Choose color &amp; glyph...</code>.</li>
+<li>On the chooser which pops out, click on the small dot on the upper left of the left panel.</li>
+<li>Go back to the window with the data points.</li>
+<li>Right click on the lower right corner of the rectangle which appeared on the figure after you selected <code>Brush</code>.</li>
+<li>Dragg the rectangle corner in order to cover the whole set of points.</li>
+<li>Go back to the <code>Interaction</code> menu and select the first row to go back where you were at the start.</li>
+</ul></li>
+<li>Select menu: <code>View</code> -&gt; <code>Rotation</code>.</li>
+<li>Adjust the speed of the rotation in order to see things properly.</li>
+</ul>
+<p>
+We easily discern 10 rather well separated clusters. Meaning that an automatic clustering with 10 clusters on the first 3 principal components should do the job.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge0bcb34" class="outline-2">
+<h2 id="orge0bcb34"><span class="section-number-2">9</span> Clustering with K-Means</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+Since our dynamic visualization shows 10 well separated clusters in 3 dimension, a simple <a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means</a> should do the job. We are using here the <a href="http://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html#sklearn.cluster.KMeans">KMeans</a> class of <a href="http://scikit-learn.org/stable/index.html">scikit-learn</a>: 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org318ad08"><span style="color: #729fcf; font-weight: bold;">from</span> sklearn.cluster <span style="color: #729fcf; font-weight: bold;">import</span> KMeans
+<span style="color: #ff6347;">km10</span> = KMeans(n_clusters=10, init=<span style="color: #ad7fa8; font-style: italic;">'k-means++'</span>, n_init=100, max_iter=100)
+km10.fit(np.dot(evtsE[goodEvts,:],u[:,0:3]))
+<span style="color: #ff6347;">c10</span> = km10.fit_predict(np.dot(evtsE[goodEvts,:],u[:,0:3]))
+</pre>
+</div>
+
+<p>
+In order to facilitate comparison when models with different numbers of clusters or when different models are used, clusters are sorted by "size". The size is defined here as the sum of the absolute value of the median of the cluster (an L1 norm):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgaba1b9a"><span style="color: #ff6347;">cluster_median</span> = <span style="color: #729fcf;">list</span>([(i,
+                        np.apply_along_axis(np.median,0,
+                                            evtsE[goodEvts,:][c10 == i,:]))
+                                            <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(10)
+                                            <span style="color: #729fcf; font-weight: bold;">if</span> <span style="color: #729fcf;">sum</span>(c10 == i) &gt; 0])
+<span style="color: #ff6347;">cluster_size</span> = <span style="color: #729fcf;">list</span>([np.<span style="color: #729fcf;">sum</span>(np.<span style="color: #729fcf;">abs</span>(x[1])) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> cluster_median])
+<span style="color: #ff6347;">new_order</span> = <span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">reversed</span>(np.argsort(cluster_size)))
+<span style="color: #ff6347;">new_order_reverse</span> = <span style="color: #729fcf;">sorted</span>(<span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(new_order)), key=new_order.__getitem__)
+<span style="color: #ff6347;">c10b</span> = [new_order_reverse[i] <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> c10]
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-orgf463c9c" class="outline-3">
+<h3 id="orgf463c9c"><span class="section-number-3">9.1</span> Cluster specific plots</h3>
+<div class="outline-text-3" id="text-9-1">
+<p>
+Looking at the first 5 clusters we get Fig. \ref{fig:events-clusters0to4} with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.subplot(511)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 0,:])
+plt.ylim([-15,20])
+plt.subplot(512)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 1,:])
+plt.ylim([-15,20])
+plt.subplot(513)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 2,:])
+plt.ylim([-15,20])
+plt.subplot(514)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 3,:])
+plt.ylim([-15,20])
+plt.subplot(515)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 4,:])
+plt.ylim([-15,20])
+</pre>
+</div>
+
+
+<div id="org0da9aac" class="figure">
+<p><img src="figsL1/events-clusters0to4.png" alt="events-clusters0to4.png" />
+</p>
+<p><span class="figure-number">Figure 13: </span>First 5 clusters. Cluster 0 at the top, cluster 4 at the bottom. Red, cluster specific central / median event. Blue, cluster specific <code>MAD</code>.</p>
+</div>
+
+<p>
+Looking at the last 5 clusters we get Fig. \ref{fig:events-clusters5to9} with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.subplot(511)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 5,:])
+plt.ylim([-10,10])
+plt.subplot(512)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 6,:])
+plt.ylim([-10,10])
+plt.subplot(513)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 7,:])
+plt.ylim([-10,10])
+plt.subplot(514)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 8,:])
+plt.ylim([-10,10])
+plt.subplot(515)
+swp.plot_events(evtsE[goodEvts,:][np.array(c10b) == 9,:])
+plt.ylim([-10,10])
+</pre>
+</div>
+
+
+<div id="org3ebec4d" class="figure">
+<p><img src="figsL1/events-clusters5to9.png" alt="events-clusters5to9.png" />
+</p>
+<p><span class="figure-number">Figure 14: </span>Last 5 clusters. Cluster 5 at the top, cluster 9 at the bottom. Red, cluster specific central / median event. Blue, cluster specific <code>MAD</code>. Notice the change in ordinate scale compared to the previous figure.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org615816c" class="outline-3">
+<h3 id="org615816c"><span class="section-number-3">9.2</span> Results inspection with <code>GGobi</code></h3>
+<div class="outline-text-3" id="text-9-2">
+<p>
+We start by checking our clustering quality with <code>GGobi</code>. To this end we export the data and the labels of each event:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org54e6c3c"><span style="color: #ff6347;">f</span> = <span style="color: #729fcf;">open</span>(<span style="color: #ad7fa8; font-style: italic;">'evtsEsorted.csv'</span>,<span style="color: #ad7fa8; font-style: italic;">'w'</span>)
+<span style="color: #ff6347;">w</span> = csv.writer(f)
+w.writerows(np.concatenate((np.dot(evtsE[goodEvts,:],u[:,:8]),
+                            np.array([c10b]).T),
+                            axis=1))
+f.close()
+</pre>
+</div>
+
+<p>
+An again succinct description of how to do the dynamical visual check is:
+</p>
+<ul class="org-ul">
+<li>Load the new data into GGobi like before.</li>
+<li>In menu: <code>Display</code> -&gt; <code>New Scatterplot Display</code>, select <code>evtsEsorted.csv</code>.</li>
+<li>Change the glyphs like before.</li>
+<li>In menu: <code>Tools</code> -&gt; <code>Color Schemes</code>, select a scheme with 10 colors, like <code>Spectral</code>, <code>Spectral 10</code>.</li>
+<li>In menu: <code>Tools</code> -&gt; <code>Automatic Brushing</code>, select <code>evtsEsorted.csv</code> tab and, within this tab, select variable <code>c10b</code>. Then click on <code>Apply</code>.</li>
+<li>Select <code>View</code> -&gt; <code>Rotation</code> like before and see your result.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org45e2c12" class="outline-2">
+<h2 id="org45e2c12"><span class="section-number-2">10</span> Spike "peeling": a "Brute force" superposition resolution</h2>
+<div class="outline-text-2" id="text-10">
+<p>
+We are going to resolve (the most "obvious") superpositions by a "recursive peeling method":
+</p>
+<ol class="org-ol">
+<li>Events are detected and cut from the raw data <i>or from an already peeled version of the data</i>.</li>
+<li>The closest center (in term of Euclidean distance) to the event is found.</li>
+<li>If the residual sum of squares (<code>RSS</code>), that is: (actual data - best center)\(^2\), is smaller than the squared norm of a cut, the best center is subtracted from the data on which detection was performed&#x2014;jitter is again compensated for at this stage.</li>
+<li>Go back to step 1 or stop.</li>
+</ol>
+
+<p>
+To apply this procedure, we need, for each cluster, estimates of its center and of its first two derivatives. Function <code>mk_center_dictionary</code> does the job for us. We must moreover build our clusters' centers such that they can be used for subtraction, <i>this implies that we should make them long enough, on both side of the peak, to see them go back to baseline</i>. Formal parameters <code>before</code> and <code>after</code> bellow should therefore be set to larger values than the ones used for clustering: 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4ba7067"><span style="color: #ff6347;">centers</span> = { <span style="color: #ad7fa8; font-style: italic;">"Cluster "</span> + <span style="color: #729fcf;">str</span>(i) :
+            swp.mk_center_dictionary(sp0E[goodEvts][np.array(c10b)==i],
+                                     np.array(data))
+            <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(10)}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org713d5a3" class="outline-3">
+<h3 id="org713d5a3"><span class="section-number-3">10.1</span> First peeling</h3>
+<div class="outline-text-3" id="text-10-1">
+<p>
+Function <code>classify_and_align_evt</code> is used next. For each detected event, it matches the closest template, correcting for the jitter, if the closest template is close enough:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">swp.classify_and_align_evt(sp0[0],np.array(data),centers)
+</pre>
+</div>
+
+<pre class="example">
+['Cluster 7', 281, -0.14107833394834743]
+
+</pre>
+
+<p>
+We can use the function on every detected event. A trick here is to store the matrix version of the data in order to avoid the conversion of the list of vectors (making the data of the different channels) into a matrix for each detected event:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf752cb6"><span style="color: #ff6347;">data0</span> = np.array(data) 
+<span style="color: #ff6347;">round0</span> = [swp.classify_and_align_evt(sp0[i],data0,centers)
+          <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(sp0))]
+</pre>
+</div>
+
+<p>
+We can check how many events got unclassified on a total of <code>1795</code> :
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #729fcf;">len</span>([x[1] <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> round0 <span style="color: #729fcf; font-weight: bold;">if</span> x[0] == <span style="color: #ad7fa8; font-style: italic;">'?'</span>])
+</pre>
+</div>
+
+<pre class="example">
+22
+
+</pre>
+
+<p>
+Using function <code>predict_data</code>, we create an ideal data trace given events' positions, events' origins and a clusters' catalog:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgeda00db"><span style="color: #ff6347;">pred0</span> = swp.predict_data(round0,centers)
+</pre>
+</div>
+
+<p>
+We then subtract the prediction (<code>pred0</code>) from the data (<code>data0</code>) to get the "peeled" data (<code>data1</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge69e1b0"><span style="color: #ff6347;">data1</span> = data0 - pred0
+</pre>
+</div>
+
+<p>
+We can compare the original data with the result of the "first peeling" to get Fig. \ref{fig:FirstPeeling}:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(tt, data0[0,], color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data1[0,], color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data0[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data1[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data0[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data1[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data0[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data1[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+plt.xlim([0.9,1])
+</pre>
+</div>
+
+
+<div id="org622305e" class="figure">
+<p><img src="figsL1/FirstPeeling.png" alt="FirstPeeling.png" />
+</p>
+<p><span class="figure-number">Figure 15: </span>100 ms of the locust data set. Black, original data; red, after first peeling.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0cddecf" class="outline-3">
+<h3 id="org0cddecf"><span class="section-number-3">10.2</span> Second peeling</h3>
+<div class="outline-text-3" id="text-10-2">
+<p>
+We then take <code>data1</code> as our former <code>data0</code> and we repeat the procedure. We do it with slight modifications: detection is done on a single recording site and a shorter filter length is used before detecting the events. Doing detection on a single site (here site 0) allows us to correct some drawbacks of our crude spike detection method. When we used it the first time we summed the filtered and rectified versions of the data before looking at peaks. This summation can lead to badly defined spike times when two neurons that are large on different recording sites, say site 0 and site 1 fire at nearly the same time. The summed event can then have a peak in between the two true peaks and our jitter correction cannot resolve that. We are therefore going to perform detection on the different sites. The jitter estimation and the subtraction are always going to be done on the 4 recording sites:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7d49565"><span style="color: #ff6347;">data_filtered</span> = np.apply_along_axis(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+                                    fftconvolve(x,np.array([1,1,1])/3.,
+                                                <span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+                                    1,data1)
+<span style="color: #ff6347;">data_filtered</span> = (data_filtered.transpose() /
+                 np.apply_along_axis(swp.mad,1,
+                                     data_filtered)).transpose()
+<span style="color: #ff6347;">data_filtered</span>[data_filtered &lt; 4] = 0
+<span style="color: #ff6347;">sp1</span> = swp.peak(data_filtered[0,:])
+</pre>
+</div>
+
+<p>
+We classify the events and obtain the new prediction and the new "data":
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgfb26719"><span style="color: #ff6347;">round1</span> = [swp.classify_and_align_evt(sp1[i],data1,centers)
+          <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(sp1))]
+<span style="color: #ff6347;">pred1</span> = swp.predict_data(round1,centers)
+<span style="color: #ff6347;">data2</span> = data1 - pred1
+</pre>
+</div>
+
+<p>
+We can check how many events got unclassified on a total of <code>244</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #729fcf;">len</span>([x[1] <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> round1 <span style="color: #729fcf; font-weight: bold;">if</span> x[0] == <span style="color: #ad7fa8; font-style: italic;">'?'</span>])
+</pre>
+</div>
+
+<pre class="example">
+58
+
+</pre>
+
+<p>
+We can compare the first peeling with the second one (Fig. \ref{fig:SecondPeeling}):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(tt, data1[0,], color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data2[0,], color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data1[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data2[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data1[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data2[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data1[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data2[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+plt.xlim([0.9,1])
+</pre>
+</div>
+
+
+<div id="org7296445" class="figure">
+<p><img src="figsL1/SecondPeeling.png" alt="SecondPeeling.png" />
+</p>
+<p><span class="figure-number">Figure 16: </span>100 ms of the locust data set. Black, first peeling; red, second peeling.</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org4bf2e49" class="outline-3">
+<h3 id="org4bf2e49"><span class="section-number-3">10.3</span> Third peeling</h3>
+<div class="outline-text-3" id="text-10-3">
+<p>
+We take <code>data2</code> as our former <code>data1</code> and we repeat the procedure detecting on channel 1:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org50080c1"><span style="color: #ff6347;">data_filtered</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+                      fftconvolve(x,np.array([1,1,1])/3.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+                      1,data2)
+<span style="color: #ff6347;">data_filtered</span> = (data_filtered.transpose() / \
+                 <span style="color: #729fcf;">apply</span>(swp.mad,1,data_filtered)).transpose()
+<span style="color: #ff6347;">data_filtered</span>[data_filtered &lt; 4] = 0
+<span style="color: #ff6347;">sp2</span> = swp.peak(data_filtered[1,:])
+<span style="color: #729fcf;">len</span>(sp2)
+</pre>
+</div>
+
+<pre class="example">
+129
+
+</pre>
+<p>
+The classification follows with the prediction and the number of unclassified events:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgaa8f71a"><span style="color: #ff6347;">round2</span> = [swp.classify_and_align_evt(sp2[i],data2,centers) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(sp2))]
+<span style="color: #ff6347;">pred2</span> = swp.predict_data(round2,centers)
+<span style="color: #ff6347;">data3</span> = data2 - pred2
+<span style="color: #729fcf;">len</span>([x[1] <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> round2 <span style="color: #729fcf; font-weight: bold;">if</span> x[0] == <span style="color: #ad7fa8; font-style: italic;">'?'</span>])
+</pre>
+</div>
+
+<pre class="example">
+22
+
+</pre>
+<p>
+We can compare the second peeling with the third one (Fig. \ref{fig:ThirdPeeling}):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(tt, data2[0,], color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data3[0,], color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data2[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data3[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data2[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data3[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data2[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data3[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+plt.xlim([0.9,1])
+</pre>
+</div>
+
+
+<div id="org2821554" class="figure">
+<p><img src="figsL1/ThirdPeeling.png" alt="ThirdPeeling.png" />
+</p>
+<p><span class="figure-number">Figure 17: </span>100 ms of the locust data set. Black, second peeling; red, third peeling. <i>In this portion of data we see events but none belonging to our centers catalog</i>.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7ba7f3d" class="outline-3">
+<h3 id="org7ba7f3d"><span class="section-number-3">10.4</span> Fourth peeling</h3>
+<div class="outline-text-3" id="text-10-4">
+<p>
+We take <code>data3</code> as our former <code>data2</code> and we repeat the procedure detecting on channel 2:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org59f14c2"><span style="color: #ff6347;">data_filtered</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+                      fftconvolve(x,np.array([1,1,1])/3.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+                      1,data3)
+<span style="color: #ff6347;">data_filtered</span> = (data_filtered.transpose() / \
+                 <span style="color: #729fcf;">apply</span>(swp.mad,1,data_filtered)).transpose()
+<span style="color: #ff6347;">data_filtered</span>[data_filtered &lt; 4] = 0
+<span style="color: #ff6347;">sp3</span> = swp.peak(data_filtered[2,:])
+<span style="color: #729fcf;">len</span>(sp3)
+</pre>
+</div>
+
+<pre class="example">
+99
+
+</pre>
+
+<p>
+The classification follows with the prediction and the number of unclassified events:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org16a8046"><span style="color: #ff6347;">round3</span> = [swp.classify_and_align_evt(sp3[i],data3,centers) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(sp3))]
+<span style="color: #ff6347;">pred3</span> = swp.predict_data(round3,centers)
+<span style="color: #ff6347;">data4</span> = data3 - pred3
+<span style="color: #729fcf;">len</span>([x[1] <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> round3 <span style="color: #729fcf; font-weight: bold;">if</span> x[0] == <span style="color: #ad7fa8; font-style: italic;">'?'</span>])
+</pre>
+</div>
+
+<pre class="example">
+16
+
+</pre>
+
+<p>
+We can compare the third peeling with the fourth one (Fig. \ref{fig:FourthPeeling}) looking at a different part of the data than on the previous figures:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(tt, data3[0,], color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data4[0,], color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data3[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data4[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data3[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data4[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data3[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data4[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+plt.xlim([3.9,4])
+</pre>
+</div>
+
+
+<div id="orgacd0cc6" class="figure">
+<p><img src="figsL1/FourthPeeling.png" alt="FourthPeeling.png" />
+</p>
+<p><span class="figure-number">Figure 18: </span>100 ms of the locust data set (different time frame than on the previous plot). Black, third peeling; red, fourth peeling. <i>On this portion of the trace, nothing was detected on site 2 (the third one, remember that <code>Python</code> starts numbering at 0)</i>.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0c1c0dc" class="outline-3">
+<h3 id="org0c1c0dc"><span class="section-number-3">10.5</span> Fifth peeling</h3>
+<div class="outline-text-3" id="text-10-5">
+<p>
+We take <code>data4</code> as our former <code>data3</code> and we repeat the procedure detecting on channel 3:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org6eac730"><span style="color: #ff6347;">data_filtered</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+                      fftconvolve(x,np.array([1,1,1])/3.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+                      1,data4)
+<span style="color: #ff6347;">data_filtered</span> = (data_filtered.transpose() / \
+                 <span style="color: #729fcf;">apply</span>(swp.mad,1,data_filtered)).transpose()
+<span style="color: #ff6347;">data_filtered</span>[data_filtered &lt; 4] = 0
+<span style="color: #ff6347;">sp4</span> = swp.peak(data_filtered[3,:])
+<span style="color: #729fcf;">len</span>(sp4)
+</pre>
+</div>
+
+<pre class="example">
+170
+
+</pre>
+
+<p>
+The classification follows with the prediction and the number of unclassified events:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org9b62056"><span style="color: #ff6347;">round4</span> = [swp.classify_and_align_evt(sp4[i],data4,centers) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(sp4))]
+<span style="color: #ff6347;">pred4</span> = swp.predict_data(round4,centers)
+<span style="color: #ff6347;">data5</span> = data4 - pred4
+<span style="color: #729fcf;">len</span>([x[1] <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> round4 <span style="color: #729fcf; font-weight: bold;">if</span> x[0] == <span style="color: #ad7fa8; font-style: italic;">'?'</span>])
+</pre>
+</div>
+
+<pre class="example">
+53
+
+</pre>
+
+<p>
+We can compare the third peeling with the fourth one (Fig. \ref{fig:FifthPeeling}):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(tt, data4[0,], color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[0,], color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data4[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data4[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data4[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+plt.xlim([3.9,4])
+</pre>
+</div>
+
+
+<div id="org8e5b562" class="figure">
+<p><img src="figsL1/FifthPeeling.png" alt="FifthPeeling.png" />
+</p>
+<p><span class="figure-number">Figure 19: </span>100 ms of the locust data set. Black, fourth peeling; red, fifth peeling. Two events got detected on channel 3 and subtracted.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6c23204" class="outline-3">
+<h3 id="org6c23204"><span class="section-number-3">10.6</span> General comparison</h3>
+<div class="outline-text-3" id="text-10-6">
+<p>
+We can compare the raw data with the fifth peeling on the first second (Fig. \ref{fig:RawVSFifthPeeling}):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(tt, data0[0,], color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[0,], color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data0[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[1,]-15, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data0[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[2,]-25, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.plot(tt, data0[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.plot(tt, data5[3,]-40, color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=0.3)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
+plt.xlim([0,1])
+</pre>
+</div>
+
+
+<div id="org619a022" class="figure">
+<p><img src="figsL1/RawVSFifthPeeling.png" alt="RawVSFifthPeeling.png" />
+</p>
+<p><span class="figure-number">Figure 20: </span>The first second of the locust data set. Black, raw data; red, fifth peeling.</p>
+</div>
+
+<p>
+We can also look at the remaining unclassified events; they don't look like any of our templates (Fig. \ref{fig:FifthPeelingRemainingBad}):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #ff6347;">bad_ones</span> = [x[1] <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> round4 <span style="color: #729fcf; font-weight: bold;">if</span> x[0] == <span style="color: #ad7fa8; font-style: italic;">'?'</span>]
+<span style="color: #ff6347;">r4BE</span> = swp.mk_events(bad_ones, data4)
+swp.plot_events(r4BE)
+</pre>
+</div>
+
+
+<div id="orgcd60443" class="figure">
+<p><img src="figsL1/FifthPeelingRemainingBad.png" alt="FifthPeelingRemainingBad.png" />
+</p>
+<p><span class="figure-number">Figure 21: </span>The 53 remaining bad events after the fifth peeling.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org11cd061" class="outline-2">
+<h2 id="org11cd061"><span class="section-number-2">11</span> Getting the spike trains</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+Once we have decided to stop the peeling iterations we can extract our spike trains with (notice the syntax difference between <code>Python 3</code> and <code>Python 2</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge63a96d"><span style="color: #ff6347;">round_all</span> = round0.copy() <span style="color: #2c5115;"># </span><span style="color: #888a85;">Python 3</span>
+<span style="color: #2c5115;"># </span><span style="color: #888a85;">round_all = round0[:] # Python 2</span>
+round_all.extend(round1)
+round_all.extend(round2)
+round_all.extend(round3)
+round_all.extend(round4)
+<span style="color: #ff6347;">spike_trains</span> = { n : np.sort([x[1] + x[2] <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> round_all
+                              <span style="color: #729fcf; font-weight: bold;">if</span> x[0] == n]) <span style="color: #729fcf; font-weight: bold;">for</span> n <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">list</span>(centers)}
+</pre>
+</div>
+<p>
+The number of spikes attributed to each neuron is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">[(n,<span style="color: #729fcf;">len</span>(spike_trains[n])) <span style="color: #729fcf; font-weight: bold;">for</span> n <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">list</span>(centers)]
+</pre>
+</div>
+
+<pre class="example">
+[('Cluster 0', 92),
+ ('Cluster 1', 173),
+ ('Cluster 2', 101),
+ ('Cluster 3', 173),
+ ('Cluster 4', 63),
+ ('Cluster 5', 149),
+ ('Cluster 6', 238),
+ ('Cluster 7', 233),
+ ('Cluster 8', 456),
+ ('Cluster 9', 588)]
+</pre>
+</div>
+</div>
+
+
+<div id="outline-container-org6b6d8a6" class="outline-2">
+<h2 id="org6b6d8a6"><span class="section-number-2">12</span> Individual function definitions</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+Short function are presented in 'one piece'. The longer ones are presented with their <code>docstring</code> first followed by the body of the function. To get the actual function you should replace the <code>&lt;&lt;docstring&gt;&gt;</code> appearing in the function definition by the actual <code>doctring</code>. This is just a direct application of the <a href="http://en.wikipedia.org/wiki/Literate_programming">literate programming</a> paradigm. More complicated functions are split into more parts with their own descriptions.
+</p>
+</div>
+
+<div id="outline-container-org43e35e1" class="outline-3">
+<h3 id="org43e35e1"><span class="section-number-3">12.1</span> <code>plot_data_list</code></h3>
+<div class="outline-text-3" id="text-12-1">
+<p>
+We define a function, <code>plot_data_list</code>, making our raw data like displaying command lighter, starting with the <code>docstring</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb1b2520"><span style="color: #888a85;">"""Plots data when individual recording channels make up elements</span>
+<span style="color: #888a85;">of a list.</span>
+
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">data_list: a list of numpy arrays of dimension 1 that should all</span>
+<span style="color: #888a85;">           be of the same length (not checked).</span>
+<span style="color: #888a85;">time_axes: an array with as many elements as the components of</span>
+<span style="color: #888a85;">           data_list. The time values of the abscissa.</span>
+<span style="color: #888a85;">linewidth: the width of the lines drawing the curves.</span>
+<span style="color: #888a85;">color: the color of the curves.</span>
+
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">Nothing is returned, the function is used for its side effect: a</span>
+<span style="color: #888a85;">plot is generated. </span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+Then the definition of the function per se:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge42c138"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">plot_data_list</span>(data_list,
+                   time_axes,
+                   linewidth=0.2,
+                   color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>):
+    &lt;&lt;plot_data_list-doctring&gt;&gt;
+    <span style="color: #ff6347;">nb_chan</span> = <span style="color: #729fcf;">len</span>(data_list)
+    <span style="color: #ff6347;">data_min</span> = [np.<span style="color: #729fcf;">min</span>(x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> data_list]
+    <span style="color: #ff6347;">data_max</span> = [np.<span style="color: #729fcf;">max</span>(x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> data_list]
+    <span style="color: #ff6347;">display_offset</span> = <span style="color: #729fcf;">list</span>(np.cumsum(np.array([0] +
+                                             [data_max[i]-
+                                              data_min[i-1]
+                                             <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span>
+                                             <span style="color: #729fcf;">range</span>(1,nb_chan)])))
+    <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nb_chan):
+        plt.plot(time_axes,data_list[i]-display_offset[i],
+                 linewidth=linewidth,color=color)
+    plt.yticks([])
+    plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>)
+
+</pre>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-org892994a" class="outline-3">
+<h3 id="org892994a"><span class="section-number-3">12.2</span> <code>peak</code></h3>
+<div class="outline-text-3" id="text-12-2">
+<p>
+We define function <code>peak</code> which detects local maxima using an estimate of the derivative of the signal. Only putative maxima that are farther apart than <code>minimal_dist</code> sampling points are kept. The function returns a vector of indices. Its <code>docstring</code> is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge515bc8"><span style="color: #888a85;">"""Find peaks on one dimensional arrays.</span>
+
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">x: a one dimensional array on which scipy.signal.fftconvolve can</span>
+<span style="color: #888a85;">   be called.</span>
+<span style="color: #888a85;">minimal_dist: the minimal distance between two successive peaks.</span>
+<span style="color: #888a85;">not_zero: the smallest value above which the absolute value of</span>
+<span style="color: #888a85;">the derivative is considered not null.</span>
+
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">An array of (peak) indices is returned.</span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+And the function per se:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org5994885"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">peak</span>(x, minimal_dist=15, not_zero=1e-3):
+    &lt;&lt;peak-docstring&gt;&gt;
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">Get the first derivative</span>
+    <span style="color: #ff6347;">dx</span> = scipy.signal.fftconvolve(x,np.array([1,0,-1])/2.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>) 
+    <span style="color: #ff6347;">dx</span>[np.<span style="color: #729fcf;">abs</span>(dx) &lt; not_zero] = 0
+    <span style="color: #ff6347;">dx</span> = np.diff(np.sign(dx))
+    <span style="color: #ff6347;">pos</span> = np.arange(<span style="color: #729fcf;">len</span>(dx))[dx &lt; 0]
+    <span style="color: #729fcf; font-weight: bold;">return</span> pos[:-1][np.diff(pos) &gt; minimal_dist]
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org291bb07" class="outline-3">
+<h3 id="org291bb07"><span class="section-number-3">12.3</span> <code>cut_sgl_evt</code></h3>
+<div class="outline-text-3" id="text-12-3">
+<p>
+Function <code>mk_events</code> (defined next) that we will use directly will call  <code>cut_sgl_evt</code>. As its name says cuts a single event (an return a vector with the cuts on the different recording sites glued one after the other). Its <code>docstring</code> is:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgecdd3af"><span style="color: #888a85;">"""Cuts an 'event' at 'evt_pos' on 'data'.</span>
+<span style="color: #888a85;">    </span>
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">evt_pos: an integer, the index (location) of the (peak of) the</span>
+<span style="color: #888a85;">         event.</span>
+<span style="color: #888a85;">data: a matrix whose rows contains the recording channels.</span>
+<span style="color: #888a85;">before: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">        before the reference index / time given by evt_pos.</span>
+<span style="color: #888a85;">after: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">       after the reference index / time given by evt_pos.</span>
+<span style="color: #888a85;">    </span>
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">A vector with the cuts on the different recording sites glued</span>
+<span style="color: #888a85;">one after the other. </span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+And the function per se:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgcbe9739"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">cut_sgl_evt</span>(evt_pos,data,before=14, after=30):
+    &lt;&lt;cut_sgl_evt-docstring&gt;&gt;
+    <span style="color: #ff6347;">ns</span> = data.shape[0] <span style="color: #2c5115;">## </span><span style="color: #888a85;">Number of recording sites</span>
+    <span style="color: #ff6347;">dl</span> = data.shape[1] <span style="color: #2c5115;">## </span><span style="color: #888a85;">Number of sampling points</span>
+    <span style="color: #ff6347;">cl</span> = before+after+1 <span style="color: #2c5115;">## </span><span style="color: #888a85;">The length of the cut</span>
+    <span style="color: #ff6347;">cs</span> = cl*ns <span style="color: #2c5115;">## </span><span style="color: #888a85;">The 'size' of a cut</span>
+    <span style="color: #ff6347;">cut</span> = np.zeros((ns,cl))
+    <span style="color: #ff6347;">idx</span> = np.arange(-before,after+1)
+    <span style="color: #ff6347;">keep</span> = idx + evt_pos
+    <span style="color: #ff6347;">within</span> = np.bitwise_and(0 &lt;= keep, keep &lt; dl)
+    <span style="color: #ff6347;">kw</span> = keep[within]
+    <span style="color: #ff6347;">cut</span>[:,within] = data[:,kw].copy()
+    <span style="color: #729fcf; font-weight: bold;">return</span> cut.reshape(cs) 
+  
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5939562" class="outline-3">
+<h3 id="org5939562"><span class="section-number-3">12.4</span> <code>mk_events</code></h3>
+<div class="outline-text-3" id="text-12-4">
+<p>
+Function <code>mk_events</code> takes a vector of indices as its first argument and returns a matrix with has many rows as events. Its <code>docstring is</code>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orge245ffd"><span style="color: #888a85;">"""Make events matrix out of data and events positions.</span>
+<span style="color: #888a85;">    </span>
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">positions: a vector containing the indices of the events.</span>
+<span style="color: #888a85;">data: a matrix whose rows contains the recording channels.</span>
+<span style="color: #888a85;">before: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">        before the reference index / time given by evt_pos.</span>
+<span style="color: #888a85;">after: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">       after the reference index / time given by evt_pos.</span>
+<span style="color: #888a85;">    </span>
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">A matrix with as many rows as events and whose rows are the cuts</span>
+<span style="color: #888a85;">on the different recording sites glued one after the other. </span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+And the function per se:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf792c4d"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mk_events</span>(positions, data, before=14, after=30):
+    &lt;&lt;mk_events-docstring&gt;&gt;
+    <span style="color: #ff6347;">res</span> = np.zeros((<span style="color: #729fcf;">len</span>(positions),(before+after+1)*data.shape[0]))
+    <span style="color: #729fcf; font-weight: bold;">for</span> i,p <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">enumerate</span>(positions):
+        <span style="color: #ff6347;">res</span>[i,:] = cut_sgl_evt(p,data,before,after)
+    <span style="color: #729fcf; font-weight: bold;">return</span> res 
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org23c83ce" class="outline-3">
+<h3 id="org23c83ce"><span class="section-number-3">12.5</span> <code>plot_events</code></h3>
+<div class="outline-text-3" id="text-12-5">
+<p>
+In order to facilitate events display, we define an event specific plotting function starting with its <code>docstring</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc64aace"><span style="color: #888a85;">"""Plot events.</span>
+<span style="color: #888a85;">    </span>
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">evts_matrix: a matrix of events. Rows are events. Cuts from</span>
+<span style="color: #888a85;">             different recording sites are glued one after the</span>
+<span style="color: #888a85;">             other on each row.</span>
+<span style="color: #888a85;">n_plot: an integer, the number of events to plot (if 'None',</span>
+<span style="color: #888a85;">        default, all are shown).</span>
+<span style="color: #888a85;">n_channels: an integer, the number of recording channels.</span>
+<span style="color: #888a85;">events_color: the color used to display events. </span>
+<span style="color: #888a85;">events_lw: the line width used to display events. </span>
+<span style="color: #888a85;">show_median: should the median event be displayed?</span>
+<span style="color: #888a85;">median_color: color used to display the median event.</span>
+<span style="color: #888a85;">median_lw: line width used to display the median event.</span>
+<span style="color: #888a85;">show_mad: should the MAD be displayed?</span>
+<span style="color: #888a85;">mad_color: color used to display the MAD.</span>
+<span style="color: #888a85;">mad_lw: line width used to display the MAD.</span>
+
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">Noting, the function is used for its side effect.</span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+And the function per se:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org3e5f991"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">plot_events</span>(evts_matrix, 
+                n_plot=<span style="color: #8ae234;">None</span>,
+                n_channels=4,
+                events_color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>, 
+                events_lw=0.1,
+                show_median=<span style="color: #8ae234;">True</span>,
+                median_color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,
+                median_lw=0.5,
+                show_mad=<span style="color: #8ae234;">True</span>,
+                mad_color=<span style="color: #ad7fa8; font-style: italic;">'blue'</span>,
+                mad_lw=0.5):
+    &lt;&lt;plot_events-docstring&gt;&gt;
+    <span style="color: #729fcf; font-weight: bold;">if</span> n_plot <span style="color: #729fcf; font-weight: bold;">is</span> <span style="color: #8ae234;">None</span>:
+        <span style="color: #ff6347;">n_plot</span> = evts_matrix.shape[0]
+
+    <span style="color: #ff6347;">cut_length</span> = evts_matrix.shape[1] // n_channels 
+    
+    <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_plot):
+        plt.plot(evts_matrix[i,:], color=events_color, lw=events_lw)
+    <span style="color: #729fcf; font-weight: bold;">if</span> show_median:
+        <span style="color: #ff6347;">MEDIAN</span> = np.apply_along_axis(np.median,0,evts_matrix)
+        plt.plot(MEDIAN, color=median_color, lw=median_lw)
+
+    <span style="color: #729fcf; font-weight: bold;">if</span> show_mad:
+        <span style="color: #ff6347;">MAD</span> = np.apply_along_axis(mad,0,evts_matrix)
+        plt.plot(MAD, color=mad_color, lw=mad_lw)
+    
+    <span style="color: #ff6347;">left_boundary</span> = np.arange(cut_length,
+                              evts_matrix.shape[1],
+                              cut_length*2)
+    <span style="color: #729fcf; font-weight: bold;">for</span> l <span style="color: #729fcf; font-weight: bold;">in</span> left_boundary:
+        plt.axvspan(l,l+cut_length-1,
+                    facecolor=<span style="color: #ad7fa8; font-style: italic;">'grey'</span>,alpha=0.5,edgecolor=<span style="color: #ad7fa8; font-style: italic;">'none'</span>)
+    plt.xticks([])
+    <span style="color: #729fcf; font-weight: bold;">return</span>
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org17d651b" class="outline-3">
+<h3 id="org17d651b"><span class="section-number-3">12.6</span> <code>plot_data_list_and_detection</code></h3>
+<div class="outline-text-3" id="text-12-6">
+<p>
+We define a function, <code>plot_data_list_and_detection</code>, making our data and detection displaying command lighter. Its <code>docstring</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org59e8232"><span style="color: #888a85;">"""Plots data together with detected events.</span>
+<span style="color: #888a85;">    </span>
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">data_list: a list of numpy arrays of dimension 1 that should all</span>
+<span style="color: #888a85;">           be of the same length (not checked).</span>
+<span style="color: #888a85;">time_axes: an array with as many elements as the components of</span>
+<span style="color: #888a85;">           data_list. The time values of the abscissa.</span>
+<span style="color: #888a85;">evts_pos: a vector containing the indices of the detected</span>
+<span style="color: #888a85;">          events.</span>
+<span style="color: #888a85;">linewidth: the width of the lines drawing the curves.</span>
+<span style="color: #888a85;">color: the color of the curves.</span>
+
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">Nothing is returned, the function is used for its side effect: a</span>
+<span style="color: #888a85;">plot is generated. </span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+And the function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org6c556cb"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">plot_data_list_and_detection</span>(data_list,
+                                 time_axes,
+                                 evts_pos,
+                                 linewidth=0.2,
+                                 color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>):                             
+    &lt;&lt;plot_data_list_and_detection-docstring&gt;&gt;
+    <span style="color: #ff6347;">nb_chan</span> = <span style="color: #729fcf;">len</span>(data_list)
+    <span style="color: #ff6347;">data_min</span> = [np.<span style="color: #729fcf;">min</span>(x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> data_list]
+    <span style="color: #ff6347;">data_max</span> = [np.<span style="color: #729fcf;">max</span>(x) <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> data_list]
+    <span style="color: #ff6347;">display_offset</span> = <span style="color: #729fcf;">list</span>(np.cumsum(np.array([0] +
+                                             [data_max[i]-
+                                              data_min[i-1] <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span>
+                                             <span style="color: #729fcf;">range</span>(1,nb_chan)])))
+    <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nb_chan):
+        plt.plot(time_axes,data_list[i]-display_offset[i],
+                 linewidth=linewidth,color=color)
+        plt.plot(time_axes[evts_pos],
+                 data_list[i][evts_pos]-display_offset[i],<span style="color: #ad7fa8; font-style: italic;">'ro'</span>)
+    plt.yticks([])
+    plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5db650e" class="outline-3">
+<h3 id="org5db650e"><span class="section-number-3">12.7</span> <code>mk_noise</code></h3>
+<div class="outline-text-3" id="text-12-7">
+<p>
+Getting an estimate of the noise statistical properties is an essential ingredient to build respectable goodness of fit tests. In our approach "noise events" are essentially anything that is not an "event". I wrote essentially and not exactly since there is a little twist here which is the minimal distance we are willing to accept between the reference time of a noise event and the reference time of the last preceding and of the first following "event". We could think that keeping a cut length on each side would be enough. That would indeed be the case if <i>all</i> events were starting from and returning to zero within a cut. But this is not the case with the cuts parameters we chose previously (that will become clear soon). You might wonder why we chose so short a cut length then. Simply to avoid having to deal with too many superposed events which are the really bothering events for anyone wanting to do proper sorting. 
+To obtain our noise events we are going to use function <code>mk_noise</code> which takes the <i>same</i> arguments as function <code>mk_events</code> plus two numbers: 
+</p>
+<ul class="org-ul">
+<li><code>safety_factor</code> a number by which the cut length is multiplied and which sets the minimal distance between the reference times discussed in the previous paragraph.</li>
+<li><code>size</code> the maximal number of noise events one wants to cut (the actual number obtained might be smaller depending on the data length, the cut length, the safety factor and the number of events).</li>
+</ul>
+
+<p>
+We define now function <code>mk_noise</code> starting with its <code>docstring</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org81d5071"><span style="color: #888a85;">"""Constructs a noise sample.</span>
+
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">positions: a vector containing the indices of the events.</span>
+<span style="color: #888a85;">data: a matrix whose rows contains the recording channels.</span>
+<span style="color: #888a85;">before: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">        before the reference index / time given by evt_pos.</span>
+<span style="color: #888a85;">after: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">       after the reference index / time given by evt_pos.</span>
+<span style="color: #888a85;">safety_factor: a number by which the cut length is multiplied</span>
+<span style="color: #888a85;">               and which sets the minimal distance between the </span>
+<span style="color: #888a85;">               reference times discussed in the previous</span>
+<span style="color: #888a85;">               paragraph.</span>
+<span style="color: #888a85;">size: the maximal number of noise events one wants to cut (the</span>
+<span style="color: #888a85;">      actual number obtained might be smaller depending on the</span>
+<span style="color: #888a85;">      data length, the cut length, the safety factor and the</span>
+<span style="color: #888a85;">      number of events).</span>
+<span style="color: #888a85;">    </span>
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">A matrix with as many rows as noise events and whose rows are</span>
+<span style="color: #888a85;">the cuts on the different recording sites glued one after the</span>
+<span style="color: #888a85;">other. </span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+And the function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7ebe7fd"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mk_noise</span>(positions, data, before=14, after=30, safety_factor=2, size=2000):
+    &lt;&lt;mk_noise-docstring&gt;&gt;
+    <span style="color: #ff6347;">sl</span> = before+after+1 <span style="color: #2c5115;">## </span><span style="color: #888a85;">cut length</span>
+    <span style="color: #ff6347;">ns</span> = data.shape[0] <span style="color: #2c5115;">## </span><span style="color: #888a85;">number of recording sites</span>
+    <span style="color: #ff6347;">i1</span> = np.diff(positions) <span style="color: #2c5115;">## </span><span style="color: #888a85;">inter-event intervals</span>
+    <span style="color: #ff6347;">minimal_length</span> = <span style="color: #729fcf;">round</span>(sl*safety_factor)
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">Get next the number of noise sweeps that can be</span>
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">cut between each detected event with a safety factor</span>
+    <span style="color: #ff6347;">nb_i</span> = (i1-minimal_length)//sl
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">Get the number of noise sweeps that are going to be cut</span>
+    <span style="color: #ff6347;">nb_possible</span> = <span style="color: #729fcf;">min</span>(size,<span style="color: #729fcf;">sum</span>(nb_i[nb_i&gt;0]))
+    <span style="color: #ff6347;">res</span> = np.zeros((nb_possible,sl*data.shape[0]))
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">Create next a list containing the indices of the inter event</span>
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">intervals that are long enough</span>
+    <span style="color: #ff6347;">idx_l</span> = [i <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(i1)) <span style="color: #729fcf; font-weight: bold;">if</span> nb_i[i] &gt; 0]
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">Make next an index running over the inter event intervals</span>
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">from which at least one noise cut can be made</span>
+    <span style="color: #ff6347;">interval_idx</span> = 0
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">noise_positions = np.zeros(nb_possible,dtype=numpy.int)</span>
+    <span style="color: #ff6347;">n_idx</span> = 0
+    <span style="color: #729fcf; font-weight: bold;">while</span> n_idx &lt; nb_possible:
+        <span style="color: #ff6347;">within_idx</span> = 0 <span style="color: #2c5115;">## </span><span style="color: #888a85;">an index of the noise cut with a long enough</span>
+                       <span style="color: #2c5115;">## </span><span style="color: #888a85;">interval</span>
+        <span style="color: #ff6347;">i_pos</span> = positions[idx_l[interval_idx]] + minimal_length
+        <span style="color: #2c5115;">## </span><span style="color: #888a85;">Variable defined next contains the number of noise cuts</span>
+        <span style="color: #2c5115;">## </span><span style="color: #888a85;">that can be made from the "currently" considered long-enough</span>
+        <span style="color: #2c5115;">## </span><span style="color: #888a85;">inter event interval</span>
+        <span style="color: #ff6347;">n_at_interval_idx</span> = nb_i[idx_l[interval_idx]]
+        <span style="color: #729fcf; font-weight: bold;">while</span> within_idx &lt; n_at_interval_idx <span style="color: #729fcf; font-weight: bold;">and</span> n_idx &lt; nb_possible:
+            <span style="color: #ff6347;">res</span>[n_idx,:]= cut_sgl_evt(<span style="color: #729fcf;">int</span>(i_pos),data,before,after)
+            <span style="color: #2c5115;">## </span><span style="color: #888a85;">noise_positions[n_idx] = i_pos</span>
+            <span style="color: #ff6347;">n_idx</span> += 1
+            <span style="color: #ff6347;">i_pos</span> += sl
+            <span style="color: #ff6347;">within_idx</span> += 1
+        <span style="color: #ff6347;">interval_idx</span> += 1
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">return (res,noise_positions)</span>
+    <span style="color: #729fcf; font-weight: bold;">return</span> res
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2343f3b" class="outline-3">
+<h3 id="org2343f3b"><span class="section-number-3">12.8</span> <code>mad</code></h3>
+<div class="outline-text-3" id="text-12-8">
+<p>
+We define the <code>mad</code> function in one piece since it is very short:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org376889d"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mad</span>(x):
+    <span style="color: #888a85;">"""Returns the Median Absolute Deviation of its argument.</span>
+<span style="color: #888a85;">    """</span>
+    <span style="color: #729fcf; font-weight: bold;">return</span> np.median(np.absolute(x - np.median(x)))*1.4826
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7cfbad0" class="outline-3">
+<h3 id="org7cfbad0"><span class="section-number-3">12.9</span> <code>mk_aligned_events</code></h3>
+<div class="outline-text-3" id="text-12-9">
+</div><div id="outline-container-orgd2c7804" class="outline-4">
+<h4 id="orgd2c7804"><span class="section-number-4">12.9.1</span> The jitter: A worked out example</h4>
+<div class="outline-text-4" id="text-12-9-1">
+<p>
+Function <code>mk_aligned_events</code> is somehow the "heavy part" of this document. Its job is to align events on their templates while taking care of two jitter sources: the sampling and the noise one. Rather than getting into a theoretical discussion, we illustrate the problem with one of the events detected on our data set. Cluster 1 is the cluster exhibiting the largest <a href="http://en.wikipedia.org/wiki/Jitter">sampling jitter</a> effects, since it has the largest time derivative, in absolute value, of its median event . This is clearly seen when we superpose the 50th event from this cluster with the median event (remember that we start numbering at 0). So we get first our estimate for center or template of cluster 1:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org4133d8e"><span style="color: #ff6347;">c1_median</span> = <span style="color: #729fcf;">apply</span>(np.median,0,evtsE[goodEvts,:][np.array(c10b)==1,:])
+</pre>
+</div>
+<p>
+And we do the plot (Fig. \ref{fig:JitterIllustrationCluster1Event50}):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(c1_median,color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>)
+plt.plot(evtsE[goodEvts,:][np.array(c10b)==1,:][50,:],color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+</pre>
+</div>
+
+
+<div id="orge4aa198" class="figure">
+<p><img src="figsL1/JitterIllustrationCluster1Event50.png" alt="JitterIllustrationCluster1Event50.png" />
+</p>
+<p><span class="figure-number">Figure 22: </span>The median event of cluster 1 (red) together with event 50 of the same cluster (black).</p>
+</div>
+
+<p>
+A Taylor expansion shows that if we write <i>g(t)</i> the observed 50th event, δ the sampling jitter and <i>f(t)</i> the actual waveform of the event then:
+</p>
+\begin{equation}
+g(t) = f(t+δ) + ε(t) \approx f(t) + δ \, f'(t) + δ^2/2 \, f''(t) + ε(t) \, ;
+\end{equation}
+<p>
+where ε is a Gaussian process and where \(f'\) and \(f''\) stand for the first and second time derivatives of \(f\). Therefore, if we can get estimates of \(f'\) and \(f''\) we should be able to estimate δ by linear regression (if we neglect the \(δ^2\) term as well as the potentially non null correlation in ε) or by non linear regression (if we keep the latter). We start by getting the derivatives estimates:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgbc61291"><span style="color: #ff6347;">dataD</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x: fftconvolve(x,np.array([1,0,-1])/2.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+              1, data)
+<span style="color: #ff6347;">evtsED</span> = swp.mk_events(sp0E,dataD,14,30)
+<span style="color: #ff6347;">dataDD</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x: fftconvolve(x,np.array([1,0,-1])/2.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+               1, dataD)
+<span style="color: #ff6347;">evtsEDD</span> = swp.mk_events(sp0E,dataDD,14,30)
+<span style="color: #ff6347;">c1D_median</span> = <span style="color: #729fcf;">apply</span>(np.median,0,
+                   evtsED[goodEvts,:][np.array(c10b)==1,:])
+<span style="color: #ff6347;">c1DD_median</span> = <span style="color: #729fcf;">apply</span>(np.median,0,
+                    evtsEDD[goodEvts,:][np.array(c10b)==1,:])
+</pre>
+</div>
+<p>
+We then get something like Fig. \ref{fig:JitterIllustrationCluster1Event50b}:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(evtsE[goodEvts,:][np.array(c10b)==1,:][50,:]-\
+         c1_median,color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=2)
+plt.plot(1.5*c1D_median,color=<span style="color: #ad7fa8; font-style: italic;">'blue'</span>,lw=2)
+plt.plot(1.5*c1D_median+1.5**2/2*c1DD_median,color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>,lw=2)
+</pre>
+</div>
+
+
+<div id="orge928d67" class="figure">
+<p><img src="figsL1/JitterIllustrationCluster1Event50b.png" alt="JitterIllustrationCluster1Event50b.png" />
+</p>
+<p><span class="figure-number">Figure 23: </span>The median event of cluster 1 subtracted from event 50 of the same cluster (red); 1.5 times the first derivative of the median event (blue)—corresponding to δ=1.5—; 1.5 times the first derivative + 1.5^2/2 times the second (black)—corresponding again to δ=1.5—.</p>
+</div>
+
+<p>
+If we neglect the \(δ^2\) term we quickly arrive at:
+</p>
+\begin{equation}
+\hat{δ} = \frac{\mathbf{f'} \cdot (\mathbf{g} -\mathbf{f})}{\| \mathbf{f'} \|^2} \, ;
+\end{equation} 
+<p>
+where the 'vectorial' notation like \(\mathbf{a} \cdot \mathbf{b}\) stands here for: 
+\[
+\sum_{i=0}^{179} a_i b_i \, .
+\]
+</p>
+
+<p>
+For the 50th event of the cluster we get:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd2049ab"><span style="color: #ff6347;">delta_hat</span> = np.dot(c1D_median,
+                   evtsE[goodEvts,:][np.array(c10b)==1,:][50,:]-\
+                   c1_median)/np.dot(c1D_median,c1D_median)
+delta_hat
+</pre>
+</div>
+
+<pre class="example">
+1.4917182304326997
+
+</pre>
+
+<p>
+We can use this estimated value of <code>delta_hat</code> as an initial guess for a procedure refining the estimate using also the \(δ^2\) term. The obvious quantity we should try to minimize is the residual sum of square, <code>RSS</code> defined by:
+\[
+\mathrm{RSS}(δ) = \| \mathbf{g} - \mathbf{f} - δ \, \mathbf{f'} - δ^2/2 \, \mathbf{f''} \|^2 \; .
+\]
+We can define a function returning the <code>RSS</code> for a given value of δ as well as an event <code>evt</code> a cluster center (median event of the cluster) <code>center</code> and its first two derivatives, <code>centerD</code> and <code>centerDD</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org65e5c04"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">rss_fct</span>(delta,evt,center,centerD,centerDD):
+    <span style="color: #729fcf; font-weight: bold;">return</span> np.<span style="color: #729fcf;">sum</span>((evt - center - delta*centerD - delta**2/2*centerDD)**2)
+
+</pre>
+</div>
+<p>
+To create quickly a graph of the <code>RSS</code> as a function of δ for the specific case we are dealing with now (51st element of cluster 1) we create a vectorized or <i>universal</i> function version of the <code>rss_for_alignment</code> we just defined:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgca90c54"><span style="color: #ff6347;">urss_fct</span> = np.frompyfunc(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+                         rss_fct(x,
+                                 evtsE[goodEvts,:]\
+                                 [np.array(c10b)==1,:][50,:],
+                                 c1_median,c1D_median,c1DD_median),1,1)
+
+</pre>
+</div>
+<p>
+We then get the Fig. \ref{fig:JitterIllustrationCluster1Event50c} with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.subplot(1,2,1)
+<span style="color: #ff6347;">dd</span> = np.arange(-5,5,0.05)
+plt.plot(dd,urss_fct(dd),color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>,lw=2)
+plt.subplot(1,2,2)
+<span style="color: #ff6347;">dd_fine</span> = np.linspace(delta_hat-0.5,delta_hat+0.5,501)
+plt.plot(dd_fine,urss_fct(dd_fine),color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>,lw=2)
+plt.axvline(x=delta_hat,color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>)
+</pre>
+</div>
+
+
+<div id="org9c422ed" class="figure">
+<p><img src="figsL1/JitterIllustrationCluster1Event50c.png" alt="JitterIllustrationCluster1Event50c.png" />
+</p>
+<p><span class="figure-number">Figure 24: </span>The <code>RSS</code> as a function of δ for event 50 of cluster 1. Left, \(δ \in [-5,5]\); right, \(δ \in [\hat{δ}-0.5,\hat{δ}+0.5]\) and the red vertical line shows \(\hat{δ}\).</p>
+</div>
+
+<p>
+The left panel of the above figure shows that our initial guess for \(\hat{δ}\) is not bad but still approximately 0.2 units away from the actual minimum. The classical way to refine our δ estimate—in 'nice situations' where the function we are trying to minimize is locally convex—is to use the <a href="http://en.wikipedia.org/wiki/Newton's_method">Newton-Raphson algorithm</a> which consists in approximating locally the 'target function' (here our <code>RSS</code> function) by a parabola having locally the same first and second derivatives, before jumping to the minimum of this approximating parabola. If we develop our previous expression of \(\mathrm{RSS}(δ)\) we get:
+\[
+\mathrm{RSS}(δ) = \| \mathbf{h} \|^2 - 2\, δ \, \mathbf{h} \cdot \mathbf{f'} + δ^2 \, \left( \|\mathbf{f'}\|^2 -  \mathbf{h} \cdot \mathbf{f''}\right) + δ^3 \, \mathbf{f'} \cdot \mathbf{f''} + \frac{δ^4}{4} \|\mathbf{f''}\|^2 \, ;
+\]
+where \(\mathbf{h}\) stands for \(\mathbf{g} - \mathbf{f}\). By differentiation with respect to δ we get:
+\[
+\mathrm{RSS}'(δ) = - 2\, \mathbf{h} \cdot \mathbf{f'} + 2 \, δ \, \left( \|\mathbf{f'}\|^2 -  \mathbf{h} \cdot \mathbf{f''}\right) + 3 \, δ^2 \, \mathbf{f'} \cdot \mathbf{f''} + δ^3 \|\mathbf{f''}\|^2 \, .
+\]
+And a second differentiation leads to:
+\[
+\mathrm{RSS}''(δ) = 2 \, \left( \|\mathbf{f'}\|^2 -  \mathbf{h} \cdot \mathbf{f''}\right) + 6 \, δ \, \mathbf{f'} \cdot \mathbf{f''} + 3 \, δ^2 \|\mathbf{f''}\|^2 \, .
+\]
+The equation of the approximating parabola at \(δ^{(k)}\) is then:
+\[
+\mathrm{RSS}(δ^{(k)} + η) \approx \mathrm{RSS}(δ^{(k)}) + η \, \mathrm{RSS}'(δ^{(k)}) + \frac{η^2}{2} \, \mathrm{RSS}''(δ^{(k)})\; ,
+\]
+and its minimum—if \(\mathrm{RSS}''(δ)\) &gt; 0—is located at:
+\[
+δ^{(k+1)} = δ^{(k)} - \frac{\mathrm{RSS}'(δ^{(k)})}{\mathrm{RSS}''(δ^{(k)})} \; .
+\]
+Defining functions returning the required derivatives:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc5eacb6"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">rssD_fct</span>(delta,evt,center,centerD,centerDD):
+    <span style="color: #ff6347;">h</span> = evt - center
+    <span style="color: #729fcf; font-weight: bold;">return</span> -2*np.dot(h,centerD) + \
+      2*delta*(np.dot(centerD,centerD) - np.dot(h,centerDD)) + \
+      3*delta**2*np.dot(centerD,centerDD) + \
+      delta**3*np.dot(centerDD,centerDD)
+
+<span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">rssDD_fct</span>(delta,evt,center,centerD,centerDD):
+    <span style="color: #ff6347;">h</span> = evt - center
+    <span style="color: #729fcf; font-weight: bold;">return</span> 2*(np.dot(centerD,centerD) - np.dot(h,centerDD)) + \
+      6*delta*np.dot(centerD,centerDD) + \
+      3*delta**2*np.dot(centerDD,centerDD)
+
+</pre>
+</div>
+<p>
+we can get a graphical representation (Fig. \ref{fig:JitterIllustrationCluster1Event50d}) of a single step of the Newton-Raphson algorithm:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7e072cd"><span style="color: #ff6347;">rss_at_delta0</span> = rss_fct(delta_hat,
+                        evtsE[goodEvts,:][np.array(c10b)==1,:][50,:],
+                        c1_median,c1D_median,c1DD_median)
+<span style="color: #ff6347;">rssD_at_delta0</span> = rssD_fct(delta_hat,
+                          evtsE[goodEvts,:][np.array(c10b)==1,:][50,:],
+                          c1_median,c1D_median,c1DD_median)
+<span style="color: #ff6347;">rssDD_at_delta0</span> = rssDD_fct(delta_hat,
+                            evtsE[goodEvts,:][np.array(c10b)==1,:]\
+                            [50,:],c1_median,c1D_median,c1DD_median)
+<span style="color: #ff6347;">delta_1</span> = delta_hat - rssD_at_delta0/rssDD_at_delta0
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(dd_fine,urss_fct(dd_fine),color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>,lw=2)
+plt.axvline(x=delta_hat,color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>)
+plt.plot(dd_fine,
+         rss_at_delta0 + (dd_fine-delta_hat)*rssD_at_delta0 + \
+         (dd_fine-delta_hat)**2/2*rssDD_at_delta0,color=<span style="color: #ad7fa8; font-style: italic;">'blue'</span>,lw=2)
+plt.axvline(x=delta_1,color=<span style="color: #ad7fa8; font-style: italic;">'grey'</span>)
+</pre>
+</div>
+
+
+<div id="org20cf23b" class="figure">
+<p><img src="figsL1/JitterIllustrationCluster1Event50d.png" alt="JitterIllustrationCluster1Event50d.png" />
+</p>
+<p><span class="figure-number">Figure 25: </span>The <code>RSS</code> as a function of δ for event 50 of cluster 1  (black), the red vertical line shows \(\hat{δ}\). In blue, the approximating parabola at \(\hat{δ}\). The grey vertical line shows the minimum of the approximating parabola.</p>
+</div>
+
+<p>
+Subtracting the second order in δ approximation of f(t+δ) from the observed 50th event of cluster 1 we get Fig. \ref{fig:JitterIllustrationCluster1Event50e}:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">plt.plot(evtsE[goodEvts,:][np.array(c10b)==1,:][50,:]-\
+         c1_median-delta_1*c1D_median-delta_1**2/2*c1DD_median,
+         color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>,lw=2)
+plt.plot(evtsE[goodEvts,:][np.array(c10b)==1,:][50,:],
+         color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>,lw=2)
+plt.plot(c1_median+delta_1*c1D_median+delta_1**2/2*c1DD_median,
+         color=<span style="color: #ad7fa8; font-style: italic;">'blue'</span>,lw=1)
+</pre>
+</div>
+
+
+<div id="org03ce378" class="figure">
+<p><img src="figsL1/JitterIllustrationCluster1Event50e.png" alt="JitterIllustrationCluster1Event50e.png" />
+</p>
+<p><span class="figure-number">Figure 26: </span>Event 50 of cluster 1 (black), second order approximation of f(t+δ) (blue) and residual (red) for δ—obtained by a succession of a linear regression (order 1) and a single Newton-Raphson step—equal to: <code>1.3748048144324905</code>.</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6969d8e" class="outline-4">
+<h4 id="org6969d8e"><span class="section-number-4">12.9.2</span> Function definition</h4>
+<div class="outline-text-4" id="text-12-9-2">
+<p>
+We start with the chunk importing the required functions from the different modules (<code>&lt;&lt;mk_aligned_events-import-functions&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org315df28"><span style="color: #729fcf; font-weight: bold;">from</span> scipy.signal <span style="color: #729fcf; font-weight: bold;">import</span> fftconvolve
+<span style="color: #729fcf; font-weight: bold;">from</span> numpy <span style="color: #729fcf; font-weight: bold;">import</span> apply_along_axis <span style="color: #729fcf; font-weight: bold;">as</span> <span style="color: #729fcf;">apply</span>
+<span style="color: #729fcf; font-weight: bold;">from</span> scipy.spatial.distance <span style="color: #729fcf; font-weight: bold;">import</span> squareform
+</pre>
+</div>
+<p>
+We then get the first and second derivatives of the data:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf774ce6"><span style="color: #ff6347;">dataD</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x: fftconvolve(x,np.array([1,0,-1])/2., <span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+              1, data)
+<span style="color: #ff6347;">dataDD</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x: fftconvolve(x,np.array([1,0,-1])/2.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+               1, dataD)
+    
+</pre>
+</div>
+<p>
+Events are cut from the different data 'versions', derivatives of order 0, 1 and 2 (<code>&lt;&lt;mk_aligned_events-get-events&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org00d4b90"><span style="color: #ff6347;">evts</span> = mk_events(positions, data, before, after)
+<span style="color: #ff6347;">evtsD</span> = mk_events(positions, dataD, before, after)
+<span style="color: #ff6347;">evtsDD</span> = mk_events(positions, dataDD, before, after)    
+</pre>
+</div>
+<p>
+A center or template is obtained by taking the pointwise median of the events we just got on the three versions of the data (<code>&lt;&lt;mk_aligned_events-get-centers&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7a06225"><span style="color: #ff6347;">center</span> = <span style="color: #729fcf;">apply</span>(np.median,0,evts)
+<span style="color: #ff6347;">centerD</span> = <span style="color: #729fcf;">apply</span>(np.median,0,evtsD)
+<span style="color: #ff6347;">centerD_norm2</span> = np.dot(centerD,centerD)
+<span style="color: #ff6347;">centerDD</span> = <span style="color: #729fcf;">apply</span>(np.median,0,evtsDD)
+<span style="color: #ff6347;">centerDD_norm2</span> = np.dot(centerDD,centerDD)
+<span style="color: #ff6347;">centerD_dot_centerDD</span> = np.dot(centerD,centerDD)
+</pre>
+</div>
+<p>
+Given an event, make a first order jitter estimation and compute the norm of the initial residual, <code>h_order0_norm2</code>, and of its first order jitter corrected version, <code>h_order1_norm2</code> (<code>&lt;&lt;mk_aligned_events-do-job-on-single-event-order1&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org9327f21"><span style="color: #ff6347;">h</span> = evt - center
+<span style="color: #ff6347;">h_order0_norm2</span> = <span style="color: #729fcf;">sum</span>(h**2)
+<span style="color: #ff6347;">h_dot_centerD</span> = np.dot(h,centerD)
+<span style="color: #ff6347;">jitter0</span> = h_dot_centerD/centerD_norm2
+<span style="color: #ff6347;">h_order1_norm2</span> = <span style="color: #729fcf;">sum</span>((h-jitter0*centerD)**2)
+</pre>
+</div>
+<p>
+If the residual's norm decrease upon first order jitter correction, try a second order one. At the end compare the norm of the second order jitter corrected residual (<code>h_order2_norm2</code>) with the one of the first order (<code>h_order1_norm2</code>). If the former is larger or equal than the latter, set the estimated jitter to its first order value (<code>&lt;&lt;mk_aligned_events-do-job-on-single-event-order2&gt;&gt;</code>): 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org65f8b43"><span style="color: #ff6347;">h_dot_centerDD</span> = np.dot(h,centerDD)
+<span style="color: #ff6347;">first</span> = -2*h_dot_centerD + \
+  2*jitter0*(centerD_norm2 - h_dot_centerDD) + \
+  3*jitter0**2*centerD_dot_centerDD + \
+  jitter0**3*centerDD_norm2
+<span style="color: #ff6347;">second</span> = 2*(centerD_norm2 - h_dot_centerDD) + \
+  6*jitter0*centerD_dot_centerDD + \
+  3*jitter0**2*centerDD_norm2
+<span style="color: #ff6347;">jitter1</span> = jitter0 - first/second
+<span style="color: #ff6347;">h_order2_norm2</span> = <span style="color: #729fcf;">sum</span>((h-jitter1*centerD- \
+                      jitter1**2/2*centerDD)**2)
+<span style="color: #729fcf; font-weight: bold;">if</span> h_order1_norm2 &lt;= h_order2_norm2:
+    <span style="color: #ff6347;">jitter1</span> = jitter0
+</pre>
+</div>
+<p>
+And now the function's <code>docstring</code> (<code>&lt;&lt;mk_aligned_events-docstring&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org715c76e"><span style="color: #888a85;">"""Align events on the central event using first or second order</span>
+<span style="color: #888a85;">Taylor expansion.</span>
+
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">positions: a vector of indices with the positions of the</span>
+<span style="color: #888a85;">           detected events. </span>
+<span style="color: #888a85;">data: a matrix whose rows contains the recording channels.</span>
+<span style="color: #888a85;">before: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">        before the reference index / time given by positions.</span>
+<span style="color: #888a85;">after: an integer, how many points should be within the cut</span>
+<span style="color: #888a85;">       after the reference index / time given by positions.</span>
+<span style="color: #888a85;">   </span>
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">A tuple whose elements are:</span>
+<span style="color: #888a85;">  A matrix with as many rows as events and whose rows are the</span>
+<span style="color: #888a85;">  cuts on the different recording sites glued one after the</span>
+<span style="color: #888a85;">  other. These events have been jitter corrected using the</span>
+<span style="color: #888a85;">  second order Taylor expansion.</span>
+<span style="color: #888a85;">  A vector of events positions where "actual" positions have</span>
+<span style="color: #888a85;">  been rounded to the nearest index.</span>
+<span style="color: #888a85;">  A vector of jitter values.</span>
+<span style="color: #888a85;">  </span>
+<span style="color: #888a85;">Details</span>
+<span style="color: #888a85;">------- </span>
+<span style="color: #888a85;">(1) The data first and second derivatives are estimated first.</span>
+<span style="color: #888a85;">(2) Events are cut next on each of the three versions of the data.</span>
+<span style="color: #888a85;">(3) The global median event for each of the three versions are</span>
+<span style="color: #888a85;">obtained.</span>
+<span style="color: #888a85;">(4) Each event is then aligned on the median using a first order</span>
+<span style="color: #888a85;">Taylor expansion.</span>
+<span style="color: #888a85;">(5) If this alignment decreases the squared norm of the event</span>
+<span style="color: #888a85;">(6) an improvement is looked for using a second order expansion.</span>
+<span style="color: #888a85;">If this second order expansion still decreases the squared norm</span>
+<span style="color: #888a85;">and if the estimated jitter is larger than 1, the whole procedure</span>
+<span style="color: #888a85;">is repeated after cutting a new the event based on a better peak</span>
+<span style="color: #888a85;">position (7). </span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+To end up with the function itself:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org295b91a"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mk_aligned_events</span>(positions, data, before=14, after=30):
+    &lt;&lt;mk_aligned_events-docstring&gt;&gt;
+    &lt;&lt;mk_aligned_events-<span style="color: #729fcf; font-weight: bold;">import</span>-functions&gt;&gt;
+    <span style="color: #ff6347;">n_evts</span> = <span style="color: #729fcf;">len</span>(positions)
+    <span style="color: #ff6347;">new_positions</span> = positions.copy()
+    <span style="color: #ff6347;">jitters</span> = np.zeros(n_evts)
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Details (1)</span>
+    &lt;&lt;mk_aligned_events-dataD-<span style="color: #729fcf; font-weight: bold;">and</span>-dataDD&gt;&gt;
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Details (2)</span>
+    &lt;&lt;mk_aligned_events-get-events&gt;&gt;
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Details (3)</span>
+    &lt;&lt;mk_aligned_events-get-centers&gt;&gt;
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Details (4)</span>
+    <span style="color: #729fcf; font-weight: bold;">for</span> evt_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_evts):
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">Details (5)</span>
+        <span style="color: #ff6347;">evt</span> = evts[evt_idx,:]
+        <span style="color: #ff6347;">evt_pos</span> = positions[evt_idx]
+        &lt;&lt;mk_aligned_events-do-job-on-single-event-order1&gt;&gt;
+        <span style="color: #729fcf; font-weight: bold;">if</span> h_order0_norm2 &gt; h_order1_norm2:
+            <span style="color: #2c5115;"># </span><span style="color: #888a85;">Details (6)</span>
+            &lt;&lt;mk_aligned_events-do-job-on-single-event-order2&gt;&gt;
+        <span style="color: #729fcf; font-weight: bold;">else</span>:
+            <span style="color: #ff6347;">jitter1</span> = 0
+        <span style="color: #729fcf; font-weight: bold;">if</span> <span style="color: #729fcf;">abs</span>(<span style="color: #729fcf;">round</span>(jitter1)) &gt; 0:
+            <span style="color: #2c5115;"># </span><span style="color: #888a85;">Details (7)</span>
+            <span style="color: #ff6347;">evt_pos</span> -= <span style="color: #729fcf;">int</span>(<span style="color: #729fcf;">round</span>(jitter1))
+            <span style="color: #ff6347;">evt</span> = cut_sgl_evt(evt_pos,data=data,
+                              before=before, after=after)
+            &lt;&lt;mk_aligned_events-do-job-on-single-event-order1&gt;&gt;               
+            <span style="color: #729fcf; font-weight: bold;">if</span> h_order0_norm2 &gt; h_order1_norm2:
+                &lt;&lt;mk_aligned_events-do-job-on-single-event-order2&gt;&gt;
+            <span style="color: #729fcf; font-weight: bold;">else</span>:
+                <span style="color: #ff6347;">jitter1</span> = 0
+        <span style="color: #729fcf; font-weight: bold;">if</span> <span style="color: #729fcf;">sum</span>(evt**2) &gt; <span style="color: #729fcf;">sum</span>((h-jitter1*centerD-
+                              jitter1**2/2*centerDD)**2):
+            <span style="color: #ff6347;">evts</span>[evt_idx,:] = evt-jitter1*centerD- \
+                jitter1**2/2*centerDD
+        <span style="color: #ff6347;">new_positions</span>[evt_idx] = evt_pos 
+        <span style="color: #ff6347;">jitters</span>[evt_idx] = jitter1
+    <span style="color: #729fcf; font-weight: bold;">return</span> (evts, new_positions,jitters)
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org1331d11" class="outline-3">
+<h3 id="org1331d11"><span class="section-number-3">12.10</span> <code>mk_center_dictionary</code></h3>
+<div class="outline-text-3" id="text-12-10">
+<p>
+We define function <code>mk_center_dictionary</code> starting with its <code>docstring</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org45e3011"><span style="color: #888a85;">""" Computes clusters 'centers' or templates and associated data.</span>
+
+<span style="color: #888a85;">Clusters' centers should be built such that they can be used for </span>
+<span style="color: #888a85;">subtraction, this implies that we should make them long enough, on</span>
+<span style="color: #888a85;">both side of the peak, to see them go back to baseline. Formal</span>
+<span style="color: #888a85;">parameters before and after bellow should therefore be set to</span>
+<span style="color: #888a85;">larger values than the ones used for clustering. </span>
+
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">positions : a vector of spike times, that should all come from the</span>
+<span style="color: #888a85;">            same cluster and correspond to reasonably 'clean'</span>
+<span style="color: #888a85;">            events.</span>
+<span style="color: #888a85;">data : a data matrix.</span>
+<span style="color: #888a85;">before : the number of sampling point to keep before the peak.</span>
+<span style="color: #888a85;">after : the number of sampling point to keep after the peak.</span>
+
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">A dictionary with the following components:</span>
+<span style="color: #888a85;">  center: the estimate of the center (obtained from the median).</span>
+<span style="color: #888a85;">  centerD: the estimate of the center's derivative (obtained from</span>
+<span style="color: #888a85;">           the median of events cut on the derivative of data).</span>
+<span style="color: #888a85;">  centerDD: the estimate of the center's second derivative</span>
+<span style="color: #888a85;">            (obtained from the median of events cut on the second</span>
+<span style="color: #888a85;">            derivative of data).</span>
+<span style="color: #888a85;">  centerD_norm2: the squared norm of the center's derivative.</span>
+<span style="color: #888a85;">  centerDD_norm2: the squared norm of the center's second</span>
+<span style="color: #888a85;">                  derivative.</span>
+<span style="color: #888a85;">  centerD_dot_centerDD: the scalar product of the center's first</span>
+<span style="color: #888a85;">                        and second derivatives.</span>
+<span style="color: #888a85;">  center_idx: an array of indices generated by</span>
+<span style="color: #888a85;">              np.arange(-before,after+1).</span>
+<span style="color: #888a85;"> """</span>
+</pre>
+</div>
+<p>
+The function starts by evaluating the first two derivatives of the data (<code>&lt;&lt;get-derivatives&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org3bdb82f"><span style="color: #729fcf; font-weight: bold;">from</span> scipy.signal <span style="color: #729fcf; font-weight: bold;">import</span> fftconvolve
+<span style="color: #729fcf; font-weight: bold;">from</span> numpy <span style="color: #729fcf; font-weight: bold;">import</span> apply_along_axis <span style="color: #729fcf; font-weight: bold;">as</span> <span style="color: #729fcf;">apply</span>
+<span style="color: #ff6347;">dataD</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+              fftconvolve(x,np.array([1,0,-1])/2.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+              1, data)
+<span style="color: #ff6347;">dataDD</span> = <span style="color: #729fcf;">apply</span>(<span style="color: #729fcf; font-weight: bold;">lambda</span> x:
+               fftconvolve(x,np.array([1,0,-1])/2.,<span style="color: #ad7fa8; font-style: italic;">'same'</span>),
+               1, dataD)
+    
+</pre>
+</div>
+<p>
+The function is defined next:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgdcb1123"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mk_center_dictionary</span>(positions, data, before=49, after=80):
+    &lt;&lt;mk_center_dictionary-docstring&gt;&gt;
+    &lt;&lt;mk_center_dictionary-get-derivatives&gt;&gt;
+    <span style="color: #ff6347;">evts</span> = mk_events(positions, data, before, after)
+    <span style="color: #ff6347;">evtsD</span> = mk_events(positions, dataD, before, after)
+    <span style="color: #ff6347;">evtsDD</span> = mk_events(positions, dataDD, before, after)
+    <span style="color: #ff6347;">evts_median</span> = <span style="color: #729fcf;">apply</span>(np.median,0,evts)
+    <span style="color: #ff6347;">evtsD_median</span> = <span style="color: #729fcf;">apply</span>(np.median,0,evtsD)
+    <span style="color: #ff6347;">evtsDD_median</span> = <span style="color: #729fcf;">apply</span>(np.median,0,evtsDD)
+    <span style="color: #729fcf; font-weight: bold;">return</span> {<span style="color: #ad7fa8; font-style: italic;">"center"</span> : evts_median, 
+            <span style="color: #ad7fa8; font-style: italic;">"centerD"</span> : evtsD_median, 
+            <span style="color: #ad7fa8; font-style: italic;">"centerDD"</span> : evtsDD_median, 
+            <span style="color: #ad7fa8; font-style: italic;">"centerD_norm2"</span> : np.dot(evtsD_median,evtsD_median),
+            <span style="color: #ad7fa8; font-style: italic;">"centerDD_norm2"</span> : np.dot(evtsDD_median,evtsDD_median),
+            <span style="color: #ad7fa8; font-style: italic;">"centerD_dot_centerDD"</span> : np.dot(evtsD_median,
+                                            evtsDD_median), 
+            <span style="color: #ad7fa8; font-style: italic;">"center_idx"</span> : np.arange(-before,after+1)}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2a3d8b4" class="outline-3">
+<h3 id="org2a3d8b4"><span class="section-number-3">12.11</span> <code>classify_and_align_evt</code></h3>
+<div class="outline-text-3" id="text-12-11">
+<p>
+We now define with the following <code>docstring</code> (<code>&lt;&lt;classify_and_align_evt-docstring&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org0e71fec"><span style="color: #888a85;">"""Compares a single event to a dictionary of centers and returns</span>
+<span style="color: #888a85;">the name of the closest center if it is close enough or '?', the</span>
+<span style="color: #888a85;">corrected peak position and the remaining jitter.</span>
+
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">evt_pos : a sampling point at which an event was detected.</span>
+<span style="color: #888a85;">data : a data matrix.</span>
+<span style="color: #888a85;">centers : a centers' dictionary returned by mk_center_dictionary.</span>
+<span style="color: #888a85;">before : the number of sampling point to consider before the peak.</span>
+<span style="color: #888a85;">after : the number of sampling point to consider after the peak.</span>
+
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">A list with the following components:</span>
+<span style="color: #888a85;">  The name of the closest center if it was close enough or '?'.</span>
+<span style="color: #888a85;">  The nearest sampling point to the events peak.</span>
+<span style="color: #888a85;">  The jitter: difference between the estimated actual peak</span>
+<span style="color: #888a85;">  position and the nearest sampling point.</span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+The first chunk of the function takes a dictionary of centers, <code>centers</code>, generated by <code>mk_center_dictionary</code>, defines two variables, <code>cluster_names</code> and <code>n_sites</code>, and builds a matrix of centers, <code>centersM</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org99965dd"><span style="color: #ff6347;">cluster_names</span> = np.sort(<span style="color: #729fcf;">list</span>(centers))
+<span style="color: #ff6347;">n_sites</span> = data.shape[0]
+<span style="color: #ff6347;">centersM</span> = np.array([centers[c_name][<span style="color: #ad7fa8; font-style: italic;">"center"</span>]\
+                     [np.tile((-before &lt;= centers[c_name]\
+                               [<span style="color: #ad7fa8; font-style: italic;">"center_idx"</span>]).\
+                               __and__(centers[c_name][<span style="color: #ad7fa8; font-style: italic;">"center_idx"</span>] \
+                                       &lt;= after), n_sites)]
+                                       <span style="color: #729fcf; font-weight: bold;">for</span> c_name <span style="color: #729fcf; font-weight: bold;">in</span> cluster_names])
+</pre>
+</div>
+<p>
+Extract the event, <code>evt</code>, to classify and subtract each center from it, <code>delta</code>, to find the closest one, <code>cluster_idx</code>, using the Euclidean squared norm (<code>&lt;&lt;cluster_idx&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org92c656b"><span style="color: #ff6347;">evt</span> = cut_sgl_evt(evt_pos,data=data,before=before, after=after)
+<span style="color: #ff6347;">delta</span> = -(centersM - evt)
+<span style="color: #ff6347;">cluster_idx</span> = np.argmin(np.<span style="color: #729fcf;">sum</span>(delta**2,axis=1))    
+</pre>
+</div>
+<p>
+Get the name of the selected cluster, <code>good_cluster_name</code>, and its 'time indices', <code>good_cluster_idx</code>. Then, extract the first two derivatives of the center, <code>centerD</code> and <code>centerDD</code>, their squared norms, <code>centerD_norm2</code> and <code>centerDD_norm2</code>, and their dot product, <code>centerD_dot_centerDD</code> (<code>&lt;&lt;get-centers&gt;&gt;</code>):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org03ff671"><span style="color: #ff6347;">good_cluster_name</span> = cluster_names[cluster_idx]
+<span style="color: #ff6347;">good_cluster_idx</span> = np.tile((-before &lt;= centers[good_cluster_name]\
+                            [<span style="color: #ad7fa8; font-style: italic;">"center_idx"</span>]).\
+                            __and__(centers[good_cluster_name]\
+                                    [<span style="color: #ad7fa8; font-style: italic;">"center_idx"</span>] &lt;= after),
+                                    n_sites)
+<span style="color: #ff6347;">centerD</span> = centers[good_cluster_name][<span style="color: #ad7fa8; font-style: italic;">"centerD"</span>][good_cluster_idx]
+<span style="color: #ff6347;">centerD_norm2</span> = np.dot(centerD,centerD)
+<span style="color: #ff6347;">centerDD</span> = centers[good_cluster_name][<span style="color: #ad7fa8; font-style: italic;">"centerDD"</span>][good_cluster_idx]
+<span style="color: #ff6347;">centerDD_norm2</span> = np.dot(centerDD,centerDD)
+<span style="color: #ff6347;">centerD_dot_centerDD</span> = np.dot(centerD,centerDD)
+</pre>
+</div>
+<p>
+Do a first order jitter correction where <code>h</code> contains the difference between the event and the center. Obtain the estimated jitter, <code>jitter0</code> and the squared norm of the first order corrected residual, <code>h_order1_norm2</code> (<code>&lt;&lt;jitter-order-1&gt;&gt;</code>): 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb198302"><span style="color: #ff6347;">h_order0_norm2</span> = <span style="color: #729fcf;">sum</span>(h**2)
+<span style="color: #ff6347;">h_dot_centerD</span> = np.dot(h,centerD)
+<span style="color: #ff6347;">jitter0</span> = h_dot_centerD/centerD_norm2
+<span style="color: #ff6347;">h_order1_norm2</span> = <span style="color: #729fcf;">sum</span>((h-jitter0*centerD)**2)     
+</pre>
+</div>
+<p>
+Do a second order jitter correction. Obtain the estimated jitter, <code>jitter1</code> and the squared norm of the second order corrected residual, <code>h_order2_norm2</code> (<code>&lt;&lt;jitter-order-2&gt;&gt;</code>):  
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org3f6e49a"><span style="color: #ff6347;">h_dot_centerDD</span> = np.dot(h,centerDD)
+<span style="color: #ff6347;">first</span> = -2*h_dot_centerD + \
+  2*jitter0*(centerD_norm2 - h_dot_centerDD) + \
+  3*jitter0**2*centerD_dot_centerDD + \
+  jitter0**3*centerDD_norm2
+<span style="color: #ff6347;">second</span> = 2*(centerD_norm2 - h_dot_centerDD) + \
+  6*jitter0*centerD_dot_centerDD + \
+  3*jitter0**2*centerDD_norm2
+<span style="color: #ff6347;">jitter1</span> = jitter0 - first/second
+<span style="color: #ff6347;">h_order2_norm2</span> = <span style="color: #729fcf;">sum</span>((h-jitter1*centerD-jitter1**2/2*centerDD)**2)
+</pre>
+</div>
+<p>
+Now define the function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org717e8d2"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">classify_and_align_evt</span>(evt_pos, data, centers,
+                           before=14, after=30):
+    &lt;&lt;classify_and_align_evt-docstring&gt;&gt;
+    &lt;&lt;classify_and_align_evt-centersM&gt;&gt;
+    &lt;&lt;classify_and_align_evt-cluster_idx&gt;&gt;
+    &lt;&lt;classify_and_align_evt-get-centers&gt;&gt;
+    <span style="color: #ff6347;">h</span> = delta[cluster_idx,:]
+    &lt;&lt;classify_and_align_evt-jitter-order-1&gt;&gt;
+    <span style="color: #729fcf; font-weight: bold;">if</span> h_order0_norm2 &gt; h_order1_norm2:
+        &lt;&lt;classify_and_align_evt-jitter-order-2&gt;&gt;
+        <span style="color: #729fcf; font-weight: bold;">if</span> h_order1_norm2 &lt;= h_order2_norm2:
+            <span style="color: #ff6347;">jitter1</span> = jitter0
+    <span style="color: #729fcf; font-weight: bold;">else</span>:
+        <span style="color: #ff6347;">jitter1</span> = 0
+    <span style="color: #729fcf; font-weight: bold;">if</span> <span style="color: #729fcf;">abs</span>(<span style="color: #729fcf;">round</span>(jitter1)) &gt; 0:
+        <span style="color: #ff6347;">evt_pos</span> -= <span style="color: #729fcf;">int</span>(<span style="color: #729fcf;">round</span>(jitter1))
+        <span style="color: #ff6347;">evt</span> = cut_sgl_evt(evt_pos,data=data,
+                          before=before, after=after)
+        <span style="color: #ff6347;">h</span> = evt - centers[good_cluster_name][<span style="color: #ad7fa8; font-style: italic;">"center"</span>]\
+          [good_cluster_idx]
+        &lt;&lt;classify_and_align_evt-jitter-order-1&gt;&gt;  
+        <span style="color: #729fcf; font-weight: bold;">if</span> h_order0_norm2 &gt; h_order1_norm2:
+            &lt;&lt;classify_and_align_evt-jitter-order-2&gt;&gt;
+            <span style="color: #729fcf; font-weight: bold;">if</span> h_order1_norm2 &lt;= h_order2_norm2:
+                <span style="color: #ff6347;">jitter1</span> = jitter0
+        <span style="color: #729fcf; font-weight: bold;">else</span>:
+            <span style="color: #ff6347;">jitter1</span> = 0
+    <span style="color: #729fcf; font-weight: bold;">if</span> <span style="color: #729fcf;">sum</span>(evt**2) &gt; <span style="color: #729fcf;">sum</span>((h-jitter1*centerD-jitter1**2/2*centerDD)**2):
+        <span style="color: #729fcf; font-weight: bold;">return</span> [cluster_names[cluster_idx], evt_pos, jitter1]
+    <span style="color: #729fcf; font-weight: bold;">else</span>:
+        <span style="color: #729fcf; font-weight: bold;">return</span> [<span style="color: #ad7fa8; font-style: italic;">'?'</span>,evt_pos, jitter1]
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd931be7" class="outline-3">
+<h3 id="orgd931be7"><span class="section-number-3">12.12</span> <code>predict_data</code></h3>
+<div class="outline-text-3" id="text-12-12">
+<p>
+We define function <code>predict_data</code> that creates an ideal data trace given events' positions, events' origins and a clusters' catalog. We start with the <code>docstring</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgab4b06b"><span style="color: #888a85;">"""Predicts ideal data given a list of centers' names, positions,</span>
+<span style="color: #888a85;">jitters and a dictionary of centers.</span>
+
+<span style="color: #888a85;">Parameters</span>
+<span style="color: #888a85;">----------</span>
+<span style="color: #888a85;">class_pos_jitter_list : a list of lists returned by</span>
+<span style="color: #888a85;">                        classify_and_align_evt.</span>
+<span style="color: #888a85;">centers_dictionary : a centers' dictionary returned by</span>
+<span style="color: #888a85;">                     mk_center_dictionary.</span>
+<span style="color: #888a85;">nb_channels : the number of recording channels.</span>
+<span style="color: #888a85;">data_length : the number of sampling points.</span>
+
+<span style="color: #888a85;">Returns</span>
+<span style="color: #888a85;">-------</span>
+<span style="color: #888a85;">A matrix of ideal (noise free) data with nb_channels rows and</span>
+<span style="color: #888a85;">data_length columns.</span>
+<span style="color: #888a85;">"""</span>
+</pre>
+</div>
+<p>
+And the function:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd10944d"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">predict_data</span>(class_pos_jitter_list,
+                 centers_dictionary,
+                 nb_channels=4,
+                 data_length=300000):
+    &lt;&lt;predict_data-docstring&gt;&gt;
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">Create next a matrix that will contain the results</span>
+    <span style="color: #ff6347;">res</span> = np.zeros((nb_channels,data_length))
+    <span style="color: #2c5115;">## </span><span style="color: #888a85;">Go through every list element</span>
+    <span style="color: #729fcf; font-weight: bold;">for</span> class_pos_jitter <span style="color: #729fcf; font-weight: bold;">in</span> class_pos_jitter_list:
+        <span style="color: #ff6347;">cluster_name</span> = class_pos_jitter[0]
+        <span style="color: #729fcf; font-weight: bold;">if</span> cluster_name != <span style="color: #ad7fa8; font-style: italic;">'?'</span>:
+            <span style="color: #ff6347;">center</span> = centers_dictionary[cluster_name][<span style="color: #ad7fa8; font-style: italic;">"center"</span>]
+            <span style="color: #ff6347;">centerD</span> = centers_dictionary[cluster_name][<span style="color: #ad7fa8; font-style: italic;">"centerD"</span>]
+            <span style="color: #ff6347;">centerDD</span> = centers_dictionary[cluster_name][<span style="color: #ad7fa8; font-style: italic;">"centerDD"</span>]
+            <span style="color: #ff6347;">jitter</span> = class_pos_jitter[2]
+            <span style="color: #ff6347;">pred</span> = center + jitter*centerD + jitter**2/2*centerDD
+            <span style="color: #ff6347;">pred</span> = pred.reshape((nb_channels,<span style="color: #729fcf;">len</span>(center)//nb_channels))
+            <span style="color: #ff6347;">idx</span> = centers_dictionary[cluster_name][<span style="color: #ad7fa8; font-style: italic;">"center_idx"</span>] + \
+              class_pos_jitter[1]
+            <span style="color: #2c5115;">## </span><span style="color: #888a85;">Make sure that the event is not too close to the</span>
+            <span style="color: #2c5115;">## </span><span style="color: #888a85;">boundaries</span>
+            <span style="color: #ff6347;">within</span> = np.bitwise_and(0 &lt;= idx, idx &lt; data_length)
+            <span style="color: #ff6347;">kw</span> = idx[within]
+            <span style="color: #ff6347;">res</span>[:,kw] += pred[:,within]
+    <span style="color: #729fcf; font-weight: bold;">return</span> res
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Date: LASCON, January 23 2018, Tutorial 3</p>
+<p class="author">Author: Christophe Pouzat</p>
+<p class="date">Created: 2018-01-22 lun. 22:21</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
