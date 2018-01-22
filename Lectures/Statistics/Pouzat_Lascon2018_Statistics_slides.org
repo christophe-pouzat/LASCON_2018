@@ -238,7 +238,7 @@ ECDF with 95% confidence band of the inter MEPP times from Fatt and Katz (1952).
 * Models and estimators                                              :export:
 
 ** The setting
-- We consider a situation where a sample or a set of observations $\mathbold{x}=(x_i)_{i=1,\ldots,n}$ are available.
+- We consider a situation where a sample (or a set of observations) $\mathbold{x}=(x_i)_{i=1,\ldots,n}$ is available.
 - These observations are modeled as a draw from a probability distribution $\mathcal{M}$, we say that the sample $\mathbold{x}$ is the *realization* of the random variable $\mathbold{X}$ whose distribution is $\mathcal{M}$ ($\mathbold{X} \sim \mathcal{M}$). 
 - Our model $\mathcal{M}$ is in fact partly unknown, otherwise we would not need the experiment that gave us $\mathbold{x}$.
 - So we really have in mind a collection of models that we write $\mathcal{M}(\theta)$, where $\theta \in \mathbb{R}^p$ and $p < \infty$.
@@ -267,5 +267,80 @@ As an example, we could assume:
 - We therefore expect (in general) that $\hat{\theta}(y_1,\ldots,y_n) \neq \hat{\theta}(x_1,\ldots,x_n)$. 
 - Stated differently, *since $\hat{\theta}$ depends on the observations, it is a random variable*.
 - The notion of "finding $\hat{\theta}(x_1,\ldots,x_n)$ as close as possible to $\theta_0$" must then be made more precise.
-- Doing as if we could perform as many experiments as we wish, we will look for estimators whose mean value $\lim_{n \rightarrow \infty} \mathtt{E}\hat{\theta}(x_i) = \theta_0$. Such estimators are called *asymptotically unbiased*.
+- Doing as if we could perform as many experiments as we wish, we will look for estimators whose mean value satisfy $\lim_{n \rightarrow \infty} \mathtt{E}\hat{\theta}(x_i) = \theta_0$. Such estimators are called *asymptotically unbiased*.
+** 
 - We would also like the distribution of $\hat{\theta}$ to be as concentrated as possible around $\theta_0$, that is, to have a small variance. 
+- Comparing the results of two independent experiments means comparing $\hat{\theta}(y_1,\ldots,y_n)$ and $\hat{\theta}(x_1,\ldots,x_n)$ and we would like a /yardstick/ allowing us to judge how different are two estimated values.
+- Stated more formally we want a procedure that providence *confidence intervals* on the estimated parameters.
+- *Implementing reproducible research is just impossible without confidence intervals* (as soon as the observations are variable at least).
+
+* The likelihood function  :export:
+** The likelihood function 
+- In the previous section we defined a "model" as a probability (density) function depending on some parameters $\mathcal{M}(\hat{\theta})$ like \[\prod_{i=1}^n p(X_i; t_i, \theta) \quad \text{with} \quad (t_i)_{i=1,\ldots,n} \ge 0 \quad \text{fixed}\, .\]
+- Once data have been observed and "plugged-in" the probability density function: \[\prod_{i=1}^n p(x_i; t_i, \theta) \quad \text{with} \quad (t_i,\textcolor{red}{x_i})_{i=1,\ldots,n} \ge 0 \quad \text{fixed}\, ,\] we can view this object as a function of $\theta$.
+- *The likelihood function is "just" that: the probability density applied to "fixed" data, viewed as a function of the model parameters, $L(\theta)$.* 
+** Variations
+- We will not focus on the precise values taken by the likelihood function but on each shape.
+- We will therefore (in general) drop the factors that do not depend on the model parameters.
+- Since the likelihood function originates from a probability (density), it is positive and we can take its logarithm. Knowing the log-likelihood is like knowing the likelihood.
+- For theoretical reasons that will be explained later and for numerical reason (the likelihood can be very very small) we will work with the log-likelihood, $l(\theta) = \log L(\theta)$, most of the time.
+
+** An empirical study  
+Let us almost go back to the previous example, the mono-exponential decay, with the following modification:
+- The observations are made a regularly separated time points with a time $\delta$ between two successive observations: $(t_i)_{i=1,\ldots,n} = (\delta i)_{i=1,\ldots,n}$.
+- The measurement noise depends on the signal $s(t;\theta)$,
+- The observation at time $t_i$ is the realization of a Poisson random variable with parameter $s(t_i;\theta)$: \[\mathbb{P}\{X_i = n\} = \frac{(s_i)^n}{n!} \exp (-s_i)\, , \quad \mathrm{for} \quad n=0,1,2,\ldots \] and \[s_i = s(\delta i; \theta) = b + \Delta \, \exp (- \delta i / \tau)\; .\]
+#+BEGIN_EXPORT latex
+\vspace{0.2cm}
+#+END_EXPORT
+
+*This simple scheme contains all the key ingredients to work with fluorescence measurements.*  
+
+** 
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/exp-relaxation-illustration1.png]]
+
+Example of simulated data with $b=10$, $\Delta=90$, $\tau=1$.
+
+** 
+- In order to have simpler displays, we will start with a setting where both parameters $b$ and $\Delta$ are known.
+- The log-likelihood is then a function of a single variable $\tau$. 
+- We will also do as if only two times add been used, $t_1$ and $t_2$ leading to observations $x_1$ and $x_2$ on the previous figure.
+- The log-likelihood is then: \[l(\tau) = x_1\, \log s(t_1,\tau) - s(t_1,\tau) + x_2\, \log s(t_2,\tau) - s(t_2,\tau) \, .\]
+- To make comparison with subsequent simulations in the same setting we will show the graph of: \[r(\tau) = l(\hat{\tau}) - l(\tau) \, ,\] where $\hat{\tau}$ is the location of the maximum of $l(\tau)$.
+
+**   
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/exp-relaxation-illustration1-r.png]]
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+
+On the next slide we repeat what we just did with 9 additional samples.
+
+** 
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/exp-relaxation-illustration1-10-r.png]]
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+
+On the next slide we repeat what we just did but we now use 4 times more observations (that is 8) per sample.
+
+** 
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/exp-relaxation-illustration2-r.png]]
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+
+What do you see?
+
+** What you should have seen
+As the sample size increase:
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+- The log-likelihood becomes more symmetric.
+- The curvature increases.
+- The location of the peak gets closer to the true value.

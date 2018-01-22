@@ -323,3 +323,178 @@ plt.close()
 
 #+RESULTS: nerve-data-ecdf-band-finish
 [[file:imgs/Fatt_Katz_ECDF_band.png]]
+
+* The Likelihood :export:
+** Making the first illustrative figure
+
+#+NAME: exp-relaxation-illustration1-preparation
+#+BEGIN_SRC python :session *tuto-stats* :exports none :results silent
+fig = plt.figure(dpi=600,figsize=(10,8))
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration1
+#+BEGIN_SRC python :results silent
+tau_true = 1.0
+b_true = 10
+Delta_true = 90
+X = np.linspace(0,5/tau_true,51)
+Theo = Delta_true*np.exp(-X/tau_true)+b_true
+np.random.seed(20061001)
+Observations = np.random.poisson(Theo)
+plt.plot(X,Observations,'o')
+plt.xlabel("Time (s)",fontsize=25)
+plt.ylabel("Observations",fontsize=25)
+plt.plot(X,Theo,'r')
+plt.plot(X[[3,30]],Observations[[3,30]],'sk')
+plt.plot([X[3],X[3]],[0,Observations[3]],'--k')
+plt.plot([0,X[3]],[Observations[3],Observations[3]],'--k')
+plt.plot([X[30],X[30]],[0,Observations[30]],'--k')
+plt.plot([0,X[30]],[Observations[30],Observations[30]],'--k')
+plt.xlim([0,5])
+plt.ylim([0,110])
+plt.text(0.0,75,r'$x_1$',fontsize=25)
+plt.text(1.45,5,r'$x_2$',fontsize=25)
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration1-finish
+#+BEGIN_SRC python :results file :exports results
+plt.savefig('imgs/exp-relaxation-illustration1.png')
+plt.close()
+'imgs/exp-relaxation-illustration1.png'
+#+END_SRC
+
+#+RESULTS: exp-relaxation-illustration1-finish
+[[file:imgs/exp-relaxation-illustration1.png]]
+
+** Definition of a log-likelihood "constructor" function
+
+#+NAME: mk_model1_mloglik-definition
+#+BEGIN_SRC python :session *tuto-stats* :results silent
+def mk_model1_mloglik(observations,
+                     times,
+                     b=10,
+                     Delta=90):
+    import numpy as np
+    def mloglik(tau):
+        pred = b+Delta*np.exp(-times/tau)
+        return -np.sum(observations*np.log(pred)-pred)
+    return mloglik
+
+#+END_SRC
+
+** Make the first figure of $r(\tau)$
+
+We start by defining the minus log-likelihood function corresponding to our first sample and we maximize it using =minimize_scalar= from the submodule =optimize= of =scipy=:
+
+#+NAME: exp-relaxation-illustration1-tau_hat
+#+BEGIN_SRC python :session *tuto-stats* :results silent
+mll1 = mk_model1_mloglik(Observations[[3,30]],X[[3,30]])
+from scipy.optimize import minimize_scalar
+mll1_opt = minimize_scalar(mll1,bracket=(0.1,5))
+#+END_SRC
+
+We then define $r(\tau)$:
+
+#+NAME: exp-relaxation-illustration1-r_fct
+#+BEGIN_SRC python :session *tuto-stats* :results silent
+def R1(tau): return mll1_opt.fun-mll1(tau)
+#+END_SRC
+
+And we create the graph:
+
+#+NAME: exp-relaxation-illustration1-r-preparation
+#+BEGIN_SRC python :session *tuto-stats* :exports none :results silent
+fig = plt.figure(dpi=600,figsize=(10,8))
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration1-r
+#+BEGIN_SRC python :results silent
+tau_v = np.linspace(0.4,2.0,201)
+plt.plot(tau_v,[R1(x) for x in tau_v])
+plt.grid()
+plt.xlabel("τ",fontsize=25)
+plt.ylabel("r(τ)",fontsize=25)
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration1-r-finish
+#+BEGIN_SRC python :results file :exports results
+plt.savefig('imgs/exp-relaxation-illustration1-r.png')
+plt.close()
+'imgs/exp-relaxation-illustration1-r.png'
+#+END_SRC
+
+#+RESULTS: exp-relaxation-illustration1-r-finish
+[[file:imgs/exp-relaxation-illustration1-r.png]]
+
+** Do that with 9 other samples and plot all the $r(\tau)$ together
+
+#+NAME: exp-relaxation-illustration2-10
+#+BEGIN_SRC python :results silent
+ten_sim = [Observations] + [np.random.poisson(Theo) for i in range(9)]
+ten_mll = [mk_model1_mloglik(Obs[[3,30]],X[[3,30]]) for Obs in ten_sim]
+ten_opt = [minimize_scalar(mll1,bracket=(0.1,5)) for mll1 in ten_mll] 
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration1-10-r-preparation
+#+BEGIN_SRC python :session *tuto-stats* :exports none :results silent
+fig = plt.figure(dpi=600,figsize=(10,8))
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration1-10-r
+#+BEGIN_SRC python :results silent
+tau_v = np.linspace(0.0,3.0,501)
+for i in range(10):
+    plt.plot(tau_v,[ten_opt[i].fun-ten_mll[i](x) for x in tau_v])
+
+plt.grid()
+plt.ylim([-5,0])
+plt.xlabel("τ",fontsize=25)
+plt.ylabel("r(τ)",fontsize=25)
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration1-10-r-finish
+#+BEGIN_SRC python :results file :exports results
+plt.savefig('imgs/exp-relaxation-illustration1-10-r.png')
+plt.close()
+'imgs/exp-relaxation-illustration1-10-r.png'
+#+END_SRC
+
+#+RESULTS: exp-relaxation-illustration1-10-r-finish
+[[file:imgs/exp-relaxation-illustration1-10-r.png]]
+
+** Do that with the same samples but using 8 observatoins
+
+#+NAME: exp-relaxation-illustration2
+#+BEGIN_SRC python :results silent
+ten_mll2 = [mk_model1_mloglik(Obs[[3,10,15,20,30,40,50]],
+                              X[[3,10,15,20,30,40,50]])
+            for Obs in ten_sim]
+ten_opt2 = [minimize_scalar(mll1,bracket=(0.1,5)) for mll1 in ten_mll2] 
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration2-r-preparation
+#+BEGIN_SRC python :session *tuto-stats* :exports none :results silent
+fig = plt.figure(dpi=600,figsize=(10,8))
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration2-r
+#+BEGIN_SRC python :results silent
+tau_v2 = np.linspace(0.5,2.0,201)
+for i in range(10):
+    plt.plot(tau_v2,[ten_opt2[i].fun-ten_mll2[i](x) for x in tau_v2])
+
+plt.grid()
+plt.ylim([-5,0])
+plt.xlabel("τ",fontsize=25)
+plt.ylabel("r(τ)",fontsize=25)
+#+END_SRC
+
+#+NAME: exp-relaxation-illustration2-r-finish
+#+BEGIN_SRC python :results file :exports results
+plt.savefig('imgs/exp-relaxation-illustration2-r.png')
+plt.close()
+'imgs/exp-relaxation-illustration2-r.png'
+#+END_SRC
+
+#+RESULTS: exp-relaxation-illustration2-r-finish
+[[file:imgs/exp-relaxation-illustration2-r.png]]
