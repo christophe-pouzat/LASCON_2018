@@ -498,3 +498,48 @@ plt.close()
 
 #+RESULTS: exp-relaxation-illustration2-r-finish
 [[file:imgs/exp-relaxation-illustration2-r.png]]
+
+* MLE
+** Doing the simulation with the two estimators
+
+#+BEGIN_SRC python :results silent
+np.random.seed(20110928)
+nrep=10000
+samp_sample = [np.random.poisson(Theo[[3,30]]) for i in range(nrep)]
+samp_mle = [0 for i in range(nrep)]
+for i in range(nrep):
+    mll = mk_model1_mloglik(samp_sample[i],X[[3,30]])
+    mll_opt = minimize_scalar(mll,bracket=(0.1,10))
+    samp_mle[i] = mll_opt.x
+
+samp_rss = [0 for i in range(nrep)]
+for i in range(nrep):
+    rss_opt =  minimize_scalar(lambda tau: (samp_sample[i][0]-10-90*np.exp(-X[3]/tau))**2+
+                               (samp_sample[i][1]-10-90*np.exp(-X[30]/tau))**2,
+                               bracket=(0.1,10))
+    samp_rss[i] = rss_opt.x
+
+#+END_SRC
+
+#+NAME: exp-relaxation-estimator-comparison-preparation
+#+BEGIN_SRC python :session *tuto-stats* :exports none :results silent
+fig = plt.figure(dpi=600,figsize=(10,8))
+#+END_SRC
+
+#+NAME: exp-relaxation-estimator-comparison
+#+BEGIN_SRC python :results silent
+useless_stuff = plt.hist([samp_rss,samp_mle],bins=75,normed=True,histtype='step',lw=2)
+plt.xlabel(r'$\tau$',fontsize=25)
+plt.ylabel('Density',fontsize=25)
+plt.title(r'Densities of $\widetilde{\tau}$ and $\widehat{\tau}$',fontsize=25)
+#+END_SRC
+
+#+NAME: exp-relaxation-estimator-comparison-finish
+#+BEGIN_SRC python :results file :exports results
+plt.savefig('imgs/exp-relaxation-estimator-comparison.png')
+plt.close()
+'imgs/exp-relaxation-estimator-comparison.png'
+#+END_SRC
+
+#+RESULTS: exp-relaxation-estimator-comparison-finish
+[[file:imgs/exp-relaxation-estimator-comparison.png]]

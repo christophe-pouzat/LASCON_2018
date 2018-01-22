@@ -267,7 +267,7 @@ As an example, we could assume:
 - We therefore expect (in general) that $\hat{\theta}(y_1,\ldots,y_n) \neq \hat{\theta}(x_1,\ldots,x_n)$. 
 - Stated differently, *since $\hat{\theta}$ depends on the observations, it is a random variable*.
 - The notion of "finding $\hat{\theta}(x_1,\ldots,x_n)$ as close as possible to $\theta_0$" must then be made more precise.
-- Doing as if we could perform as many experiments as we wish, we will look for estimators whose mean value satisfy $\lim_{n \rightarrow \infty} \mathtt{E}\hat{\theta}(x_i) = \theta_0$. Such estimators are called *asymptotically unbiased*.
+- Doing as if we could perform as many experiments as we wish, we will look for estimators whose mean value satisfy $\lim_{n \rightarrow \infty} \mathtt{E}\hat{\theta}(x_i) = \theta_0$. Such estimators are called *asymptotically unbiased* or *consistent*.
 ** 
 - We would also like the distribution of $\hat{\theta}$ to be as concentrated as possible around $\theta_0$, that is, to have a small variance. 
 - Comparing the results of two independent experiments means comparing $\hat{\theta}(y_1,\ldots,y_n)$ and $\hat{\theta}(x_1,\ldots,x_n)$ and we would like a /yardstick/ allowing us to judge how different are two estimated values.
@@ -344,3 +344,53 @@ As the sample size increase:
 - The log-likelihood becomes more symmetric.
 - The curvature increases.
 - The location of the peak gets closer to the true value.
+
+* The Maximum Likelihood Estimator :export:
+
+** The MLE
+- In 1922 Fischer proposed to take as an estimator $\hat{\theta}$ the $\theta$ that maximizes $l(\theta)$.
+- In that he was essentially following and generalizing Daniel Bernoulli, Lambert and Gauss.
+- But he went much farther claiming that when the maximum was a smooth maximum, obtained by taking the derivative / gradient with respect to $\theta$ and setting it equal to 0, then:
+  + The accuracy (standard error of the estimate) can be found to a good approximation from the curvature of $l(\theta)$ at its maximum.
+  + $\hat{\theta}$ expresses all the relevant information available in the data.
+  + This estimate is the best of all the consistent ones. 
+
+** Some remarks
+- The MLE is just the value of the parameter that makes the observations most probable /a posteriori/.
+- Some technical precautions are required in order to fulfill all of Fischer's promises; they are referred to as "the appropriate smoothness conditions" in the literature.  
+- They are heavy to state and a real pain to check (that's why no one checks them)!
+- My recommendation is to go ahead and after the MLE, $\hat{\theta}$, has been found, do a parametric bootstrap:
+  + take $\hat{\theta}$ has the "true" value and simulate 500 to 1000 samples from $\mathcal{M}(\hat{\theta})$,
+  + for each simulated sample, repeat the estimation procedure and get a sample of 500 to 1000 $\hat{\theta}$ values,
+  + check that this sample has the properties expected from MLE theory.
+- With this bootstrap procedure we also make sure that the "asymptotic" regime is reached (the theorems are valid when the sample size goes to infinity).
+
+** Illustration: comparison of two estimators
+We reconsider our first simulation, 2 observations, $b$ and $\Delta$ known and we compare two estimators for $\tau$:
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT 
+- The MLE, $\hat{\tau}$, that maximizes: \[l(\tau) = x_1\, \log s(t_1,\tau) - s(t_1,\tau) + x_2\, \log s(t_2,\tau) - s(t_2,\tau) \, .\]
+- The least squares estimator, $\tilde{\tau}$, that minimizes: \[rss(\tau) = (x_1-s(t_1,\tau))^2+(x_2-s(t_2,\tau))^2\, .\]
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT 
+
+We simulate 10000 samples and get both estimators for each.
+
+** 
+#+ATTR_LATEX: :width 0.8\textwidth
+[[./imgs/exp-relaxation-estimator-comparison.png]]
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+
+$\tilde{\tau}$ is blue and $\hat{\tau}$ is orange.
+
+** Some remarks
+
+- Maximum likelihood estimation is very general: as soon as we have an expression for the probability (density) of our data, we can use it.
+- It assumes that the true model is in the family we consider, *this is a very strong assumption*.
+- We must therefore always do some goodness of fit test, otherwise the confidence intervals we will get will be meaningless.
+- Doing maximum likelihood means that we do optimization all the time. The users of this method should make a minimal effort to master the numerical optimization routines they are going to use.
+- Be careful with the optimization routines of =Scipy=.  
