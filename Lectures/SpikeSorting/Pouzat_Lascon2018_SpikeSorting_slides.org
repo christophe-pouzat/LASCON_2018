@@ -176,37 +176,11 @@ Fig. 1 of Antic et al (2000).
 #+END_CENTER
 "Snail1web". Licensed under Public domain via Wikimedia Commons.
 
-** Currents associated with a non-uniform membrane potential
-When the membrane potential, $V_m$, is spatially non-uniform *axial*, $I_i$ [A], and *trans-membrane*, $i_m$ [A/L], currents are necessarily present:
-\[I_i = - \pi a^2 \sigma_i \partial V_m / \partial x\]
-and
-\[i_m = \pi a^2 \sigma_i \partial^2 V_m / \partial x^2 \, ,\]
-where $a$ is the axon / neurite diameter, the neurite is assumed to "seat" on the $x$ axis, an axial current is positive if it goes in the increasing $x$ direction and a trans-mambrane current is positive if it goes from inside to outside and $\sigma_i$ is the intracellular conductance per centimeter [S/L]. See for instance Plonsey and Barr (2007) Chap. 6 and 8.
-
-** Currents associated with a propagating AP
+** Something you already know
 #+BEGIN_CENTER
-#+ATTR_LaTeX: :width 0.7\textwidth
-[[~/Base_Figures/Plonsey+Barr2007Fig8-3.png]]
+[[file:imgs/RoachFig.png]]
 #+END_CENTER
-Fig. 8.3 of Plonsey and Barr (2007).
-
-** Extracellular potential associated with a current source
-For a point current source of intensity $I_0$ in a medium of conductivity per unit length $\sigma_e$, the extracellular potential (with respect to a reference at infinity) depends only on the distance, $r$, to the source and is given by:
-\[\Phi_e = \frac{1}{4 \pi \sigma_e} \frac{I_0}{r} \, .\]
-For a fiber "seating" on the $x$ axis we get at a point $(x',y',z')$ the potential:
-\[\Phi_e(x',y',z') = \frac{1}{4 \pi \sigma_e} \int_L \frac{i_m(x)}{\sqrt{(x-x')^2+y'^2+z'^2}} dx \, .\]
-
-** 
-#+BEGIN_CENTER
-#+ATTR_LaTeX: :width 0.6\textwidth
-[[~/Base_Figures/Plonsey+Barr2007Fig8-5.png]]
-#+END_CENTER
-Part of Fig. 8.5 of Plonsey and Barr (2007).
-
-Using our previous expression for $i_m$ we get:
-\[\Phi_e(x',y',z') = \frac{a^2 \sigma_i}{4 \sigma_e} \int_L \frac{\partial^2 V_m(x)}{\partial x^2} \frac{dx}{\sqrt{(x-x')^2+y'^2+z'^2}} \, .\]
-
-*Notice the dependence on the fiber cross-section*.
+Left, Rinberg and Davidowitz (2002); top, Spira et al (1969); bottom, Hamon et al (1990).
 
 ** Observed extracellular potential
 #+BEGIN_CENTER
@@ -283,21 +257,17 @@ Fig. 5 of Williams and Stuart (1999) /J Physiol/ \textbf{521}:467.
 
 Fig. 5 of Cooley and Dodge (1966) /Biophys J/ \textbf{6}:583.
 
-** A note on slice recording
-#+BEGIN_CENTER
-#+ATTR_LaTeX: :width 0.5\textwidth
-[[~/Base_Figures/Sakmann+Stuart:2009Fig1.png]]
-#+END_CENTER
-
-Fig. 1 of Sakmann and Stuart (2009)
-
 ** 
 #+BEGIN_CENTER
-#+ATTR_LaTeX: :width 0.7\textwidth
-[[~/Base_Figures/Aitken+:1995Fig2.png]]
+#+ATTR_LATEX: :width 0.85\textwidth
+[[file:imgs/TraubEtAl_cas1b_enC_out_plot-1.png]]
 #+END_CENTER
 
-Fig. 2 of Aitken et al (1995) /J Neurosci Methods/ \textbf{59}:139.
+CA3 pyramidal cell simulation. After Traub et al (1994). Current injected in the soma. Voltage response in the soma and dendrite (blue), axon initial segment (red), axon (black).
+
+** My conclusion
+- Extracellular recordings from regions with neurons having different "sizes", like the neo-cortex, result in a biased sampling of the neuronal populations.
+- Since what goes on in the soma is not necessarily what goes on in the axon and since the extracellular potential is dominated by what goes on in the former, we might get wrong output estimations from extracellular recordings. 
 
 ** What happens when the diameter increases?
 #+BEGIN_CENTER
@@ -345,6 +315,15 @@ Fig. 4 of Poggio and Mountcastle (1963) /J Neurophys/ \textbf{26}:775. /In vivo/
 #+END_CENTER
 Fig. 1 of Gerstein and Clark (1964) /Science/ \textbf{143}:1325. Dorsal cochlear nucleus recordings from anesthetized cats.
 
+** 
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.7\textwidth
+[[./imgs/comparaison-motifs.png]]
+#+END_CENTER
+
+Concentrate on part B. 3 templates are subtracted from the same event. Top: event (black) and template (gray); bottom: event-template (in red the residual sum of squares).
+
+
 ** Dimension reduction and cluster membership (1965)
 #+BEGIN_CENTER
 #+ATTR_LaTeX: :width 1.0\textwidth
@@ -352,12 +331,24 @@ Fig. 1 of Gerstein and Clark (1964) /Science/ \textbf{143}:1325. Dorsal cochlear
 #+END_CENTER
 Fig. 1-3 of Simon (1965) /Electroenceph clin Neurophysiol/ \textbf{18}:192. 
 
+** A modern version of dimension reduction
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.7\textwidth
+[[./imgs/dim-red.png]]
+#+END_CENTER
+
 ** Superposition resolution (1972)
 #+BEGIN_CENTER
 #+ATTR_LaTeX: :width 0.4\textwidth
 [[~/Base_Figures/Prochazka+1972Fig3.png]]
 #+END_CENTER
 Fig. 3 of Prochazka et al (1972) /Electroenceph clin Neurophysiol/ \textbf{32}:95. 
+
+** A modern version of superposition resolution
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.7\textwidth
+[[./imgs/superposition.png]]
+#+END_CENTER
 
 ** Multi-channel linear filter: principle
 #+BEGIN_CENTER
