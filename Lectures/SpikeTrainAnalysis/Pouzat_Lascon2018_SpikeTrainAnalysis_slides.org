@@ -1,0 +1,85 @@
+# -*- ispell-local-dictionary: "american" -*-
+#+TITLE: Stochastic neuronal discharge models and their inference
+#+AUTHOR: @@latex:{\large Christophe Pouzat} \\ \vspace{0.2cm}MAP5, Paris-Descartes University and CNRS\\ \vspace{0.2cm} \texttt{christophe.pouzat@parisdescartes.fr}@@
+#+DATE: LASCON, January 24 2018, Lecture 4
+#+OPTIONS: H:2 tags:nil
+#+EXCLUDE_TAGS: noexport
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+#+LATEX_HEADER: \usepackage{dsfont}
+#+BEAMER_HEADER: \setbeamercovered{invisible}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Where are we ?}\tableofcontents[currentsection]\end{frame}}
+#+BEAMER_HEADER: \beamertemplatenavigationsymbolsempty
+#+STARTUP: beamer
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+#+STARTUP: indent
+#+PROPERTY: header-args :eval no-export
+
+* What are we going to discuss?
+
+** Spike trains
+
+After a "rather heavy" pre-processing stage called *spike sorting*, the *raster plot* representing the spike trains can be built:
+
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.9\textwidth
+[[file:imgs/exemple-raster.png]]
+#+END_CENTER
+
+** Inter Spike Intervals (ISI)
+
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.9\textwidth
+[[file:imgs/locust20010214_Spontaneous_1_tetB_u1_7_isi_dens.png]]
+#+END_CENTER
+
+Estimated ISI densities of 7 neurons recorded simultaneously from the locust antennal lobe.
+
+** Responses to stimulation 
+
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.9\textwidth
+[[file:imgs/locust20010214_C3H_1_tetB_u1_raster.png]]
+#+END_CENTER
+
+Raster plots from one of the neurons showing the responses to 25 presentations (gray background) of cis-3-hexen-1-ol.
+
+** 
+
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.9\textwidth
+[[file:imgs/locust20010214_C3H_1_tetB_u1_cp_norm_wt.png]]
+#+END_CENTER
+
+The observed counting processes associated with the 25 observed point processes just shown. In red the empirical mean of the 25.
+
+** Modeling spike trains: Why and How?
+- A key working hypothesis in Neurosciences states that the spikes' occurrence times, as opposed to their waveform are the only information carriers between brain region (Adrian and Zotterman, 1926).
+- This hypothesis encourages the development of models whose goal is to predict the probability of occurrence of a spike at a given time, without *necessarily* considering the biophysical spike generation mechanisms.
+
+* In defense of a modeling approach with a strong stochastic element 
+
+** Membrane noise can lead to output fluctuations
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.9\textheight
+[[file:imgs/VerveenDerksen1968.png]]
+#+END_CENTER
+
+** Synaptic noise is ubiquitous
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.9\textheight
+[[file:imgs/Pouzat+Marty:1998Fig1.jpg]]
+#+END_CENTER
+
+(Pouzat & Marty, 1998)
+
+** Action potential propagation failures can occur
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.7\textheight
+[[file:imgs/Smith1980.png]]
+#+END_CENTER
