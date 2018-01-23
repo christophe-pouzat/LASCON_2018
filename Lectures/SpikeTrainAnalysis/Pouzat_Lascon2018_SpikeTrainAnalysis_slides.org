@@ -61,6 +61,17 @@ The observed counting processes associated with the 25 observed point processes 
 
 * In defense of a modeling approach with a strong stochastic element 
 
+** Purpose of this section
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+
+One could argue that dynamical systems are capable of generating highly variable outputs--just think of your favorite (pseudo-)random number generator, it's a deterministic system that does indeed generate numbers that look really random!--and that techniques adapted to fluctuating phenomena should not be employed.
+
+There are, in my view, two answers to such a statement:
+- One can decide that statistical methods are relevant because they provide a "usefull" summary of the observations. In the same spirit, describing a human population with statistical concepts implies that that in some aspect people are exchangeable but does not imply that humans are /always and in all aspects/ exchangeable; these tools provide usefull summaries upon which we can build.
+- More fundemantally, what we know of neurons' biophysics, leads us to thing that there is /an intrisicly stochastic component in their dynamics/; that's the point made in this section.
+ 
 ** Membrane noise can lead to output fluctuations
 
 #+BEGIN_CENTER
@@ -83,3 +94,23 @@ The observed counting processes associated with the 25 observed point processes 
 #+ATTR_LATEX: :width 0.7\textheight
 [[file:imgs/Smith1980.png]]
 #+END_CENTER
+
+** A Summary of noise sources
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 1.0\textheight
+[[file:imgs/YaromHounsgaard2011Fig1.png]]
+#+END_CENTER
+
+Fig. 1 of Yarom and Hounsgaard (2011).
+
+*** References
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+
+The figure is taken from Yosef Yarom, and Jorn Hounsgaard (2011) Voltage Fluctuations in Neurons: Signal or Noise? /Physiological Reviews/ *91(3)* [[https://doi.org/10.1152/physrev.00019.2010][doi:10.1152/physrev.00019.2010]].
+
+Other early reference worth checking: 
+- W H Calvin, and C F Stevens (1968) Synaptic noise and other sources of randomness in motoneuron interspike intervals. /J Neurophysiol/ *31(4)*:574-587, [[https://doi.org/10.1152/jn.1968.31.4.574][doi:10.1152/jn.1968.31.4.574]].
+- Louis J DeFelice (1981) /Introduction to Membrane Noise/, Plenum Press. 
