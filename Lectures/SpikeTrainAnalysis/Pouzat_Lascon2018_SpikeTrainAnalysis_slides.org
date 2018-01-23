@@ -111,6 +111,37 @@ Fig. 1 of Yarom and Hounsgaard (2011).
 
 The figure is taken from Yosef Yarom, and Jorn Hounsgaard (2011) Voltage Fluctuations in Neurons: Signal or Noise? /Physiological Reviews/ *91(3)* [[https://doi.org/10.1152/physrev.00019.2010][doi:10.1152/physrev.00019.2010]].
 
-Other early reference worth checking: 
+Other early references worth checking: 
 - W H Calvin, and C F Stevens (1968) Synaptic noise and other sources of randomness in motoneuron interspike intervals. /J Neurophysiol/ *31(4)*:574-587, [[https://doi.org/10.1152/jn.1968.31.4.574][doi:10.1152/jn.1968.31.4.574]].
 - Louis J DeFelice (1981) /Introduction to Membrane Noise/, Plenum Press. 
+
+* Descriptive stats, stationary discharge 1 neuron
+
+** What is this section about
+:PROPERTIES:
+:BEAMER_ENV: note
+:END:
+
+Expose what is "usually" done with spike trains from a single neuron in the "stationary" regime.
+
+** Single neuron spike trains 
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 1.0\textheight
+[[file:imgs/KufflerEtAl_1957_Fig6.png]]
+#+END_CENTER
+
+A recording from a cat (retinal) ganglion cell by Kuffler, Fitzhugh and Barlow (1957).
+
+** ISI histograms
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.7\textheight
+[[file:imgs/KufflerEtAl_1957_Fig7.png]]
+#+END_CENTER
+
+They got good fits with a gamma distribution.
+
+** An alternative display
+
+

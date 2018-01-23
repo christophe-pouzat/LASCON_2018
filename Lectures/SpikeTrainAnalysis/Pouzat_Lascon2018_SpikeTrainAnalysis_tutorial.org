@@ -1,0 +1,71 @@
+# -*- ispell-local-dictionary: "american" -*-
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:nil arch:headline
+#+OPTIONS: author:t broken-links:nil c:nil creator:nil
+#+OPTIONS: d:(not "LOGBOOK") date:t e:t email:nil f:t inline:t num:t
+#+OPTIONS: p:nil pri:nil prop:nil stat:t tags:nil tasks:t tex:t
+#+OPTIONS: timestamp:t title:t toc:t todo:t |:t
+#+TITLE: Spike Train Analysis: Tutorial
+#+AUTHOR: Christophe Pouzat
+#+EMAIL: christophe.pouzat@parisdescartes.fr
+#+DATE: LASCON, January 24 2018, Tutorial 4
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+LaTeX_CLASS: koma-article
+#+LaTeX_CLASS_OPTIONS: [koma,11pt]
+#+LaTeX_HEADER: \usepackage{cmbright}
+#+LaTeX_HEADER: \usepackage[round]{natbib}
+#+LaTeX_HEADER: \usepackage{alltt}
+#+LaTeX_HEADER: \usepackage[usenames,dvipsnames]{xcolor}
+#+LaTeX_HEADER: \renewenvironment{verbatim}{\begin{alltt} \scriptsize \color{Bittersweet} \vspace{0.2cm} }{\vspace{0.2cm} \end{alltt} \normalsize \color{black}}
+#+LaTeX_HEADER: \usepackage{listings}
+#+LaTeX_HEADER: \lstloadlanguages{C,Gnuplot,bash,sh,R}
+#+LaTeX_HEADER: \hypersetup{colorlinks=true,pagebackref=true}
+#+STARTUP: indent
+#+PROPERTY: header-args :eval no-export
+#+PROPERTY: header-args:python :session *sta-python* :results pp
+
+* Setup :noexport:
+#+NAME: org-latex-set-up
+#+BEGIN_SRC emacs-lisp :results silent :exports none 
+(setq smartparens-mode nil)
+(require 'ox-latex)
+(setq org-export-latex-listings t)
+(setq org-latex-listings 'listings)
+(setq org-latex-listings-options
+        '(("frame" "lines")
+          ("basicstyle" "\\footnotesize")
+          ("numbers" "left")
+          ("numberstyle" "\\tiny")))
+(add-to-list 'org-latex-classes
+          '("koma-article"
+             "\\documentclass{scrartcl}"
+             ("\\section{%s}" . "\\section*{%s}")
+             ("\\subsection{%s}" . "\\subsection*{%s}")
+             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+             ("\\paragraph{%s}" . "\\paragraph*{%s}")
+             ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+#+END_SRC
+
+* Data used :export:
+We are going to use spike trains recorded from the locust, /Schistocerca americana/, antennal lobe (the first olfactory relay of the insects). The raw extracellular data (before spike sorting) can be downloaded from zenodo: [[https://zenodo.org/record/21589]]. We are going to concentrate on data set =locust20010214=. The *complete* description of the sorting leading to the spike trains--that's a copy of my electronic lab-book--can be found on the dedicated GitHub site: [[https://christophe-pouzat.github.io/zenodo-locust-datasets-analysis/Locust_Analysis_with_R/locust20010214/Sorting_20010214_tetB.html]].
+
+A model with 10 units was used and the first 7 units are well isolated. The spike trains can be found on my dedicated GitHub repository: [[https://github.com/christophe-pouzat/zenodo-locust-datasets-analysis]], more precisely at the following location: [[https://github.com/christophe-pouzat/zenodo-locust-datasets-analysis/tree/master/Locust_Analysis_with_R/locust20010214/locust20010214_spike_trains]]. The README file of the repository specifies that:
+#+BEGIN_QUOTE
+The spike trains in directory locustXXX_spike_trains are stored in ASCII format with one spike time (in seconds) per line. They are named locustXXX_StimID_tetY_uZ.txt, where XXX gives the experiment data and Y the tetrode label, StimID is a stimulation identifier (more precisely a group name in the HDF5 data file) and Z is the unit number. When several trials, like say 25 stimulation with citronelal, were recorded, the successive trials will be found one after the other and time 0 is defined as the start of the acquisition of the first trial.
+#+END_QUOTE  
+
+** Getting the data into Python
+ 
+#+NAME: download-data
+#+BEGIN_SRC python :exports code :results silent
+from urllib.request import urlretrieve # Python 3
+# from urllib import urlretrieve # Python 2
+data_name = 'locust20010214_Spontaneous_1_tetB_u1.txt'
+data_src = 'https://raw.githubusercontent.com/christophe-pouzat/\
+zenodo-locust-datasets-analysis/master/Locust_Analysis_with_R/\
+locust20010214/locust20010214_spike_trains/\
+locust20010214_Spontaneous_1_tetB_u1.txt'
+urlretrieve(data_src,data_name)
+#+END_SRC
+
