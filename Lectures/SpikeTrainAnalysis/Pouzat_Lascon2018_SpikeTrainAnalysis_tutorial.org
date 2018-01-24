@@ -48,6 +48,7 @@
 #+END_SRC
 
 * Data used :export:
+** Locust data
 We are going to use spike trains recorded from the locust, /Schistocerca americana/, antennal lobe (the first olfactory relay of the insects). The raw extracellular data (before spike sorting) can be downloaded from zenodo: [[https://zenodo.org/record/21589]]. We are going to concentrate on data set =locust20010214=. The *complete* description of the sorting leading to the spike trains--that's a copy of my electronic lab-book--can be found on the dedicated GitHub site: [[https://christophe-pouzat.github.io/zenodo-locust-datasets-analysis/Locust_Analysis_with_R/locust20010214/Sorting_20010214_tetB.html]].
 
 A model with 10 units was used and the first 7 units are well isolated. The spike trains can be found on my dedicated GitHub repository: [[https://github.com/christophe-pouzat/zenodo-locust-datasets-analysis]], more precisely at the following location: [[https://github.com/christophe-pouzat/zenodo-locust-datasets-analysis/tree/master/Locust_Analysis_with_R/locust20010214/locust20010214_spike_trains]]. The README file of the repository specifies that:
@@ -56,8 +57,19 @@ The spike trains in directory locustXXX_spike_trains are stored in ASCII format 
 #+END_QUOTE  
 
 ** Getting the data into Python
+
+We start our =Python= session the "usual" way, loading our favorite modules:
+
+#+NAME: import-numpy-pylab
+#+BEGIN_SRC python :results silent
+import numpy as np
+import matplotlib.pylab as plt
+plt.ion() # to get interactive graphics
+#+END_SRC
+
+We download the data of the first neuron (unit 1) in the spontaneous regime "within" =Python= with:
  
-#+NAME: download-data
+#+NAME: download-u1-data-from-spont1-locust20010214-python
 #+BEGIN_SRC python :exports code :results silent
 from urllib.request import urlretrieve # Python 3
 # from urllib import urlretrieve # Python 2
@@ -69,3 +81,149 @@ locust20010214_Spontaneous_1_tetB_u1.txt'
 urlretrieve(data_src,data_name)
 #+END_SRC
 
+If you prefer using the command line, you can type:
+
+#+NAME: download-u1-data-from-spont1-locust20010214-shell
+#+BEGIN_SRC sh :exports both :results output :eval never
+wget https://raw.githubusercontent.com/christophe-pouzat/\
+zenodo-locust-datasets-analysis/master/Locust_Analysis_with_R/\
+locust20010214/locust20010214_spike_trains/\
+locust20010214_Spontaneous_1_tetB_u1.txt
+#+END_SRC
+
+We then load the data into =Python= with:
+
+#+NAME: load-u1-data-from-spont1-locust20010214-python
+#+BEGIN_SRC python :exports both
+u1spont = [float(line) for line in open("locust20010214_Spontaneous_1_tetB_u1.txt")]
+len(u1spont) 
+#+END_SRC
+
+#+RESULTS: load-u1-data-from-spont1-locust20010214-python
+: 3331
+
+So we have just read 3331 spike times. This spike times are in sampling units; that means we have to divide them by the sampling rate (15 kHz) to the times in seconds. We can check the "head" and the tail of the data we just loaded with:
+
+#+NAME: head-u1-data-from-spont1-locust20010214-python
+#+BEGIN_SRC python :exports both
+u1spont[:10]
+#+END_SRC
+
+#+RESULTS: head-u1-data-from-spont1-locust20010214-python
+#+begin_example
+[4364.629,
+ 49876.8,
+ 50529.95,
+ 50988.26,
+ 51371.66,
+ 51769.29,
+ 52703.77,
+ 54772.34,
+ 56472.7,
+ 71766.51]
+#+end_example
+
+and
+
+#+NAME: tail-u1-data-from-spont1-locust20010214-python
+#+BEGIN_SRC python :exports both
+u1spont[-10:]
+#+END_SRC
+
+#+RESULTS: tail-u1-data-from-spont1-locust20010214-python
+#+begin_example
+[13442792.0,
+ 13455679.0,
+ 13458610.0,
+ 13460049.0,
+ 13460517.0,
+ 13461154.0,
+ 13464139.0,
+ 13470059.0,
+ 13471539.0,
+ 13472243.0]
+#+end_example
+
+The successive acquisition epochs are one after the other, each acquisition was 29 seconds long with a 1 second gap between each acquisition. To convert our data into seconds we simply do:
+
+#+NAME: to-seconds-u1-data-from-spont1-locust20010214-python
+#+BEGIN_SRC python :results silent
+u1spont = [x/15000 for x in u1spont]
+#+END_SRC
+
+We get our observed counting process plot with:
+
+#+NAME: u1-data-from-spont1-locust20010214-plot
+#+BEGIN_SRC python :results silent
+plt.step(u1spont,np.arange(len(u1spont))+1,where='post')
+plt.grid()
+plt.xlabel('Time (s)')
+plt.ylabel('Nb of evts')
+#+END_SRC
+
+#+NAME: u1-data-from-spont1-locust20010214-plot-save
+#+BEGIN_SRC python :exports results :results file
+plt.savefig("imgs/u1-data-from-spont1-locust20010214-cp.png")
+plt.close()
+"imgs/u1-data-from-spont1-locust20010214-cp.png"
+#+END_SRC
+
+#+CAPTION: The observed counting process from neuron 1 in the spontaneous regime. The two pauses are due to two "noisy" acquisition epochs during which sorting was impossible to do properly.
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: u1-data-from-spont1-locust20010214-plot-save
+[[file:imgs/u1-data-from-spont1-locust20010214-cp.png]]
+
+** Cockroach data
+
+Looking briefly at the cockroach data (recorded and sorted by Antoine Chaffiol) will be the occasion of dealing with an =HDF5= file and of seeing some "nastier" example of spontaneous activity. Loading and manipulating such a file in =Python= requires the installation of the =h5py= module.
+
+We start by downloading the data from =zenodo=:
+
+#+NAME: download-cockroach-data
+#+BEGIN_SRC python :results silent
+from urllib.request import urlretrieve
+name_on_disk = 'CockroachDataJNM_2009_181_119.h5'
+urlretrieve('https://zenodo.org/record/14281/files/'+
+            name_on_disk,
+            name_on_disk)
+#+END_SRC 
+
+To load the data, we must import the =h5py= module:
+
+#+NAME: import-h5py
+#+BEGIN_SRC python :results silent
+import h5py
+#+END_SRC
+
+We then open out file for reading and get the data from =Neuron1= in the spontaneous regime of experiment =e060824=:
+
+#+NAME: open-cockroach-data-for-reading
+#+BEGIN_SRC python 
+f = h5py.File("CockroachDataJNM_2009_181_119.h5","r")
+n1_cockroach = f["e060824/Neuron1/spont"][...]
+#+END_SRC
+
+#+RESULTS: open-cockroach-data-for-reading
+: 'org_babel_python_eoe'
+
+We make the observed counting process plot for this neuron:
+
+#+NAME: cockroach-data-spont1-plot
+#+BEGIN_SRC python :results silent
+plt.step(n1_cockroach,np.arange(len(n1_cockroach))+1,where='post')
+plt.grid()
+plt.xlabel('Time (s)')
+plt.ylabel('Nb of evts')
+#+END_SRC
+
+#+NAME: cockroach-data-spont1-plot-save
+#+BEGIN_SRC python :exports results :results file
+plt.savefig("imgs/cockroach-data-spont1-cp.png")
+plt.close()
+"imgs/cockroach-data-spont1-cp.png"
+#+END_SRC
+
+#+CAPTION: The observed counting process from neuron 1 in the spontaneous regime of experiment e060824. Data recorded and sorted from the cockroach /Periplaneta americana/ by Antoine Chaffiol.
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: cockroach-data-spont1-plot-save
+[[file:imgs/cockroach-data-spont1-cp.png]]

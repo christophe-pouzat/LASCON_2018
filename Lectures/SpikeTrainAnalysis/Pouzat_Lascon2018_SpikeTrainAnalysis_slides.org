@@ -142,6 +142,57 @@ A recording from a cat (retinal) ganglion cell by Kuffler, Fitzhugh and Barlow (
 
 They got good fits with a gamma distribution.
 
-** An alternative display
+** An alternative display: the observed counting process
 
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.7\textheight
+[[file:imgs/u1-data-from-spont1-locust20010214-cp.png]]
+#+END_CENTER
 
+In their *first figure*, Cox & Lewis (/The Statistical Analysis of Series of Events/, 1966) use this kind of display, showing the /observed counting process/ (what Guilherme wrote $N(t)$ yesterday). Here applied to spontaneous data recorded form a well isolated neuron in the locust antennal lobe. 
+
+** 
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.9\textheight
+[[file:imgs/cockroach-data-spont1-cp.png]]
+#+END_CENTER
+
+Another example from a neuron recorded and sorted from the cockroach /Periplaneta americana/ by Antoine Chaffiol.
+
+** Check the potential correlations between successive ISI
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.8\textheight
+[[file:imgs/locust20010214_Spontaneous_1_tetB_u1_lrank.png]]
+#+END_CENTER
+
+Here the locust data. The /rank/ of ISI$_{k+1}$ is shown against the rank of ISI$_{k}$.
+
+* Descriptive stats, stationary discharge 2 neurons 
+
+** Recurrence times
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.8\textheight
+[[file:imgs/JohnsonKiang1976Title.png]]
+#+END_CENTER
+
+Johnson & Kiang (1976) /J Neurophysiol/.
+
+** 
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 1.0\textheight
+[[file:imgs/JohnsonKiang1976Fig1.png]]
+#+END_CENTER
+
+** 
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 1.0\textheight
+[[file:imgs/JohnsonKiang1976Fig2.png]]
+#+END_CENTER
+
+** 
+#+BEGIN_CENTER
+#+ATTR_LATEX: :height 0.8\textheight
+[[file:imgs/JohnsonKiang1976Fig5.png]]
+#+END_CENTER
