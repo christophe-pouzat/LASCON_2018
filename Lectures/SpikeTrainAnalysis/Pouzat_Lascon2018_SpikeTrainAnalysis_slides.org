@@ -196,3 +196,295 @@ Johnson & Kiang (1976) /J Neurophysiol/.
 #+ATTR_LATEX: :height 0.8\textheight
 [[file:imgs/JohnsonKiang1976Fig5.png]]
 #+END_CENTER
+
+** Cross-correlation histograms
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 1.0\textheight
+[[file:imgs/BrillingerEtAl1976.png]]
+#+END_CENTER
+
+** 
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 1.0\textheight
+[[file:imgs/BrillingerEtAl1976Fig1.png]]
+#+END_CENTER
+ 
+
+* Descriptive stats, stimulus response 1 neuron
+
+** The classical /raster plot/
+
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.9\textwidth
+[[file:imgs/locust20010214_C3H_1_tetB_u1_raster.png]]
+#+END_CENTER
+
+Raster plots from one of the neurons showing the responses to 25 presentations (gray background) of cis-3-hexen-1-ol.
+
+** The more informative observed counting processes
+
+#+BEGIN_CENTER
+#+ATTR_LaTeX: :width 0.9\textwidth
+[[file:imgs/locust20010214_C3H_1_tetB_u1_cp_norm_wt.png]]
+#+END_CENTER
+
+The observed counting processes associated with the 25 observed point processes just shown. In red the empirical mean of the 25.
+
+** The Peri-Stimulus Time Histogram
+
+For details on PSTHs, don't miss my Saturday morning talk!
+
+* Some stochastic models of neuronal discharges
+
+** A random walk with a drift 
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.8\textheight
+[[file:imgs/GersteinMandelbrot_1964.png]]
+#+END_CENTER
+
+(Biophysical Journal, 1964)
+
+** A Hawkes process model
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.9\textheight
+[[file:imgs/ChornoboyEtAl_1988.png]]
+#+END_CENTER
+
+** A generalized linear model (GLM)
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.7\textheight
+[[file:imgs/Brillinger_1988.png]]
+#+END_CENTER
+
+* Working with the intensity of the process
+
+** Few definitions
+
+*Counting Process*: For points $\{ t_j \}$ randomly
+scattered along a line, the counting process $N(t)$ gives the
+number of points observed in the interval $(0,t]$:
+\begin{equation*}
+    N(t) = \sharp \{ t_j \; \mathrm{with} \; 0 < t_j \leq t \}
+\end{equation*}  
+where $\sharp$ stands for the number of elements of
+a set.
+
+** 
+
+*History*: The history, $\mathcal{H}_t$, consists of the
+variates determined up to and including time $t$ that are
+necessary to describe the evolution of the counting
+process. $\mathcal{H}_t$ can include all or part of the neuron's
+discharge up to $t$ but also the discharge sequences of other
+neurons recorded simultaneously, the elapsed time since the onset
+of a stimulus, the nature of the stimulus, etc. One of the major
+problems facing the neuroscientist analysing spike trains is the
+determination of what constitutes $\mathcal{H}_t$ for the data at
+hand. A pre-requisite for practical applications of the approach
+described here is that $\mathcal{H}_t$ involves only a
+finite (but possibly random) time period prior to $t$. 
+
+** 
+
+*Conditional Intensity*: For the process $N$ and history
+$\mathcal{H}_t$, the conditional intensity at time $t$ is defined by:
+\begin{equation*}
+    \lambda (t \mid \mathcal{H}_t) = \lim_{\delta \downarrow 0} \frac{\mathbb{P} \{
+      N(t,t+\delta) - N(t) = 1 \mid \mathcal{H}_t \}}{\delta}
+\end{equation*}
+
+** Probability of an ISI based on the intensity
+
+We will find the probability density of the interval between two successive events, $I_j = t_{j+1}-t_j$. 
+
+Defining $\delta = \frac{t_{j+1}-t_j}{K}$, where $K \in \mathbb{N}^{\ast}$, we write the probability of the interval as the following product:
+\begin{eqnarray}
+  \mathbb{P}\{I_j\} & = & \mathbb{P}\{N(t_j+\delta) -
+  N(t_j)=0 \mid \mathcal{H}_{t_j}\} \cdot {} \nonumber \\
+  & & {} \cdot \mathbb{P}\{N(t_j+2\,\delta)-N(t_j+\delta)=0 \mid
+  \mathcal{H}_{t_{j+\delta}}\} \cdots {} \nonumber \\
+  & & {} \cdots \mathbb{P}\{N(t_j+K\,\delta)-N(t_j + (K-1) \,
+  \delta)=0 \mid
+  \mathcal{H}_{t_{j+ (K-1) \, \delta}}\} \cdot {} \nonumber \\
+  & & {} \cdot \mathbb{P}\{N(t_j+(K+1)\delta)-N(t_j + K \,
+  \delta)=1 \mid \mathcal{H}_{t_{j+ K \delta}}\} \nonumber
+\end{eqnarray}
+
+** 
+If we interpret our definition of the conditional intensity as meaning:
+\begin{eqnarray*}
+  \mathbb{P} \{N(t,t+\delta) - N(t) = 0 \mid \mathcal{H}_t \} & = &
+  1 - \lambda (t \mid \mathcal{H}_t) \, \delta + \mathrm{o}(\delta)
+  \nonumber \\
+  \mathbb{P} \{N(t,t+\delta) - N(t) = 1 \mid \mathcal{H}_t \} & = &
+  \lambda (t \mid \mathcal{H}_t) \, \delta + \mathrm{o}(\delta)    
+  \nonumber \\
+  \mathbb{P} \{N(t,t+\delta) - N(t) > 1 \mid \mathcal{H}_t \} & = &
+  \mathrm{o}(\delta) \nonumber
+\end{eqnarray*}
+
+where $\mathrm{o}(\delta)$ is such that $\lim_{\delta \to
+  0}\frac{\mathrm{o}(\delta)}{\delta} = 0$. 
+
+** 
+The interval's probability becomes the outcome of
+a sequence of Bernoulli trials, each with an inhomogeneous success
+probability given by $\lambda_i \, \delta + \mathrm{o}(\delta)$,
+where, $\lambda_i = \lambda (t_j + i \, \delta \mid \mathcal{H}_{t_j +
+  i \, \delta})$ and we get:
+\begin{equation*}
+  \mathbb{P}\{I_j = t_{j+1} - t_j\} = \big( \prod_{k=1}^{K} (1 -
+  \lambda_k \, \delta + \mathrm{o}(\delta)) \big) \, (\lambda_{K+1} \, \delta + \mathrm{o}(\delta))
+\end{equation*}
+
+** 
+We can rewrite the first term on the right hand side as:
+\begin{eqnarray*}
+  \prod_{k=1}^{K} (1-\lambda_k \, \delta +
+    \mathrm{o}(\delta)) & = & \exp \log \prod_{k=1}^{K} (1-\lambda_k \, \delta +
+    \mathrm{o}(\delta)) \nonumber \\
+  & = & \exp \sum_{k=1}^{K} \log (1-\lambda_k \, \delta +
+    \mathrm{o}(\delta)) \nonumber \\
+  & = & \exp \sum_{k=1}^{K} (-\lambda_k \, \delta +
+    \mathrm{o}(\delta)) \nonumber \\
+  & = & \exp (- \sum_{k=1}^{K} \lambda_k \, \delta) \cdot \exp \big(K \,
+  \mathrm{o}(\delta) \big) 
+\end{eqnarray*}
+
+** 
+Using the continuity of the exponential function, the definition
+of the Riemann's integral, the definition of $\delta$ and the property of the $\mathrm{o}()$
+function we can take the limit when $K$ goes to $\infty$ on both sides
+of our last equation to get:
+\begin{equation*}
+  \lim_{K \to \infty} \, \prod_{k=1}^{K} (1-\lambda_k \, \delta +
+    \mathrm{o}(\delta)) = \exp - \int_{t_j}^{t_{j+1}} \lambda (t \mid
+    \mathcal{H}_t) \, dt
+\end{equation*}
+And the probability density of the interval becomes:
+\begin{equation*}
+  \lim_{K \to \infty} \, \frac{\mathbb{P}\{I_j = t_{j+1} -
+    t_j\}}{\frac{t_{j+1} - t_j}{K}} = \lambda (t_{j+1} \mid
+  \mathcal{H}_{t_{j+1}}) \, \exp - \int_{t_j}^{t_{j+1}} \lambda (t \mid
+    \mathcal{H}_t) \, dt
+\end{equation*}
+
+** 
+If we now define the /integrated conditional intensity/ by:
+\begin{equation*}
+  \Lambda(t) = \int_{u=0}^t \lambda (u \mid \mathcal{H}_u) \, du
+\end{equation*}
+We see that $\Lambda$ is increasing since by definition $\lambda \ge 0$. We see then that the mapping:
+\begin{equation}
+  \label{eq:CIMap}
+  t \in \mathcal{T} \subseteq \mathbb{R}^{+ \, \ast} \to \Lambda(t) \in \mathbb{R}^{+ \, \ast}
+\end{equation}
+is one to one and we can transform our $\{t_1,\ldots,t_n\}$ into
+$\{\Lambda_1=\Lambda(t_1),\ldots,\Lambda_n=\Lambda(t_n)\}$. 
+
+** 
+If we now consider the probability density of the intervals $t_{j+1}-t_j$ and
+$\Lambda_{j+1}-\Lambda_j$ we get:
+\begin{eqnarray*}
+  \mathrm{p}(t_{j+1}-t_j) \, dt_{j+1} & = & \lambda (t_{j+1} \mid
+  \mathcal{H}_{t_{j+1}}) \, \exp \big( - \int_{t_j}^{t_{j+1}} \lambda (t \mid
+    \mathcal{H}_t) \, dt \big) \, dt_{j+1} \nonumber \\
+    & = & \frac{d \Lambda (t_{j+1})}{dt} \, dt_{j+1} \, \exp - \big(
+    \Lambda(t_{j+1}) - \Lambda(t_j) \big) \nonumber \\
+    & = & d \Lambda_{j+1} \, \exp - \big(
+    \Lambda_{j+1} - \Lambda_j \big)
+\end{eqnarray*}
+That is, *the mapped intervals*,
+$\Lambda_{j+1} - \Lambda_j$ *follow an exponential distribution with rate 1*. This is the substance of the /time
+  transformation/ of Ogata (1988) and of the /time rescaling
+theorem/ of Brown Et Al (2002). This has been repetitively derived in the neuroscience literature: Hagiwara (1954), Brillinger (1988), Chornoboy et al (1988), Johnson (1996),...
+
+** Consequences 
+
+1. The conditional intensity, with its dependence on the past through $\mathcal{H}_t$, describes a process "making a decision" to spike or not to spike at each time step that can include /time dependent/ effects of synaptic coupling and stimulation.
+2. The conditional intensity allows us to compute the /likelihood/ of an observed spike train.
+3. The time transformation: $\{t_1,\ldots,t_n\} \rightarrow \{\Lambda_1=\Lambda(t_1),\ldots,\Lambda_n=\Lambda(t_n)\}$, leads to goodness of fit tests /since the mapped intervals should be the realization of a Poisson process with rate 1/. 
+4. This time transformation can also be used for simulations.
+
+* Model and inference 
+** Model considered
+
+We are going to write our $\lambda(t\mid \mathcal{H}_t)$ as a transformation of a "more basic" quantity, the /membrane potential process/ (MPP), $u(t\mid \mathcal{H}_t)$:
+\begin{equation*}
+\lambda(t\mid \mathcal{H}_t) \equiv \lambda_{max}\left(1+\exp -u(t\mid \mathcal{H}_t)\right)^{-1}\, ,
+\end{equation*}
+where $\lambda_{max} > 0$ is a parameter allowing us to have the proper rate (in Hz).
+
+We are going to write $u(t\mid \mathcal{H}_t)$ as:
+\begin{equation*}
+u(t\mid \mathcal{H}_t) \equiv s(t-t_l) + \sum_{j\in \mathbb{P}} \sum_{x \in T_{j}, x > t_l} g_{j}(t-x)\, , \quad \mathrm{for} \quad t > t_l\, ,
+\end{equation*}
+where $t_l$ stands for the time of the last spike of the neuron of interest, $\mathbb{P}$ is the index set of the neurons of the network that are presynaptic to the neuron of interest, $T_{j}$ stands for the set of spike times of neuron $j$, $g_{j}(t-x)$ is the effect of a spike in neuron $j$ at time $x$, $s(t-t_l)$ stand for the "self" or more appropriately "unobserved" effect.
+
+** On the "self" or "unobserved" effect
+
+In an actual setting, only a tiny fraction of the neurons of a network are observed, but we know from the biophysics of these neurons and from the anatomy and function of the first olfactory relay that 3 "factors" will contribute in making a neuron spike:
+
+- The so called "intrinsic properties" of the neuron, that is, the set of voltage dependent conductances present in the neuron's membrane, as well as their localization (not to mention the actual geometry of the neuron...).
+- The continuous asynchronous and "random" input the neuron gets from the olfactory receptors in the "spontaneous" regime. We know that this factor is a key contributor to the spontaneous activity in the first olfactory relay since this activity essentially disappear if we cut the antennal nerve (that is, the bunch of olfactory receptor axons entering into the first olfactory relay).
+- The synaptic inputs from the other neurons of the network.  
+
+** "Pragmatic" choices
+
+Since the likelihood computation implies the evaluation of many terms like:
+
+\begin{equation*}
+  \lim_{K \to \infty} \, \frac{\mathrm{Pr}\{I_j = t_{j+1} -
+    t_j\}}{\frac{t_{j+1} - t_j}{K}} = \lambda (t_{j+1} \mid
+  \mathcal{H}_{t_{j+1}}) \, \exp - \int_{t_j}^{t_{j+1}} \lambda (t \mid
+    \mathcal{H}_t) \, dt
+\end{equation*}
+
+we will model our "self" and synaptic coupling effects as piecewise constant functions. Our MPP and $\lambda (t_{j+1} \mid \mathcal{H}_{t_{j+1}})$ will therefore be piecewise constant functions and the integrated intensity $\Lambda(t)$ will be piecewise linear.
+
+The "self" effect will be $-\infty$ on the left of a /refractory period/ and /constant/ on the right of a cutoff time. The synaptic effects will have a bounded support.
+
+** Justification of the constant rate after a cutoff
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.8\textheight
+[[file:imgs/u1i1_survival_log_y.png]]
+#+END_CENTER
+
+** Example of "self" effect
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.8\textheight
+[[file:imgs/typical-unobserved-effect.png]]
+#+END_CENTER
+
+** Example of synaptic coupling
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.8\textheight
+[[file:imgs/typical-synaptic-effect.png]]
+#+END_CENTER
+
+** Example of MPP realization
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.75\textheight
+[[file:imgs/mk_mpp-test-fig.png]]
+#+END_CENTER
+
+The presynaptic neuron (black ticks) spikes independently as a renewal process. 
+
+** Example of fitted MPP
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.75\textheight
+[[file:imgs/post_full_estimation_fig.png]]
+#+END_CENTER
+
+** Thanks
+
+That's all for today folks. Thanks for listening!
