@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2018-01-24 mer. 03:27 -->
+<!-- 2018-01-24 mer. 14:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Spike Train Analysis: Tutorial</title>
@@ -225,6 +225,28 @@ for the JavaScript code in this tag.
  }
 /*]]>*///-->
 </script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content">
@@ -233,21 +255,38 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org1686a4b">1. Data used</a>
+<li><a href="#org7f1e5fc">1. Data used</a>
 <ul>
-<li><a href="#org23cda32">1.1. Locust data</a></li>
-<li><a href="#org7d9d894">1.2. Getting the data into Python</a></li>
-<li><a href="#org5165e84">1.3. Cockroach data</a></li>
+<li><a href="#org7ba8f3c">1.1. Locust data</a></li>
+<li><a href="#orgf141288">1.2. Getting the data into Python</a></li>
+<li><a href="#org87c727d">1.3. Cockroach data</a></li>
+</ul>
+</li>
+<li><a href="#org74ee612">2. Simple Stochastic Neuronal Network Code Description</a>
+<ul>
+<li><a href="#org54c8c24">2.1. Introduction</a>
+<ul>
+<li><a href="#org45c2902">2.1.1. Model considered</a></li>
+</ul>
+</li>
+<li><a href="#orgb11ace0">2.2. Implementation</a>
+<ul>
+<li><a href="#org19bd8a1">2.2.1. The approach</a></li>
+<li><a href="#orgaeca91b">2.2.2. Simulating data with <code>Python</code></a></li>
+<li><a href="#org8f964ef">2.2.3. Inference</a></li>
+<li><a href="#orgbb30ac1">2.2.4. Example of inference with <code>Python</code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org1686a4b" class="outline-2">
-<h2 id="org1686a4b"><span class="section-number-2">1</span> Data used</h2>
+<div id="outline-container-org7f1e5fc" class="outline-2">
+<h2 id="org7f1e5fc"><span class="section-number-2">1</span> Data used</h2>
 <div class="outline-text-2" id="text-1">
-</div><div id="outline-container-org23cda32" class="outline-3">
-<h3 id="org23cda32"><span class="section-number-3">1.1</span> Locust data</h3>
+</div><div id="outline-container-org7ba8f3c" class="outline-3">
+<h3 id="org7ba8f3c"><span class="section-number-3">1.1</span> Locust data</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 We are going to use spike trains recorded from the locust, <i>Schistocerca americana</i>, antennal lobe (the first olfactory relay of the insects). The raw extracellular data (before spike sorting) can be downloaded from zenodo: <a href="https://zenodo.org/record/21589">https://zenodo.org/record/21589</a>. We are going to concentrate on data set <code>locust20010214</code>. The <b>complete</b> description of the sorting leading to the spike trains&#x2013;that's a copy of my electronic lab-book&#x2013;can be found on the dedicated GitHub site: <a href="https://christophe-pouzat.github.io/zenodo-locust-datasets-analysis/Locust_Analysis_with_R/locust20010214/Sorting_20010214_tetB.html">https://christophe-pouzat.github.io/zenodo-locust-datasets-analysis/Locust_Analysis_with_R/locust20010214/Sorting_20010214_tetB.html</a>.
@@ -264,15 +303,15 @@ The spike trains in directory locustXXX_spike_trains are stored in ASCII format 
 </div>
 </div>
 
-<div id="outline-container-org7d9d894" class="outline-3">
-<h3 id="org7d9d894"><span class="section-number-3">1.2</span> Getting the data into Python</h3>
+<div id="outline-container-orgf141288" class="outline-3">
+<h3 id="orgf141288"><span class="section-number-3">1.2</span> Getting the data into Python</h3>
 <div class="outline-text-3" id="text-1-2">
 <p>
 We start our <code>Python</code> session the "usual" way, loading our favorite modules:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="org59c6841"><span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+<pre class="src src-python" id="org7c104cf"><span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
 <span style="color: #729fcf; font-weight: bold;">import</span> matplotlib.pylab <span style="color: #729fcf; font-weight: bold;">as</span> plt
 plt.ion() <span style="color: #2c5115;"># </span><span style="color: #888a85;">to get interactive graphics</span>
 </pre>
@@ -283,7 +322,7 @@ We download the data of the first neuron (unit 1) in the spontaneous regime "wit
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="org244f053"><span style="color: #729fcf; font-weight: bold;">from</span> urllib.request <span style="color: #729fcf; font-weight: bold;">import</span> urlretrieve <span style="color: #2c5115;"># </span><span style="color: #888a85;">Python 3</span>
+<pre class="src src-python" id="org8b7a599"><span style="color: #729fcf; font-weight: bold;">from</span> urllib.request <span style="color: #729fcf; font-weight: bold;">import</span> urlretrieve <span style="color: #2c5115;"># </span><span style="color: #888a85;">Python 3</span>
 <span style="color: #2c5115;"># </span><span style="color: #888a85;">from urllib import urlretrieve # Python 2</span>
 <span style="color: #ff6347;">data_name</span> = <span style="color: #ad7fa8; font-style: italic;">'locust20010214_Spontaneous_1_tetB_u1.txt'</span>
 <span style="color: #ff6347;">data_src</span> = <span style="color: #ad7fa8; font-style: italic;">'https://raw.githubusercontent.com/christophe-pouzat/\</span>
@@ -299,7 +338,7 @@ If you prefer using the command line, you can type:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh" id="orgb428b14">wget https://raw.githubusercontent.com/christophe-pouzat/<span style="color: #ad7fa8; font-style: italic;">\</span>
+<pre class="src src-sh" id="org28d692f">wget https://raw.githubusercontent.com/christophe-pouzat/<span style="color: #ad7fa8; font-style: italic;">\</span>
 zenodo-locust-datasets-analysis/master/Locust_Analysis_with_R/<span style="color: #ad7fa8; font-style: italic;">\</span>
 locust20010214/locust20010214_spike_trains/<span style="color: #ad7fa8; font-style: italic;">\</span>
 locust20010214_Spontaneous_1_tetB_u1.txt
@@ -311,7 +350,7 @@ We then load the data into <code>Python</code> with:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="orgbba57a9"><span style="color: #ff6347;">u1spont</span> = [<span style="color: #729fcf;">float</span>(line) <span style="color: #729fcf; font-weight: bold;">for</span> line <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">open</span>(<span style="color: #ad7fa8; font-style: italic;">"locust20010214_Spontaneous_1_tetB_u1.txt"</span>)]
+<pre class="src src-python" id="org423e22c"><span style="color: #ff6347;">u1spont</span> = [<span style="color: #729fcf;">float</span>(line) <span style="color: #729fcf; font-weight: bold;">for</span> line <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">open</span>(<span style="color: #ad7fa8; font-style: italic;">"locust20010214_Spontaneous_1_tetB_u1.txt"</span>)]
 <span style="color: #729fcf;">len</span>(u1spont) 
 </pre>
 </div>
@@ -326,7 +365,7 @@ So we have just read 3331 spike times. This spike times are in sampling units; t
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="orgf1f5139">u1spont[:10]
+<pre class="src src-python" id="org16ccbca">u1spont[:10]
 </pre>
 </div>
 
@@ -348,7 +387,7 @@ and
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="org9ba490d">u1spont[-10:]
+<pre class="src src-python" id="org6be2ce2">u1spont[-10:]
 </pre>
 </div>
 
@@ -370,7 +409,7 @@ The successive acquisition epochs are one after the other, each acquisition was 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="org2527137"><span style="color: #ff6347;">u1spont</span> = [x/15000 <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> u1spont]
+<pre class="src src-python" id="orga780185"><span style="color: #ff6347;">u1spont</span> = [x/15000 <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> u1spont]
 </pre>
 </div>
 
@@ -379,7 +418,7 @@ We get our observed counting process plot with:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="orgacfc17b">plt.step(u1spont,np.arange(<span style="color: #729fcf;">len</span>(u1spont))+1,where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
+<pre class="src src-python" id="orge6f4c59">plt.step(u1spont,np.arange(<span style="color: #729fcf;">len</span>(u1spont))+1,where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
 plt.grid()
 plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
 plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">'Nb of evts'</span>)
@@ -395,8 +434,8 @@ plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">'Nb of evts'</span>
 </div>
 </div>
 
-<div id="outline-container-org5165e84" class="outline-3">
-<h3 id="org5165e84"><span class="section-number-3">1.3</span> Cockroach data</h3>
+<div id="outline-container-org87c727d" class="outline-3">
+<h3 id="org87c727d"><span class="section-number-3">1.3</span> Cockroach data</h3>
 <div class="outline-text-3" id="text-1-3">
 <p>
 Looking briefly at the cockroach data (recorded and sorted by Antoine Chaffiol) will be the occasion of dealing with an <code>HDF5</code> file and of seeing some "nastier" example of spontaneous activity. Loading and manipulating such a file in <code>Python</code> requires the installation of the <code>h5py</code> module.
@@ -407,7 +446,7 @@ We start by downloading the data from <code>zenodo</code>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="orgc44bf40"><span style="color: #729fcf; font-weight: bold;">from</span> urllib.request <span style="color: #729fcf; font-weight: bold;">import</span> urlretrieve
+<pre class="src src-python" id="org50181a2"><span style="color: #729fcf; font-weight: bold;">from</span> urllib.request <span style="color: #729fcf; font-weight: bold;">import</span> urlretrieve
 <span style="color: #ff6347;">name_on_disk</span> = <span style="color: #ad7fa8; font-style: italic;">'CockroachDataJNM_2009_181_119.h5'</span>
 urlretrieve(<span style="color: #ad7fa8; font-style: italic;">'https://zenodo.org/record/14281/files/'</span>+
             name_on_disk,
@@ -416,11 +455,11 @@ urlretrieve(<span style="color: #ad7fa8; font-style: italic;">'https://zenodo.or
 </div>
 
 <p>
-To load the data, we must import the <code>h5py</code> module:
+To load the data, we must import the <code>h5py</code> module (to learn <code>h5py</code> basics, consult the <a href="http://docs.h5py.org/en/latest/quick.html#quick">Quick Start Guide</a> of the documentation):
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="org6ce6891"><span style="color: #729fcf; font-weight: bold;">import</span> h5py
+<pre class="src src-python" id="orga36d16e"><span style="color: #729fcf; font-weight: bold;">import</span> h5py
 </pre>
 </div>
 
@@ -429,7 +468,7 @@ We then open out file for reading and get the data from <code>Neuron1</code> in 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="org9753039"><span style="color: #ff6347;">f</span> = h5py.File(<span style="color: #ad7fa8; font-style: italic;">"CockroachDataJNM_2009_181_119.h5"</span>,<span style="color: #ad7fa8; font-style: italic;">"r"</span>)
+<pre class="src src-python" id="org1d9c230"><span style="color: #ff6347;">f</span> = h5py.File(<span style="color: #ad7fa8; font-style: italic;">"CockroachDataJNM_2009_181_119.h5"</span>,<span style="color: #ad7fa8; font-style: italic;">"r"</span>)
 <span style="color: #ff6347;">n1_cockroach</span> = f[<span style="color: #ad7fa8; font-style: italic;">"e060824/Neuron1/spont"</span>][...]
 </pre>
 </div>
@@ -439,7 +478,7 @@ We make the observed counting process plot for this neuron:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python" id="org5e82c24">plt.step(n1_cockroach,np.arange(<span style="color: #729fcf;">len</span>(n1_cockroach))+1,where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
+<pre class="src src-python" id="org93676c5">plt.step(n1_cockroach,np.arange(<span style="color: #729fcf;">len</span>(n1_cockroach))+1,where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
 plt.grid()
 plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">'Time (s)'</span>)
 plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">'Nb of evts'</span>)
@@ -455,11 +494,1038 @@ plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">'Nb of evts'</span>
 </div>
 </div>
 </div>
+
+<div id="outline-container-org74ee612" class="outline-2">
+<h2 id="org74ee612"><span class="section-number-2">2</span> Simple Stochastic Neuronal Network Code Description</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-org54c8c24" class="outline-3">
+<h3 id="org54c8c24"><span class="section-number-3">2.1</span> Introduction</h3>
+<div class="outline-text-3" id="text-2-1">
+</div><div id="outline-container-org45c2902" class="outline-4">
+<h4 id="org45c2902"><span class="section-number-4">2.1.1</span> Model considered</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+We are dealing with a <i>stochastic intensity</i> model, stochastic intensity that we are going to write \(\lambda(t\mid \mathcal{H}_t)\) and that we will get as a transformation of a "more basic" quantity, the <i>membrane potential process</i> (MPP), \(u(t\mid \mathcal{H}_t)\), as follows:
+</p>
+\begin{equation}\label{eq:MPP2lambda}
+\lambda(t\mid \mathcal{H}_t) \equiv \lambda_{max}\left(1+\exp -u(t\mid \mathcal{H}_t)\right)^{-1}\, ,
+\end{equation}
+<p>
+where \(\lambda_{max} > 0\) is a parameter allowing us to have the proper rate (in Hz).
+</p>
+
+<p>
+We are going to write \(u(t\mid \mathcal{H}_t)\) as:
+</p>
+\begin{equation}\label{eq:u-definition-1}
+u(t\mid \mathcal{H}_t) \equiv s(t-t_l) + \sum_{j\in \mathbb{P}} \sum_{x \in T_{j}, x > t_l} g_{j}(t-x)\, , \quad \mathrm{for} \quad t > t_l\, ,
+\end{equation}
+<p>
+where \(t_l\) stands for the time of the last spike of the neuron of interest, \(\mathbb{P}\) is the index set of the neurons of the network that are presynaptic to the neuron of interest, \(T_{j}\) stands for the set of spike times of neuron \(j\), \(g_{j}(t-x)\) is the effect of a spike in neuron \(j\) at time \(x\), \(s(t-t_l)\) stand for the "self" or more appropriately "unobserved" effect; indeed in an actual setting, only a tiny fraction of the neurons of a network are observed, but we know from the biophysics of these neurons and from the anatomy and function of the first olfactory relay that 3 "factors" will contribute in making a neuron spike:
+</p>
+
+<ul class="org-ul">
+<li>The so called "intrinsic properties" of the neuron, that is, the set of voltage dependent conductances present in the neuron's membrane, as well as their localization (not to mention the actual geometry of the neuron&#x2026;).</li>
+<li>The continuous asynchronous and "random" input the neuron gets from the olfactory receptors in the "spontaneous" regime. We know that this factor is a key contributor to the spontaneous activity in the first olfactory relay since this activity essentially disappear if we cut the antennal nerve (that is, the bunch of olfactory receptor axons entering into the first olfactory relay).</li>
+<li>The synaptic inputs from the other neurons of the network.</li>
+</ul>
+</div>
+
+<ol class="org-ol"><li><a id="org9432e48"></a>Illustration<br /><div class="outline-text-5" id="text-2-1-1-1">
+<p>
+We are going to use piecewise constant functions for \(s(\,)\) and the \(g_j(\,)\). A "typical" \(s(\,)\) might look like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd5b99d3"><span style="color: #ff6347;">s</span> = [[0.01,-4.7],[0.02,  -2],[0.03,-1.3],[0.04,-1.2],[0.05,-1.5],
+     [0.06,-1.7],[0.07,-2.1],[0.08,-2.5],[0.09,-2.7],[0.10,-2.8],
+     [0.11,-2.9],[0.12,-2.95],[0.13,-3.2],[0.14,-3.3],[0.15,-3.4],
+     [0.16,-3.5],[0.17,-3.6],[0.18,-3.7],[0.19,-3.9],[ 0.2,  -4]]
+plt.step([x <span style="color: #729fcf; font-weight: bold;">for</span> x,y <span style="color: #729fcf; font-weight: bold;">in</span> s]+[0.5],
+         [y <span style="color: #729fcf; font-weight: bold;">for</span> x,y <span style="color: #729fcf; font-weight: bold;">in</span> s]+[-4],
+         where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>,color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.grid(<span style="color: #8ae234;">True</span>)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"s(t-t_l)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/typical-unobserved-effect.png" alt="typical-unobserved-effect.png" />
+</p>
+</div>
+
+<p>
+And a typical \(g_j(\,)\) might look like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org47cb133"><span style="color: #ff6347;">g</span> = [[0.0,0.0],[0.01,2.0],[0.02,0.8],[0.03,0.4],[0.04,0.4],[0.05,0]]
+plt.step([x <span style="color: #729fcf; font-weight: bold;">for</span> x,y <span style="color: #729fcf; font-weight: bold;">in</span> g],
+         [y <span style="color: #729fcf; font-weight: bold;">for</span> x,y <span style="color: #729fcf; font-weight: bold;">in</span> g],
+         where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>,color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>)
+plt.grid(<span style="color: #8ae234;">True</span>)
+plt.xlim(0,0.5)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"g_j(t)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/typical-synaptic-effect.png" alt="typical-synaptic-effect.png" />
+</p>
+</div>
+</div></li></ol>
+</div>
+</div>
+
+<div id="outline-container-orgb11ace0" class="outline-3">
+<h3 id="orgb11ace0"><span class="section-number-3">2.2</span> Implementation</h3>
+<div class="outline-text-3" id="text-2-2">
+</div><div id="outline-container-org19bd8a1" class="outline-4">
+<h4 id="org19bd8a1"><span class="section-number-4">2.2.1</span> The approach</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+For the simulation, as well as for the (maximum likelihood) inference&#x2013;they generate very similar problems&#x2013;, we will adopt what as will refer to as the "membrane potential process viewpoint". By that we mean that each neuron of the network is primarily described by its membrane potential process that is updated when new events occur. "Event" means here:
+</p>
+
+<ul class="org-ul">
+<li>The neuron fires a spike and its MPP is reset to 0.</li>
+<li>Another neuron to which the neuron of interest is synaptically coupled fires a spike, leading to a time dependent change of the MPP (Eq. \ref{eq:u-definition-1}).</li>
+<li>More generally, since both the "self" effect and the synaptic effects are described by piecewise continuous functions (PCF), one of these PCF breakpoints is crossed and the MPP changes as a result.</li>
+</ul>
+
+<p>
+From the software implementation viewpoint, the "future" of the MPP of a given neuron looks like a double set of pairs containing a breakpoint time and an associated MPP change. This "future" trajectory must be updated every time the neuron of interest fires or one of its presynaptic neuron fires. The update amounts in the first case to a reset to zero and the setting of a new sequence of pairs given by the \(s(\,)\) function and, in the latter case, to the insertion at the proper locations of the pairs associated with the appropriate \(g_j(\,)\) function. This necessity of inserting an <i>a priori</i> unknown number of breakpoints at <i>a priori</i> unknown times calls for a <a href="https://en.wikipedia.org/wiki/Linked_list">linked list</a> data structure. This suggest using a programming language like <code>C</code> (because of the flexibility provided by the pointers) or <code>Python</code> because of its very efficient management of <a href="https://docs.python.org/3/tutorial/datastructures.html">lists</a>.     
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgaeca91b" class="outline-4">
+<h4 id="orgaeca91b"><span class="section-number-4">2.2.2</span> Simulating data with <code>Python</code></h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+We start by simulating an independent presynaptic train like we did with <code>R</code> and we compute at the end of the simulation the empirical mean and SD of the log of the simulated intervals (just to check that we get back the parameters we fed in):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgfefc7d9"><span style="color: #729fcf; font-weight: bold;">from</span> random <span style="color: #729fcf; font-weight: bold;">import</span> seed, gauss
+<span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> exp, log
+<span style="color: #729fcf; font-weight: bold;">from</span> statistics <span style="color: #729fcf; font-weight: bold;">import</span> mean, stdev
+seed(20061001)
+<span style="color: #ff6347;">n_pre</span> = 2000
+<span style="color: #ff6347;">rp_pre</span> = 0.015
+<span style="color: #ff6347;">mu_pre</span> = -2.81
+<span style="color: #ff6347;">sigma_pre</span> = 1.46
+<span style="color: #ff6347;">pre</span> = [rp_pre+exp(gauss(mu_pre,sigma_pre)) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_pre)]
+<span style="color: #ff6347;">tps</span> = 0
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,n_pre):
+    <span style="color: #ff6347;">pre</span>[i]+=pre[i-1]
+
+[mean([log(pre[i]-pre[i-1]-rp_pre) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(2,<span style="color: #729fcf;">len</span>(pre))]),
+ stdev([log(pre[i]-pre[i-1]-rp_pre) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(2,<span style="color: #729fcf;">len</span>(pre))])] 
+</pre>
+</div>
+
+<p>
+We define now function <code>get_next_spike</code> that simulates the next spike time by:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org91ee086"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">get_next_spike</span>(t_now,
+                   pre_st=pre,
+                   auto=s,
+                   syn=g,
+                   l_max=100):
+    <span style="color: #888a85;">"""Generate next spike time by inversion.</span>
+
+<span style="color: #888a85;">    Paremeters</span>
+<span style="color: #888a85;">    ----------</span>
+<span style="color: #888a85;">    t_now: the time of the last spike from the considered neuron</span>
+<span style="color: #888a85;">    pre_st: a list containing the presynaptic spike train.</span>
+<span style="color: #888a85;">    auto: a list of two elements lists containing breakpoints</span>
+<span style="color: #888a85;">    location and value on the right side of the breakpoints</span>
+<span style="color: #888a85;">    for the "self" effect of the considered neuron.</span>
+<span style="color: #888a85;">    syn: a list of two elements lists containing the effect</span>
+<span style="color: #888a85;">    of a presynaptic spike on the considered neuron membrane</span>
+<span style="color: #888a85;">    potential process.</span>
+<span style="color: #888a85;">    l_max: the maximal spike rate (in Hz) of the considered neuron.</span>
+
+<span style="color: #888a85;">    Returns</span>
+<span style="color: #888a85;">    -------</span>
+<span style="color: #888a85;">    the next spike time</span>
+<span style="color: #888a85;">    """</span>
+    <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> log,exp
+    <span style="color: #729fcf; font-weight: bold;">from</span> operator <span style="color: #729fcf; font-weight: bold;">import</span> itemgetter
+    <span style="color: #ff6347;">auto_d</span> = auto[:]
+    <span style="color: #ff6347;">auto_d</span> = [auto_d[0]]+[[auto_d[i][0],
+                           auto[i][1]-auto[i-1][1]]
+                          <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,<span style="color: #729fcf;">len</span>(auto_d))]
+    <span style="color: #ff6347;">syn_d</span> = syn[:]
+    <span style="color: #ff6347;">syn_d</span> = [syn_d[0]]+[[syn_d[i][0],
+                         syn[i][1]-syn[i-1][1]]
+                        <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,<span style="color: #729fcf;">len</span>(syn_d))]
+    <span style="color: #ff6347;">Lambda</span> = -log(random.random())
+    <span style="color: #ff6347;">pre_after</span> = [x <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> pre_st <span style="color: #729fcf; font-weight: bold;">if</span> x &gt; t_now]
+    <span style="color: #ff6347;">rp</span> = auto_d[0][0] <span style="color: #2c5115;"># </span><span style="color: #888a85;">refractory period</span>
+    <span style="color: #ff6347;">dmpp</span> = [[a+t_now,b] <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> auto_d] <span style="color: #2c5115;"># </span><span style="color: #888a85;">shift self effect by t_now</span>
+    <span style="color: #729fcf; font-weight: bold;">for</span> t_spike <span style="color: #729fcf; font-weight: bold;">in</span> pre_after: <span style="color: #2c5115;"># </span><span style="color: #888a85;">for each presynaptic spike</span>
+        <span style="color: #ff6347;">dmpp</span> += [[<span style="color: #729fcf;">max</span>(a+t_spike,t_now+rp),b] <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> syn_d
+                 <span style="color: #729fcf; font-weight: bold;">if</span> a+t_spike &gt; t_now] <span style="color: #2c5115;"># </span><span style="color: #888a85;">add the synaptic effect</span>
+    <span style="color: #ff6347;">dmpp</span> = <span style="color: #729fcf;">sorted</span>(dmpp,
+                  key=itemgetter(0)) <span style="color: #2c5115;"># </span><span style="color: #888a85;">put breakpoints in right order</span>
+    <span style="color: #ff6347;">bp</span> = [a <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> dmpp] <span style="color: #2c5115;"># </span><span style="color: #888a85;">get breakpoints</span>
+    <span style="color: #ff6347;">mpp</span> = [b <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> dmpp] <span style="color: #2c5115;"># </span><span style="color: #888a85;">get the "delta mpp"</span>
+    <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,<span style="color: #729fcf;">len</span>(mpp)): <span style="color: #2c5115;"># </span><span style="color: #888a85;">get mpp (membrane potential process) trajectory</span>
+        <span style="color: #ff6347;">mpp</span>[i] += mpp[i-1]
+    <span style="color: #ff6347;">lambda_v</span> = [l_max/(1+exp(-v)) <span style="color: #729fcf; font-weight: bold;">for</span> v <span style="color: #729fcf; font-weight: bold;">in</span> mpp] <span style="color: #2c5115;"># </span><span style="color: #888a85;">go from mpp to lambda</span>
+    <span style="color: #ff6347;">delta</span> = [bp[i]-bp[i-1] <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,<span style="color: #729fcf;">len</span>(bp))] <span style="color: #2c5115;"># </span><span style="color: #888a85;">get the intervals between successive breakpoints</span>
+    <span style="color: #ff6347;">Lambda_v</span> = [lambda_v[i]*delta[i] <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(delta))] <span style="color: #2c5115;"># </span><span style="color: #888a85;">get dLambda at the breakpoints</span>
+    <span style="color: #ff6347;">idx</span> = 0
+    <span style="color: #729fcf; font-weight: bold;">while</span> Lambda_v[idx] &lt; Lambda:
+        <span style="color: #ff6347;">Lambda</span> -= Lambda_v[idx]
+        <span style="color: #ff6347;">idx</span> += 1
+    <span style="color: #729fcf; font-weight: bold;">return</span> bp[idx] + Lambda/lambda_v[idx]
+     
+</pre>
+</div>
+
+<p>
+We use function <code>get_next_spike</code> just defined to simulate a postsynpatic train:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd1acac6"><span style="color: #729fcf; font-weight: bold;">import</span> random
+random.seed(20061001)
+<span style="color: #ff6347;">t_now</span> = 0
+<span style="color: #ff6347;">post</span> = [t_now]
+<span style="color: #729fcf; font-weight: bold;">while</span> t_now &lt; 375:
+    <span style="color: #ff6347;">t_now</span> = get_next_spike(t_now)
+    <span style="color: #ff6347;">post</span> += [t_now]
+
+</pre>
+</div>
+
+<p>
+We make a quick and dirty test on the forward recurrence time. First we get the empirical mean recurrence time:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc66f11d"><span style="color: #729fcf; font-weight: bold;">from</span> statistics <span style="color: #729fcf; font-weight: bold;">import</span> mean, stdev
+<span style="color: #ff6347;">frt</span> = [<span style="color: #729fcf;">min</span>([x <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> post <span style="color: #729fcf; font-weight: bold;">if</span> x &gt; t])-t <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> pre[:-13]]
+mean(frt)
+</pre>
+</div>
+
+<pre class="example">
+0.21951218899900915
+
+</pre>
+
+<p>
+Next we use a MC method to get the mean <code>frt</code> and its SD under the null hypothesis:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org6853084">random.seed(20110928)
+<span style="color: #ff6347;">isi_pre</span> = [pre[i]-pre[i-1] <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,<span style="color: #729fcf;">len</span>(pre))]
+<span style="color: #ff6347;">nrep</span>=100
+<span style="color: #ff6347;">frt_sim</span> = [0 <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(nrep)]
+<span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(frt_sim)):
+    <span style="color: #ff6347;">spre</span> = random.sample(isi_pre,<span style="color: #729fcf;">len</span>(isi_pre))
+    <span style="color: #729fcf; font-weight: bold;">for</span> j <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(1,<span style="color: #729fcf;">len</span>(spre)):
+        <span style="color: #ff6347;">spre</span>[j] += spre[j-1]
+    <span style="color: #ff6347;">spre</span> = [t <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> spre <span style="color: #729fcf; font-weight: bold;">if</span> t &lt; post[-1]]
+    <span style="color: #ff6347;">frt_sim</span>[i] = mean([<span style="color: #729fcf;">min</span>([x <span style="color: #729fcf; font-weight: bold;">for</span> x <span style="color: #729fcf; font-weight: bold;">in</span> post <span style="color: #729fcf; font-weight: bold;">if</span> x &gt; t])-t <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> spre])
+
+<span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> sqrt
+(mean(frt_sim),stdev(frt_sim)/sqrt(nrep))    
+</pre>
+</div>
+
+<pre class="example">
+(0.32675390581822855, 0.0014810427338481315)
+
+</pre>
+
+<p>
+So, we see that the observed mean recurrence time is much shorter than the one we would get under the null hypothesis.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8f964ef" class="outline-4">
+<h4 id="org8f964ef"><span class="section-number-4">2.2.3</span> Inference</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<p>
+Our inference will be done by maximizing the <a href="https://en.wikipedia.org/wiki/Likelihood_function">likelihood function</a> or, more precisely, its logarithm (to be more precise we are going to minimize the opposite of the log-likelihood). We therefore need to define this likelihood.
+</p>
+
+<p>
+We will have a common time resolution (or "binwidth") for our "self" and synaptic effects. This is parameter <code>delta_t</code> in the following function and that corresponds to 0.01 s (10 ms) in both our <code>s</code> and <code>g</code> above. The "self" and synaptic effects are specified by their ranges: two elements lists (parameters <code>self_range</code> and <code>syn_range</code>). Once we have the range and the binwidth, we get the breakpoints and we associate to each breakpoint a "delta value" giving the change brought to the membrane potential process (MPP) upon breakpoint crossing. The set of delta values (from the "self" and synaptic effects) are the differences of our model parameters.
+</p>
+
+<p>
+Given a range and a binwidth we start by creating a set of breakpoints starting from the left boundary specified by the first element of the range with increments all equal to binwidth until the right boundary (of the range) is reached (or passed). If there are <code>n</code> bins with the range, there are <code>n+1</code> breakpoints.
+</p>
+
+<p>
+Next, using the two spike trains, the postsynaptic one (parameter <code>post_train</code>) and the presynaptic one (parameter <code>pre_train</code>), we construct a list of global breakpoints (we can view it as the convolution of the spike trains with their effects taking care of the special effect of the refractory period given by the left boundary of parameter <code>self_range</code>). We build, moreover, one list per model parameter (that is per breakpoint of the "self" and synaptic effects) containing the index of the elements of the global breakpoint list "belonging" to the considered parameter. This will allow us to update efficiently our MPP when we change the parameter values.
+</p>
+</div>
+
+<ol class="org-ol"><li><a id="org0fbe4e5"></a>A function returning the Membrane Potential Process<br /><div class="outline-text-5" id="text-2-2-3-1">
+<p>
+We define first a function that return a function (more precisely a <a href="https://en.wikipedia.org/wiki/Closure_(computer_programming)">closure</a> and there are few peculiarities in the way <a href="https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Closures">Python deals with closures</a>) that given a parameter vector returns the MPP as a list of two numpy arrays, one containing the breakpoints time and the other containing the MPP value on the right side of each breakpoint.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc628c59"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mk_mpp</span>(post_train=post,
+           pre_train_list=[pre],
+           delta_t=0.01,
+           unobs_range=[0.01,0.2],
+           syn_range=[0,0.05],
+           lambda_max=100):
+    <span style="color: #888a85;">"""Returns an MPP function.</span>
+
+<span style="color: #888a85;">    Parameters</span>
+<span style="color: #888a85;">    ----------</span>
+<span style="color: #888a85;">    post_train: a list with the postsynaptic spike times</span>
+<span style="color: #888a85;">    pre_train_list: a list of lists with the presynaptic  </span>
+<span style="color: #888a85;">                    spike times (one list per spike train)</span>
+<span style="color: #888a85;">    delta_t: the bin width in s for the self and the synaptic effects</span>
+<span style="color: #888a85;">    unobs_range: a two elements list with the range of the self effect</span>
+<span style="color: #888a85;">    syn_range: a two elements list with the range of the synaptic effect</span>
+<span style="color: #888a85;">    lambda_max: the maximal postsynaptic discharge rate</span>
+
+<span style="color: #888a85;">    Returns</span>
+<span style="color: #888a85;">    -------</span>
+<span style="color: #888a85;">    A function (closure) that returns given a parameter vector</span>
+<span style="color: #888a85;">    a tuple of two numpy arrays containing the breakpoints locations</span>
+<span style="color: #888a85;">    and the MPP value on the right side of each breakpoint</span>
+<span style="color: #888a85;">    """</span>
+    <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> inf,ceil
+    <span style="color: #729fcf; font-weight: bold;">from</span> operator <span style="color: #729fcf; font-weight: bold;">import</span> itemgetter
+    <span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">define refractory period</span>
+    <span style="color: #ff6347;">rp</span> = unobs_range[0]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Create unobs_bk effect breakpoints list</span>
+    <span style="color: #ff6347;">n_unobs</span> = ceil((unobs_range[1]-rp)/delta_t)+1
+    <span style="color: #ff6347;">n_total</span> = n_unobs
+    <span style="color: #ff6347;">unobs_idx</span> = <span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">range</span>(n_unobs))
+    <span style="color: #ff6347;">par_idx</span> = unobs_idx
+    <span style="color: #ff6347;">unobs_bk</span> = [rp+i*delta_t <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> unobs_idx]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get the number of presynaptic spike trains</span>
+    <span style="color: #ff6347;">n_pre</span> = <span style="color: #729fcf;">len</span>(pre_train_list)
+    <span style="color: #729fcf; font-weight: bold;">if</span> n_pre &gt; 0: <span style="color: #2c5115;"># </span><span style="color: #888a85;">There is a least one presynaptic train</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">Do the same for the synaptic effects</span>
+        <span style="color: #ff6347;">n_syn</span> = ceil((syn_range[1]-syn_range[0])/delta_t)+1
+        <span style="color: #ff6347;">syn_idx</span> = <span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">range</span>(n_syn))
+        <span style="color: #ff6347;">syn_bk</span> = [syn_range[0]+i*delta_t <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_syn)]
+        <span style="color: #729fcf; font-weight: bold;">for</span> pre_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_pre):
+            <span style="color: #2c5115;"># </span><span style="color: #888a85;">Construct a list of model parameters indexes</span>
+            <span style="color: #ff6347;">par_idx</span> += [n_total+i <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> syn_idx]
+            <span style="color: #ff6347;">n_total</span> += n_syn
+    <span style="color: #ff6347;">par_idx</span> += [n_total]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Construct a list of lists with two elements:</span>
+    <span style="color: #2c5115;">#  </span><span style="color: #888a85;">a breakpoint location</span>
+    <span style="color: #2c5115;">#  </span><span style="color: #888a85;">an index of the model parameter to apply on the</span>
+    <span style="color: #2c5115;">#  </span><span style="color: #888a85;">right side of the breakpoint</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Start with the contribution of the postsynaptic train</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Every postsynpatic spike gives a breakpoint exactly at</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">the spike time and the n_total index (the largest index</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">value is associated to it)</span>
+    <span style="color: #ff6347;">glb</span> = [[t,n_total] <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post_train]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Then each postsynaptic spike is followed by its "self"</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">or unobserved effect.</span>
+    <span style="color: #729fcf; font-weight: bold;">for</span> s_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(post_train)-1):
+        <span style="color: #ff6347;">spike_time</span> = post_train[s_idx]
+        <span style="color: #ff6347;">next_time</span> = post_train[s_idx+1]
+        <span style="color: #ff6347;">glb</span> += [[unobs_bk[i]+spike_time,unobs_idx[i]] <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(unobs_bk))
+                <span style="color: #729fcf; font-weight: bold;">if</span> unobs_bk[i]+spike_time &lt; next_time]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Now add the contributions of the presynaptic trains</span>
+    <span style="color: #729fcf; font-weight: bold;">if</span> n_pre &gt; 0: <span style="color: #2c5115;"># </span><span style="color: #888a85;">there is at least one presynaptic train</span>
+        <span style="color: #ff6347;">first_post</span> = post_train[0] <span style="color: #2c5115;"># </span><span style="color: #888a85;">first postsynaptic spike time</span>
+        <span style="color: #ff6347;">last_post</span> = post_train[-1] <span style="color: #2c5115;"># </span><span style="color: #888a85;">last postsynaptic spike time</span>
+        <span style="color: #729fcf; font-weight: bold;">for</span> pre_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_pre): <span style="color: #2c5115;"># </span><span style="color: #888a85;">take each presynaptic train</span>
+            <span style="color: #ff6347;">pre_train</span> = pre_train_list[pre_idx]
+            <span style="color: #729fcf; font-weight: bold;">for</span> s_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(pre_train)):
+                <span style="color: #2c5115;"># </span><span style="color: #888a85;">Take each spike spike of pre_train</span>
+                <span style="color: #ff6347;">pre_time</span> = pre_train[s_idx]
+                <span style="color: #729fcf; font-weight: bold;">if</span> (first_post &lt; pre_time &lt; last_post):
+                    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get the post previous spike time</span>
+                    <span style="color: #ff6347;">left_time</span> = <span style="color: #729fcf;">max</span>([t <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post_train <span style="color: #729fcf; font-weight: bold;">if</span> t &lt;= pre_time])
+                    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get the post next spike time</span>
+                    <span style="color: #ff6347;">right_time</span> = <span style="color: #729fcf;">min</span>([t <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post_train <span style="color: #729fcf; font-weight: bold;">if</span> t &gt; pre_time])
+                    <span style="color: #ff6347;">glb</span> += [[<span style="color: #729fcf;">max</span>(syn_bk[i]+pre_time,left_time+rp),syn_idx[i]+n_unobs+n_syn*pre_idx] 
+                            <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(syn_bk))
+                            <span style="color: #729fcf; font-weight: bold;">if</span> left_time + rp - delta_t &lt; syn_bk[i]+pre_time &lt; right_time]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Order glb based on breakpoints' times</span>
+    <span style="color: #ff6347;">sglb</span> = <span style="color: #729fcf;">sorted</span>(glb,key=itemgetter(0))
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Extract breakpoints time</span>
+    <span style="color: #ff6347;">bp</span> = np.array([a <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> sglb])
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Extract the model parameter index to apply</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">to the right of each breakpoint</span>
+    <span style="color: #ff6347;">idx</span> = np.array([b <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> sglb])
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Keep the indexes of the breakpoints marking</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">the postsynaptic spike times</span>
+    <span style="color: #ff6347;">sp_idx</span> = np.arange(<span style="color: #729fcf;">len</span>(idx))[idx==n_total]
+    <span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mpp</span>(par):
+        <span style="color: #888a85;">"""Returns the membrane potential process for a given</span>
+<span style="color: #888a85;">        value of 'par'.</span>
+
+<span style="color: #888a85;">        The 'par' vector is constructed by pasting the height</span>
+<span style="color: #888a85;">        of the unobserved effect to the height of the</span>
+<span style="color: #888a85;">        successive synaptic effects. Keep in mind that the</span>
+<span style="color: #888a85;">        unobserved effect has as many height as breakpoints,</span>
+<span style="color: #888a85;">        the last one gives the asymptotic value (giving the</span>
+<span style="color: #888a85;">        long tail Poisson behavior), the synaptic effects have</span>
+<span style="color: #888a85;">        one height parameter less than their number of breakpoints</span>
+<span style="color: #888a85;">        since we force the effect to come back to zero after the</span>
+<span style="color: #888a85;">        last breakpoint (so the zero being known is not included</span>
+<span style="color: #888a85;">        in the model parameters).</span>
+
+<span style="color: #888a85;">        Parameters</span>
+<span style="color: #888a85;">        ----------</span>
+<span style="color: #888a85;">        par: parameter vector (see explanation above)</span>
+
+<span style="color: #888a85;">        Returns</span>
+<span style="color: #888a85;">        -------</span>
+<span style="color: #888a85;">        A tuple with two numpy arrays having the same length, </span>
+<span style="color: #888a85;">        one with the breakpoints' times one with the membrane</span>
+<span style="color: #888a85;">        potential process value on the right side of the </span>
+<span style="color: #888a85;">        breakpoint. The membrane potential value following</span>
+<span style="color: #888a85;">        a postsynaptic spike is -inf.</span>
+<span style="color: #888a85;">        """</span>
+        <span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">Transform the model parameters into a 'working_par'</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">numpy array. The latter contains the difference</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">between successive step heights of the different</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">effects (unobserved, synaptic, etc) </span>
+        <span style="color: #ff6347;">working_par</span> = np.zeros(n_total+1)
+        <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> inf
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">A breakpoint with label n_total signal</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">the occurrence of a postsynaptic spike</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">and is followed by a jump of amplitude</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">-inf</span>
+        <span style="color: #ff6347;">working_par</span>[-1] = -inf
+        <span style="color: #ff6347;">np_par</span> = np.array(par)
+        <span style="color: #ff6347;">working_par</span>[0] = par[0]
+        <span style="color: #ff6347;">working_par</span>[1:n_unobs] = np.diff(np_par[:n_unobs])
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">After the above command, working_par[0] is the same</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">as par[0], working_par[1]+working_par[0] is the same</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">as par[1], working_par[2]+working_par[1] is the same</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">as par[2], etc</span>
+        <span style="color: #729fcf; font-weight: bold;">if</span> n_pre &gt; 0: <span style="color: #2c5115;"># </span><span style="color: #888a85;">There is at least one presynaptic train</span>
+            <span style="color: #ff6347;">g</span> = np.zeros(n_syn)
+            <span style="color: #729fcf; font-weight: bold;">for</span> pre_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_pre):
+                <span style="color: #ff6347;">g</span>[-1] = 0.0
+                <span style="color: #ff6347;">left</span> = n_unobs+(n_syn-1)*pre_idx
+                <span style="color: #ff6347;">right</span> = n_unobs+(n_syn-1)*(pre_idx+1)
+                <span style="color: #ff6347;">g</span>[:-1] = np_par[left:right]
+                <span style="color: #ff6347;">working_par</span>[n_unobs+n_syn*pre_idx] = np_par[left]
+                <span style="color: #ff6347;">nleft</span> = n_unobs+n_syn*pre_idx+1
+                <span style="color: #ff6347;">nright</span> = nleft+n_syn-1
+                <span style="color: #ff6347;">working_par</span>[nleft:nright] = np.diff(g)
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get MPP (membrane potential process)</span>
+        <span style="color: #ff6347;">MPP</span> = np.zeros(<span style="color: #729fcf;">len</span>(bp))
+        <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_total+1):
+            <span style="color: #ff6347;">MPP</span>[idx==i] = working_par[i]
+        <span style="color: #2c5115;">#</span><span style="color: #888a85;">pdb.set_trace()</span>
+        <span style="color: #729fcf; font-weight: bold;">for</span> j <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(sp_idx)-1):
+            MPP[(sp_idx[j]+1):sp_idx[j+1]] = np.cumsum(MPP[(sp_idx[j]+1):sp_idx[j+1]])
+        <span style="color: #729fcf; font-weight: bold;">return</span> (bp[:],MPP[:])
+    <span style="color: #729fcf; font-weight: bold;">return</span> mpp
+
+</pre>
+</div>
+
+<p>
+We test out new function as follows:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1fabbbd"><span style="color: #ff6347;">mpp_test</span> = mk_mpp()
+<span style="color: #729fcf;">help</span>(mpp_test)
+</pre>
+</div>
+
+<pre class="example">
+
+Help on function mpp in module __main__:
+
+mpp(par)
+    Returns the membrane potential process for a given
+    value of 'par'.
+    
+    The 'par' vector is constructed by pasting the height
+    of the unobserved effect to the height of the
+    successive synaptic effects. Keep in mind that the
+    unobserved effect has as many height as breakpoints,
+    the last one gives the asymptotic value (giving the
+    long tail Poisson behavior), the synaptic effects have
+    one height parameter less than their number of breakpoints
+    since we force the effect to come back to zero after the
+    last breakpoint (so the zero being known is not included
+    in the model parameters).
+    
+    Parameters
+    ----------
+    par: parameter vector (see explanation above)
+    
+    Returns
+    -------
+    A tuple with two numpy arrays having the same length, 
+    one with the breakpoints' times one with the membrane
+    potential process value on the right side of the 
+    breakpoint. The membrane potential value following
+    a postsynaptic spike is -inf.
+</pre>
+
+<p>
+Next we get the membrane potential process corresponding to the true parameter values:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgc9f9dfa"><span style="color: #ff6347;">p0</span> = [h <span style="color: #729fcf; font-weight: bold;">for</span> t,h <span style="color: #729fcf; font-weight: bold;">in</span> s] + [h <span style="color: #729fcf; font-weight: bold;">for</span> t,h <span style="color: #729fcf; font-weight: bold;">in</span> g[:-1]]
+<span style="color: #ff6347;">mpp_prev</span> = mpp_test(p0)
+</pre>
+</div>
+
+<p>
+We make a figure with the first second:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1fd4300">plt.step(mpp_prev[0],mpp_prev[1],where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
+plt.xlim(0,1)
+[plt.axvline(t,ymax=0.1,color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>) <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> pre <span style="color: #729fcf; font-weight: bold;">if</span> 0 &lt;= t &lt;= 1]
+[plt.axvline(t,ymax=0.1,color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>) <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post <span style="color: #729fcf; font-weight: bold;">if</span> 0 &lt;= t &lt;= 1]
+plt.grid(<span style="color: #8ae234;">True</span>)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"MPP"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/mk_mpp-test-fig.png" alt="mk_mpp-test-fig.png" />
+</p>
+</div>
+</div></li>
+
+<li><a id="org8e920e6"></a>A function returning the opposite of the log-likelihood<br /><div class="outline-text-5" id="text-2-2-3-2">
+<p>
+Once the MPP is known, getting the log-likelihood is rather straight forward. We define a function returning such a function (or closure to be precise):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org8823479"><span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mk_mll</span>(post_train=post,
+           pre_train_list=[pre],
+           delta_t=0.01,
+           unobs_range=[0.01,0.2],
+           syn_range=[0,0.05],
+           lambda_max=100):
+    <span style="color: #888a85;">"""Returns an minus log-likelihood returning function.</span>
+
+<span style="color: #888a85;">    Parameters</span>
+<span style="color: #888a85;">    ----------</span>
+<span style="color: #888a85;">    post_train: a list with the postsynaptic spike times</span>
+<span style="color: #888a85;">    pre_train_list: a list of lists with the presynaptic  </span>
+<span style="color: #888a85;">                    spike times (one list per spike train)</span>
+<span style="color: #888a85;">    delta_t: the bin width in s for the self and the synaptic effects</span>
+<span style="color: #888a85;">    unobs_range: a two elements list with the range of the self effect</span>
+<span style="color: #888a85;">    syn_range: a two elements list with the range of the synaptic effect</span>
+<span style="color: #888a85;">    lambda_max: the maximal postsynaptic discharge rate</span>
+
+<span style="color: #888a85;">    Returns</span>
+<span style="color: #888a85;">    -------</span>
+<span style="color: #888a85;">    A function (closure) that returns given a parameter vector</span>
+<span style="color: #888a85;">    the opposite of the log-likelihood</span>
+<span style="color: #888a85;">    """</span>
+    <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> inf,ceil
+    <span style="color: #729fcf; font-weight: bold;">from</span> operator <span style="color: #729fcf; font-weight: bold;">import</span> itemgetter
+    <span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">define refractory period</span>
+    <span style="color: #ff6347;">rp</span> = unobs_range[0]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Create unobs_bk effect breakpoints list</span>
+    <span style="color: #ff6347;">n_unobs</span> = ceil((unobs_range[1]-rp)/delta_t)+1
+    <span style="color: #ff6347;">n_total</span> = n_unobs
+    <span style="color: #ff6347;">unobs_idx</span> = <span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">range</span>(n_unobs))
+    <span style="color: #ff6347;">par_idx</span> = unobs_idx
+    <span style="color: #ff6347;">unobs_bk</span> = [rp+i*delta_t <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> unobs_idx]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get the number of presynaptic spike trains</span>
+    <span style="color: #ff6347;">n_pre</span> = <span style="color: #729fcf;">len</span>(pre_train_list)
+    <span style="color: #729fcf; font-weight: bold;">if</span> n_pre &gt; 0: <span style="color: #2c5115;"># </span><span style="color: #888a85;">There is a least one presynaptic train</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">Do the same for the synaptic effects</span>
+        <span style="color: #ff6347;">n_syn</span> = ceil((syn_range[1]-syn_range[0])/delta_t)+1
+        <span style="color: #ff6347;">syn_idx</span> = <span style="color: #729fcf;">list</span>(<span style="color: #729fcf;">range</span>(n_syn))
+        <span style="color: #ff6347;">syn_bk</span> = [syn_range[0]+i*delta_t <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_syn)]
+        <span style="color: #729fcf; font-weight: bold;">for</span> pre_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_pre):
+            <span style="color: #2c5115;"># </span><span style="color: #888a85;">Construct a list of model parameters indexes</span>
+            <span style="color: #ff6347;">par_idx</span> += [n_total+i <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> syn_idx]
+            <span style="color: #ff6347;">n_total</span> += n_syn
+    <span style="color: #ff6347;">par_idx</span> += [n_total]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Construct a list of lists with two elements:</span>
+    <span style="color: #2c5115;">#  </span><span style="color: #888a85;">a breakpoint location</span>
+    <span style="color: #2c5115;">#  </span><span style="color: #888a85;">an index of the model parameter to apply on the</span>
+    <span style="color: #2c5115;">#  </span><span style="color: #888a85;">right side of the breakpoint</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Start with the contribution of the postsynaptic train</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Every postsynpatic spike gives a breakpoint exactly at</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">the spike time and the n_total index (the largest index</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">value is associated to it)</span>
+    <span style="color: #ff6347;">glb</span> = [[t,n_total] <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post_train]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Then each postsynaptic spike is followed by its "self"</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">or unobserved effect.</span>
+    <span style="color: #729fcf; font-weight: bold;">for</span> s_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(post_train)-1):
+        <span style="color: #ff6347;">spike_time</span> = post_train[s_idx]
+        <span style="color: #ff6347;">next_time</span> = post_train[s_idx+1]
+        <span style="color: #ff6347;">glb</span> += [[unobs_bk[i]+spike_time,unobs_idx[i]] <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(unobs_bk))
+                <span style="color: #729fcf; font-weight: bold;">if</span> unobs_bk[i]+spike_time &lt; next_time]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Now add the contributions of the presynaptic trains</span>
+    <span style="color: #729fcf; font-weight: bold;">if</span> n_pre &gt; 0: <span style="color: #2c5115;"># </span><span style="color: #888a85;">there is at least one presynaptic train</span>
+        <span style="color: #ff6347;">first_post</span> = post_train[0] <span style="color: #2c5115;"># </span><span style="color: #888a85;">first postsynaptic spike time</span>
+        <span style="color: #ff6347;">last_post</span> = post_train[-1] <span style="color: #2c5115;"># </span><span style="color: #888a85;">last postsynaptic spike time</span>
+        <span style="color: #729fcf; font-weight: bold;">for</span> pre_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_pre): <span style="color: #2c5115;"># </span><span style="color: #888a85;">take each presynaptic train</span>
+            <span style="color: #ff6347;">pre_train</span> = pre_train_list[pre_idx]
+            <span style="color: #729fcf; font-weight: bold;">for</span> s_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(pre_train)):
+                <span style="color: #2c5115;"># </span><span style="color: #888a85;">Take each spike spike of pre_train</span>
+                <span style="color: #ff6347;">pre_time</span> = pre_train[s_idx]
+                <span style="color: #729fcf; font-weight: bold;">if</span> (first_post &lt; pre_time &lt; last_post):
+                    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get the post previous spike time</span>
+                    <span style="color: #ff6347;">left_time</span> = <span style="color: #729fcf;">max</span>([t <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post_train <span style="color: #729fcf; font-weight: bold;">if</span> t &lt;= pre_time])
+                    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get the post next spike time</span>
+                    <span style="color: #ff6347;">right_time</span> = <span style="color: #729fcf;">min</span>([t <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post_train <span style="color: #729fcf; font-weight: bold;">if</span> t &gt; pre_time])
+                    <span style="color: #ff6347;">glb</span> += [[<span style="color: #729fcf;">max</span>(syn_bk[i]+pre_time,left_time+rp),syn_idx[i]+n_unobs+n_syn*pre_idx] 
+                            <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(syn_bk))
+                            <span style="color: #729fcf; font-weight: bold;">if</span> left_time + rp - delta_t &lt; syn_bk[i]+pre_time &lt; right_time]
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Order glb based on breakpoints' times</span>
+    <span style="color: #ff6347;">sglb</span> = <span style="color: #729fcf;">sorted</span>(glb,key=itemgetter(0))
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Extract breakpoints time</span>
+    <span style="color: #ff6347;">bp</span> = np.array([a <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> sglb])
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Extract the intervals between breakpoints</span>
+    <span style="color: #ff6347;">dbp</span> = np.diff(bp)
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Extract the model parameter index to apply</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">to the right of each breakpoint</span>
+    <span style="color: #ff6347;">idx</span> = np.array([b <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> sglb])
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">Keep the indexes of the breakpoints marking</span>
+    <span style="color: #2c5115;"># </span><span style="color: #888a85;">the postsynaptic spike times</span>
+    <span style="color: #ff6347;">sp_idx</span> = np.arange(<span style="color: #729fcf;">len</span>(idx))[idx==n_total]
+    <span style="color: #729fcf; font-weight: bold;">def</span> <span style="color: #edd400; font-weight: bold;">mll</span>(par):
+        <span style="color: #888a85;">"""Returns the minus log-likelihood for a given</span>
+<span style="color: #888a85;">        value of 'par'.</span>
+
+<span style="color: #888a85;">        The 'par' vector is constructed by pasting the height</span>
+<span style="color: #888a85;">        of the unobserved effect to the height of the</span>
+<span style="color: #888a85;">        successive synaptic effects. Keep in mind that the</span>
+<span style="color: #888a85;">        unobserved effect has as many height as breakpoints,</span>
+<span style="color: #888a85;">        the last one gives the asymptotic value (giving the</span>
+<span style="color: #888a85;">        long tail Poisson behavior), the synaptic effects have</span>
+<span style="color: #888a85;">        one height parameter less than their number of breakpoints</span>
+<span style="color: #888a85;">        since we force the effect to come back to zero after the</span>
+<span style="color: #888a85;">        last breakpoint (so the zero being known is not included</span>
+<span style="color: #888a85;">        in the model parameters).</span>
+
+<span style="color: #888a85;">        Parameters</span>
+<span style="color: #888a85;">        ----------</span>
+<span style="color: #888a85;">        par: parameter vector (see explanation above)</span>
+
+<span style="color: #888a85;">        Returns</span>
+<span style="color: #888a85;">        -------</span>
+<span style="color: #888a85;">        The opposite of the log-likelihood.</span>
+<span style="color: #888a85;">        """</span>
+        <span style="color: #729fcf; font-weight: bold;">import</span> numpy <span style="color: #729fcf; font-weight: bold;">as</span> np
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">Transform the model parameters into a 'working_par'</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">numpy array. The latter contains the difference</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">between successive step heights of the different</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">effects (unobserved, synaptic, etc) </span>
+        <span style="color: #ff6347;">working_par</span> = np.zeros(n_total+1)
+        <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> inf
+        <span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> exp,log
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">A breakpoint with label n_total signal</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">the occurrence of a postsynaptic spike</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">and is followed by a jump of amplitude</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">-inf</span>
+        <span style="color: #ff6347;">working_par</span>[-1] = -inf
+        <span style="color: #ff6347;">np_par</span> = np.array(par)
+        <span style="color: #ff6347;">working_par</span>[0] = par[0]
+        <span style="color: #ff6347;">working_par</span>[1:n_unobs] = np.diff(np_par[:n_unobs])
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">After the above command, working_par[0] is the same</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">as par[0], working_par[1]+working_par[0] is the same</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">as par[1], working_par[2]+working_par[1] is the same</span>
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">as par[2], etc</span>
+        <span style="color: #729fcf; font-weight: bold;">if</span> n_pre &gt; 0: <span style="color: #2c5115;"># </span><span style="color: #888a85;">There is at least one presynaptic train</span>
+            <span style="color: #ff6347;">g</span> = np.zeros(n_syn)
+            <span style="color: #729fcf; font-weight: bold;">for</span> pre_idx <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_pre):
+                <span style="color: #ff6347;">g</span>[-1] = 0.0
+                <span style="color: #ff6347;">left</span> = n_unobs+(n_syn-1)*pre_idx
+                <span style="color: #ff6347;">right</span> = n_unobs+(n_syn-1)*(pre_idx+1)
+                <span style="color: #ff6347;">g</span>[:-1] = np_par[left:right]
+                <span style="color: #ff6347;">working_par</span>[n_unobs+n_syn*pre_idx] = np_par[left]
+                <span style="color: #ff6347;">nleft</span> = n_unobs+n_syn*pre_idx+1
+                <span style="color: #ff6347;">nright</span> = nleft+n_syn-1
+                <span style="color: #ff6347;">working_par</span>[nleft:nright] = np.diff(g)
+        <span style="color: #2c5115;"># </span><span style="color: #888a85;">Get MPP (membrane potential process)</span>
+        <span style="color: #ff6347;">MPP</span> = np.zeros(<span style="color: #729fcf;">len</span>(bp))
+        <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(n_total+1):
+            <span style="color: #ff6347;">MPP</span>[idx==i] = working_par[i]
+        <span style="color: #2c5115;">#</span><span style="color: #888a85;">pdb.set_trace()</span>
+        <span style="color: #729fcf; font-weight: bold;">for</span> j <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(<span style="color: #729fcf;">len</span>(sp_idx)-1):
+            MPP[(sp_idx[j]+1):sp_idx[j+1]] = np.cumsum(MPP[(sp_idx[j]+1):sp_idx[j+1]])
+        <span style="color: #ff6347;">lambda_v</span> = lambda_max/(1+np.exp(-MPP))
+        <span style="color: #ff6347;">Lambda</span> = np.<span style="color: #729fcf;">sum</span>(lambda_v[:-1]*dbp)
+        <span style="color: #ff6347;">log_lambda</span> = np.<span style="color: #729fcf;">sum</span>(np.log(lambda_v[sp_idx[1:]-1]))
+        <span style="color: #729fcf; font-weight: bold;">return</span> Lambda - log_lambda
+    <span style="color: #729fcf; font-weight: bold;">return</span> mll
+
+</pre>
+</div>
+
+<p>
+We test our newly defined function inputting the actual parameter values:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgd8abe61"><span style="color: #ff6347;">mll_test</span>=mk_mll()
+mll_test(p0)
+</pre>
+</div>
+
+<pre class="example">
+-4039.088966290414
+
+</pre>
+
+<p>
+We can then define a set of parameter values without synaptic coupling:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org9e51cfa"><span style="color: #ff6347;">p1</span> = [h <span style="color: #729fcf; font-weight: bold;">for</span> t,h <span style="color: #729fcf; font-weight: bold;">in</span> s] + [0 <span style="color: #729fcf; font-weight: bold;">for</span> t,h <span style="color: #729fcf; font-weight: bold;">in</span> g[:-1]]
+mll_test(p1)
+</pre>
+</div>
+
+<pre class="example">
+-3715.1865993384035
+
+</pre>
+
+<p>
+And we can optimize from this parameter with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgf1a108d"><span style="color: #729fcf; font-weight: bold;">from</span> scipy.optimize <span style="color: #729fcf; font-weight: bold;">import</span> minimize
+<span style="color: #ff6347;">res</span> = minimize(mll_test,p1,method=<span style="color: #ad7fa8; font-style: italic;">'BFGS'</span>,options={<span style="color: #ad7fa8; font-style: italic;">'disp'</span>:<span style="color: #8ae234;">True</span>,<span style="color: #ad7fa8; font-style: italic;">'eps'</span>:1e-6,<span style="color: #ad7fa8; font-style: italic;">'gtol'</span>:1e-3})
+</pre>
+</div>
+
+<pre class="example">
+
+Optimization terminated successfully.
+         Current function value: -4049.213663
+         Iterations: 33
+         Function evaluations: 1242
+         Gradient evaluations: 46
+
+</pre>
+
+<p>
+That looks fine so far!
+</p>
+</div></li></ol>
+</div>
+
+<div id="outline-container-orgbb30ac1" class="outline-4">
+<h4 id="orgbb30ac1"><span class="section-number-4">2.2.4</span> Example of inference with <code>Python</code></h4>
+<div class="outline-text-4" id="text-2-2-4">
+<p>
+So let's do something looking more "real". We first consider our two spike trains in isolation and estimate their "self" of "unobserved" effect. We start with our <code>pre</code> train, as an initial guess we take the "exponential plus refractory period" estimate, that is a constant intensity following the escape from the refractory period.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org85a95fe"><span style="color: #ff6347;">refractory_period</span> = s[0][0]
+<span style="color: #ff6347;">n_isi_pre</span> = <span style="color: #729fcf;">len</span>(pre)-1
+<span style="color: #ff6347;">pre_rate0</span> = n_isi_pre/(pre[-1]-pre[0]-n_isi_pre*refractory_period)
+<span style="color: #ff6347;">pre_llf_0</span> = mk_mll(pre,[],0.01,[s[0][0],s[-1][0]],[0,0.05],100)
+<span style="color: #729fcf; font-weight: bold;">from</span> math <span style="color: #729fcf; font-weight: bold;">import</span> log
+<span style="color: #ff6347;">pre_par0</span> = [-log(100/pre_rate0-1) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(20)]
+pre_llf_0(pre_par0)
+</pre>
+</div>
+
+<pre class="example">
+
+&gt;&gt;&gt; &gt;&gt;&gt; &gt;&gt;&gt; &gt;&gt;&gt; &gt;&gt;&gt; -1445.5361688591559
+
+</pre>
+
+
+<p>
+We do the optimization:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org28e8567"><span style="color: #ff6347;">pre_llf_0_fit</span> = minimize(pre_llf_0,pre_par0,
+                         method=<span style="color: #ad7fa8; font-style: italic;">'BFGS'</span>,
+                         options={<span style="color: #ad7fa8; font-style: italic;">'disp'</span>:<span style="color: #8ae234;">True</span>,<span style="color: #ad7fa8; font-style: italic;">'eps'</span>:1e-6,<span style="color: #ad7fa8; font-style: italic;">'gtol'</span>:1e-3})
+</pre>
+</div>
+
+<pre class="example">
+
+... Optimization terminated successfully.
+         Current function value: -1914.802983
+         Iterations: 28
+         Function evaluations: 858
+         Gradient evaluations: 39
+
+</pre>
+
+<p>
+We can look at the fitted MPP as follows:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org75a2f99"><span style="color: #ff6347;">pre_mpp_0</span> = mk_mpp(pre,[],0.01,[s[0][0],s[-1][0]],[0,0.05],100)(pre_llf_0_fit.x)
+plt.step(pre_mpp_0[0],pre_mpp_0[1],where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
+plt.xlim(0.4,1.4)
+[plt.axvline(t,ymax=0.1,color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>) <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> pre <span style="color: #729fcf; font-weight: bold;">if</span> 0.4 &lt;= t &lt;= 1.4]
+plt.grid(<span style="color: #8ae234;">True</span>)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"MPP"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/pre_unobs_estimation_fig.png" alt="pre_unobs_estimation_fig.png" />
+</p>
+</div>
+
+<p>
+Now we try a model for our <code>pre</code> spike train where our <code>post</code> train would be presynaptic to <code>pre</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org8d25698"><span style="color: #ff6347;">pre_llf_1</span> = mk_mll(pre,[post],0.01,[s[0][0],s[-1][0]],[0,0.05],100)
+<span style="color: #ff6347;">pre_par1</span> = <span style="color: #729fcf;">list</span>(pre_llf_0_fit.x) + [0 <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(5)]
+pre_llf_1(pre_par1)
+</pre>
+</div>
+
+<pre class="example">
+
+-1914.802982923095
+
+</pre>
+
+<p>
+We optimize:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org47525cc"><span style="color: #ff6347;">pre_llf_1_fit</span> = minimize(pre_llf_1,pre_par1,
+                         method=<span style="color: #ad7fa8; font-style: italic;">'BFGS'</span>,
+                         options={<span style="color: #ad7fa8; font-style: italic;">'disp'</span>:<span style="color: #8ae234;">True</span>,<span style="color: #ad7fa8; font-style: italic;">'eps'</span>:1e-6,<span style="color: #ad7fa8; font-style: italic;">'gtol'</span>:1e-3})
+</pre>
+</div>
+
+<pre class="example">
+
+... Optimization terminated successfully.
+         Current function value: -1919.563263
+         Iterations: 31
+         Function evaluations: 1269
+         Gradient evaluations: 47
+
+</pre>
+
+<p>
+We can divide the estimated values of the last 5 parameters (corresponding to the coupling effect post -&gt; pre) by their estimated standard error, we get:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org2b58ce2">pre_llf_1_fit.x[20:]/np.sqrt(np.diag(pre_llf_1_fit.hess_inv)[20:])
+</pre>
+</div>
+
+<pre class="example">
+array([-2.35955805, -1.42955242, -0.62587496, -0.73246774,  1.37764567])
+
+</pre>
+
+<p>
+We see that none passes the 99% confidence interval.
+</p>
+
+<p>
+We repeat this analysis reversing the roles of pre and post. We start with the unobserved effect:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org1c11f53"><span style="color: #ff6347;">n_isi_post</span> = <span style="color: #729fcf;">len</span>(post)-1
+<span style="color: #ff6347;">post_rate0</span> = n_isi_post/(post[-1]-post[0]-n_isi_post*refractory_period)
+<span style="color: #ff6347;">post_llf_0</span> = mk_mll(post,[],0.01,[s[0][0],s[-1][0]],[0,0.05],100)
+<span style="color: #ff6347;">post_par0</span> = [-log(100/post_rate0-1) <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(20)]
+post_llf_0(post_par0)
+</pre>
+</div>
+
+<pre class="example">
+
+&gt;&gt;&gt; &gt;&gt;&gt; -2512.185863857879
+
+</pre>
+
+<p>
+We do the optimization:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orga505118"><span style="color: #ff6347;">post_llf_0_fit</span> = minimize(post_llf_0,post_par0,
+                          method=<span style="color: #ad7fa8; font-style: italic;">'BFGS'</span>,
+                          options={<span style="color: #ad7fa8; font-style: italic;">'disp'</span>:<span style="color: #8ae234;">True</span>,<span style="color: #ad7fa8; font-style: italic;">'eps'</span>:1e-6,<span style="color: #ad7fa8; font-style: italic;">'gtol'</span>:1e-3})
+</pre>
+</div>
+
+<pre class="example">
+
+... Optimization terminated successfully.
+         Current function value: -3764.533935
+         Iterations: 29
+         Function evaluations: 880
+         Gradient evaluations: 40
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orgb990523"><span style="color: #ff6347;">fig</span> = plt.figure(figsize=(5,5))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="orga886db1"><span style="color: #ff6347;">post_mpp_0</span> = mk_mpp(post,[],0.01,[s[0][0],s[-1][0]],[0,0.05],100)(post_llf_0_fit.x)
+plt.step(post_mpp_0[0],post_mpp_0[1],where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
+plt.xlim(0,1.0)
+[plt.axvline(t,ymax=0.1,color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>) <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post <span style="color: #729fcf; font-weight: bold;">if</span> 0 &lt;= t &lt;= 1]
+plt.grid(<span style="color: #8ae234;">True</span>)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"MPP"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org92814ac">plt.savefig(<span style="color: #ad7fa8; font-style: italic;">'imgs/post_unobs_estimation_fig.png'</span>)
+plt.close()
+<span style="color: #ad7fa8; font-style: italic;">'imgs/post_unobs_estimation_fig.png'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/post_unobs_estimation_fig.png" alt="post_unobs_estimation_fig.png" />
+</p>
+</div>
+
+<p>
+Now we try a model for our <code>post</code> spike train where our <code>pre</code> train would be presynaptic to <code>post</code>:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org762ea81"><span style="color: #ff6347;">post_llf_1</span> = mk_mll(post,[pre],0.01,[s[0][0],s[-1][0]],[0,0.05],100)
+<span style="color: #ff6347;">post_par1</span> = <span style="color: #729fcf;">list</span>(post_llf_0_fit.x) + [0 <span style="color: #729fcf; font-weight: bold;">for</span> i <span style="color: #729fcf; font-weight: bold;">in</span> <span style="color: #729fcf;">range</span>(5)]
+post_llf_1(post_par1)
+</pre>
+</div>
+
+<pre class="example">
+
+-3764.5339354767257
+
+</pre>
+
+<p>
+We optimize:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org293257e"><span style="color: #ff6347;">post_llf_1_fit</span> = minimize(post_llf_1,post_par1,
+                          method=<span style="color: #ad7fa8; font-style: italic;">'BFGS'</span>,
+                          options={<span style="color: #ad7fa8; font-style: italic;">'disp'</span>:<span style="color: #8ae234;">True</span>,<span style="color: #ad7fa8; font-style: italic;">'eps'</span>:1e-6,<span style="color: #ad7fa8; font-style: italic;">'gtol'</span>:1e-3})
+</pre>
+</div>
+
+<pre class="example">
+
+... Optimization terminated successfully.
+         Current function value: -4049.213663
+         Iterations: 33
+         Function evaluations: 1188
+         Gradient evaluations: 44
+
+</pre>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7debf74"><span style="color: #ff6347;">fig</span> = plt.figure(figsize=(5,5))
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org7c1dfd3"><span style="color: #ff6347;">post_mpp_1</span> = mk_mpp(post,[pre],0.01,[s[0][0],s[-1][0]],[0,0.05],100)(post_llf_1_fit.x)
+plt.step(post_mpp_1[0],post_mpp_1[1],where=<span style="color: #ad7fa8; font-style: italic;">'post'</span>)
+plt.xlim(0,1)
+[plt.axvline(t,ymax=0.1,color=<span style="color: #ad7fa8; font-style: italic;">'black'</span>) <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> pre <span style="color: #729fcf; font-weight: bold;">if</span> 0 &lt;= t &lt;= 1]
+[plt.axvline(t,ymax=0.1,color=<span style="color: #ad7fa8; font-style: italic;">'red'</span>) <span style="color: #729fcf; font-weight: bold;">for</span> t <span style="color: #729fcf; font-weight: bold;">in</span> post <span style="color: #729fcf; font-weight: bold;">if</span> 0 &lt;= t &lt;= 1]
+plt.grid(<span style="color: #8ae234;">True</span>)
+plt.xlabel(<span style="color: #ad7fa8; font-style: italic;">"Time (s)"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+plt.ylabel(<span style="color: #ad7fa8; font-style: italic;">"MPP"</span>,fontdict={<span style="color: #ad7fa8; font-style: italic;">'fontsize'</span>:18})
+</pre>
+</div>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org12784a0">plt.savefig(<span style="color: #ad7fa8; font-style: italic;">'imgs/post_full_estimation_fig.png'</span>)
+plt.close()
+<span style="color: #ad7fa8; font-style: italic;">'imgs/post_full_estimation_fig.png'</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="imgs/post_full_estimation_fig.png" alt="post_full_estimation_fig.png" />
+</p>
+</div>
+
+<p>
+We can check the difference between the true coupling and the estimated one (dividing the difference by the estimated standard error of the latter):
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python" id="org3e903d8">(np.array([b <span style="color: #729fcf; font-weight: bold;">for</span> a,b <span style="color: #729fcf; font-weight: bold;">in</span> g[:-1]])-post_llf_1_fit.x[20:])/np.sqrt(np.diag(post_llf_1_fit.hess_inv)[20:])
+</pre>
+</div>
+
+<pre class="example">
+array([-0.43685691,  0.92958674, -0.35390641,  0.89741912,  0.77982613])
+
+</pre>
+
+<p>
+That's fine the difference is always smaller than one sigma!
+</p>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="date">Date: LASCON, January 24 2018, Tutorial 4</p>
 <p class="author">Author: Christophe Pouzat</p>
-<p class="date">Created: 2018-01-24 mer. 03:27</p>
+<p class="date">Created: 2018-01-24 mer. 14:28</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
