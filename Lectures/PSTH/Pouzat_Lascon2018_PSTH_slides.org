@@ -1,0 +1,1301 @@
+# -*- ispell-local-dictionary: "american" -*-
+#+TITLE: Peri-Stimulus Time Histograms Estimation Through Poisson Regression Without Generalized Linear Models
+#+DATE: LASCON, January 27 2018
+#+AUTHOR: @@latex:{\large Christophe Pouzat, Antoine Chaffiol and Avner Bar-Hen} \\ \vspace{0.2cm} Mathématiques Appliquées à Paris 5 (MAP5) \\ \vspace{0.2cm} Université Paris-Descartes and CNRS UMR 8145 \\ \vspace{0.2cm} \texttt{christophe.pouzat@parisdescartes.fr}@@
+#+LANGUAGE: en
+#+OPTIONS:   H:2 tags:nil 
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation]
+#+LATEX_HEADER: \usepackage{dsfont}
+#+BEAMER_HEADER: \setbeamercovered{invisible}
+#+BEAMER_HEADER: \AtBeginSection[]{\begin{frame}<beamer>\frametitle{Where are we ?}\tableofcontents[currentsection]\end{frame}}
+#+BEAMER_HEADER: \beamertemplatenavigationsymbolsempty
+#+STARTUP: beamer
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+#+PROPERTY: header-args:R  :session *LASCON2018-R*
+#+Property: header-args:python :session *LASCON2018-Python* :results pp
+#+PROPERTY: header-args :eval no-export
+#+STARTUP: indent
+
+** Setup :noexport:
+#+NAME: setup
+#+begin_src R :exports none :results silent :eval no-export
+library(STAR)
+library(locfit)  
+library(Cairo)
+CairoFonts(regular="Fourier:style=Medium",
+           bold="Fourier:style=Bold",
+           italic="Fourier:style=Oblique",
+           bolditalic="Fourier:style=BoldOblique")
+png <- CairoPNG
+#+end_src
+
+* The Data and the Questions :export:
+** Data's origin :export:
+Viewed "from the outside", neurons generate brief electrical pulses: *the action potentials*
+[[file:figs/BrainProbeData.png]]
+
+Left, the brain of an insect with the recording probe on which 16 electrodes (the bright spots) have been etched. Each probe's branch has a 80 $\mu{}m$ width. Right, 1 sec of data from 4 electrodes. The spikes are the action potentials.
+
+** Spike trains :export:
+After a "rather heavy" pre-processing called *spike sorting*, the *raster plot* representing the spike trains can be built:
+#+name: raster-example
+#+header: :width 1000 :height 750
+#+header: :file figs/exemple-raster.png
+#+BEGIN_SRC R :results output graphics :exports results
+data(e060817spont)
+exemple.raster <- lapply(e060817spont,
+                         function(l) l[10 <= l & l <= 20]
+                         )
+par(cex=3,mar=c(5,1,1,1))
+myCol <- c("orangered","brown4","royalblue4")
+plot(c(10,20),c(0,4),
+     xlab="Time (s)",ylab="",
+     axes=FALSE,bty="n",type="n")
+axis(1)
+invisible(sapply(1:length(exemple.raster),
+                 function(i) {
+                     points(exemple.raster[[i]],
+                            rep(i,length(exemple.raster[[i]])),
+                            pch="|",col=myCol[i]
+                            )
+                     text(15,i-0.5,paste("Neuron",i),col=myCol[i])
+                 }
+                 )
+          )
+#+END_SRC
+
+#+RESULTS: raster-example
+[[file:figs/exemple-raster.png]]
+
+
+** Non-stationary regime: odor responses :export:
+#+begin_src R :exports none
+data(e060817terpi)
+data(e060817citron)
+data(e060817mix)
+#+end_src
+
+#+RESULTS:
+: e060817mix
+
+#+name: exemple-citronellal
+#+header: :width 2000 :height 1000 
+#+header: :file figs/exemple-exemple-citronellal.png
+#+begin_src R :exports results :results output graphics
+mkRaster <- function (x, stimTimeCourse = NULL, colStim = "grey80", xlim, 
+                      pch, xlab, ylab, main, ...) {
+    if (!is.repeatedTrain(x)) 
+        x <- as.repeatedTrain(x)
+    nbTrains <- length(x)
+    if (missing(xlim)) 
+        xlim <- c(0, ceiling(max(sapply(x, max))))
+    if (missing(xlab)) 
+        xlab <- "Time (s)"
+    if (missing(ylab)) 
+        ylab <- "trial"
+    if (missing(main)) 
+        main <- paste(deparse(substitute(x)), "raster")
+    if (missing(pch)) 
+        pch <- ifelse(nbTrains <= 20, "|", ".")
+    #oldpar <- par(mar = c(5, 4, 2, 1))
+    #on.exit(par(oldpar))
+    acquisitionDuration <- max(xlim)
+    plot(c(0, acquisitionDuration), c(0, nbTrains + 1), type = "n", 
+        xlab = xlab, ylab = ylab, xlim = xlim, ylim = c(1, nbTrains + 
+            1), bty = "n", main = main, axes = FALSE,...)
+    if (!is.null(stimTimeCourse)) {
+        rect(stimTimeCourse[1], 0.1, stimTimeCourse[2], nbTrains + 
+            0.9, col = colStim, lty = 0)
+    }
+    invisible(sapply(1:nbTrains, function(idx) points(x[[idx]], 
+        numeric(length(x[[idx]])) + idx, pch = pch)))
+    ##axis(2, at = 1:nbTrains)
+    axis(1)
+}
+
+layout(matrix(1:3,nc=3))
+par(cex.axis=3,cex.lab=4,cex.main=4,mar=c(5,5,5,1))            
+mkRaster(e060817citron[[1]],
+         stimTimeCourse=attr(e060817citron[["neuron 1"]],"stimTimeCourse"),
+         xlab="Time (s)",ylab="",main="Neuron 1",xlim=c(5,10))                  
+mkRaster(e060817citron[[2]],
+         stimTimeCourse=attr(e060817citron[["neuron 2"]],"stimTimeCourse"),
+         xlab="Time (s)",main="Neuron 2",ylab="",xlim=c(5,10))                  
+mkRaster(e060817citron[[3]],
+         stimTimeCourse=attr(e060817citron[["neuron 3"]],"stimTimeCourse"),
+         xlab="Time (s)",main="Neuron 3",ylab="",xlim=c(5,10))                  
+#+end_src
+
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: exemple-citronellal
+[[file:figs/exemple-exemple-citronellal.png]]
+
+20 stimulation with citronellal. Stimulation are delivered during 500 ms (gray background). *Is neuron 2 responding to the stimulation?* Cockroach (/Periplaneta americana/) recordings and spike sorting by Antoine Chaffiol.
+
+** Non-stationary regime: odor responses (2)	:export:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: exemple-n1-odeurs
+#+header: :width 2000 :height 1000 
+#+header: :file figs/exemple-n1-odeurs.png
+#+begin_src R :exports results :results output graphics
+layout(matrix(1:3,nc=3))
+par(cex.axis=3,cex.lab=4,cex.main=4,mar=c(5,5,5,1))            
+mkRaster(e060817citron[[1]],
+         stimTimeCourse=attr(e060817citron[["neuron 1"]],"stimTimeCourse"),
+         xlab="Time (s)",ylab="",main="Citronellal",xlim=c(5,10))                  
+mkRaster(e060817terpi[[1]],
+         stimTimeCourse=attr(e060817terpi[["neuron 1"]],"stimTimeCourse"),
+         xlab="Time (s)",main="Terpineol",ylab="",xlim=c(5,10))                  
+mkRaster(e060817mix[[1]],
+         stimTimeCourse=attr(e060817mix[["neuron 1"]],"stimTimeCourse"),
+         xlab="Time (s)",main="Mixture",ylab="",xlim=c(5,10))                  
+#+end_src
+
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: exemple-n1-odeurs
+[[file:figs/exemple-n1-odeurs.png]]
+
+Neuron 1: 20 stimulation with citronellal, terpineol and a mixture of the two. \alert{Are the reponses any different?}
+
+** What do we want? 						     :export:
+- We want to estimate the peri-stimulus time histogram (PSTH) considered as an observation from an inhomogeneous Poisson process.
+- In addition to estimation we want to:
+  + Test if a neuron is responding to a given stimulation.
+  + Test if the responses of a given neuron to two different stimulations are different.
+- This implies building some sort of confidence bands around our best estimation.
+
+** Clarification on the convergence towards an IHP
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.9\textheight
+[[file:figs/Brown1978Title.png]]
+#+END_CENTER
+
+In this paper (Corollary 2, p. 626), Tim Brown shows that aggregated uncorrelated point processes converge towards an inhomogenous Poisson Process (IHP).
+
+* First tool 							     :export:
+
+
+** The PSTH :export:
+#+NAME: calcul-de-e060817citronN1PSTH
+#+BEGIN_SRC R :exports none
+data(e060817citron)
+e060817citronN1PSTH <- gsspsth0(e060817citron[["neuron 1"]])
+#+END_SRC
+
+#+RESULTS: calcul-de-e060817citronN1PSTH
+
+#+name: exemple-construction-estimateur-freq-moyenne
+#+header: :width 4000 :height 2000
+#+header: :file figs/exemple-construction-estimateur-freq-moyenne.png
+#+BEGIN_SRC R :exports results :results output graphics
+layout(matrix(1:2,nc=2))
+par(cex=7)            
+mkRaster(e060817citron[[1]],pch=".",
+         stimTimeCourse=attr(e060817citron[["neuron 1"]],"stimTimeCourse"),
+         xlab="Time (s)",ylab="",main="")
+plot(e060817citronN1PSTH$mids,
+     e060817citronN1PSTH$counts,
+     type="h",
+     xlab="Time (s)",ylab="Number of events",
+     bty="n",lwd=7)
+#+END_SRC
+
+#+RESULTS: exemple-construction-estimateur-freq-moyenne
+[[file:figs/exemple-construction-estimateur-freq-moyenne.png]]
+
+We go from the raw data to an histogram built with a tiny time step (25 ms), leading to an estimator with little bias and large variance. 
+ 
+** The PSTH (2)							:export:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+- We model this "averaged process" as an *inhomogeneous Poisson process* with intensity \lambda(t).
+- The histogram we just built can then be seen as the observation of a collection of Poisson random variables, $\{Y_1,\ldots,Y_k\}$, with parameters: $$n \, \int_{t_i-\delta/2}^{t_i+\delta/2}\lambda(u) \, du \; \approx \; n \, \lambda(t_i) \, \delta \; , \quad i = 1,\ldots,k \; ,$$ where $t_i$ is the center of a class (bin), \delta is the bin width, $n$ is the number of stimulations and $k$ is the number of bins.
+- A piecewise constant estimator of \lambda(t) is then obtained with:$$\hat{\lambda}(t) = y_i/(n \delta)\, , \quad \textrm{if} \quad t \in [t_i-\delta/2,t_i+\delta/2) \; .$$ This is the "classical" PSTH.
+  
+** The PSTH (3)							:export:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+- We are going to assume that \lambda(t) is \alert{smooth}---this is a very reasonable assumption given what we know about the insect olfactory system.
+- We can then attempt to improve on the "classical" PSTH by trading a little bias increase for (an hopefully large) variance decrease.
+- Many nonparametric methods are available to do that: kernel regression, local polynomials, smoothing splines, wavelets, etc.
+- A problem in the case of the PSTH is that the observed counts ($\{y_1,\ldots,y_k\}$) follow Poisson distributions with different parameters implying that they have different variances.
+- We have then at least two possibilities: i) use a generalized linear model (GLM); ii) transform the data to stabilize the variance.
+- We are going to use the second approach.
+  
+#+BEGIN_SRC R :exports none
+data(e060817terpi)
+data(e060817mix)
+write(sort(unlist(e060817citron[["neuron 1"]])),file="e060817n1citron.txt",ncolumns = 1)
+write(sort(unlist(e060817terpi[["neuron 1"]])),file="e060817n1terpi.txt",ncolumns = 1)
+write(sort(unlist(e060817mix[["neuron 1"]])),file="e060817n1mix.txt",ncolumns = 1)
+write(sort(unlist(e060817citron[["neuron 2"]])),file="e060817n2citron.txt",ncolumns = 1)
+write(sort(unlist(e060817terpi[["neuron 2"]])),file="e060817n2terpi.txt",ncolumns = 1)
+write(sort(unlist(e060817mix[["neuron 2"]])),file="e060817n2mix.txt",ncolumns = 1)
+write(sort(unlist(e060817citron[["neuron 3"]])),file="e060817n3citron.txt",ncolumns = 1)
+write(sort(unlist(e060817terpi[["neuron 3"]])),file="e060817n3terpi.txt",ncolumns = 1)
+write(sort(unlist(e060817mix[["neuron 3"]])),file="e060817n3mix.txt",ncolumns = 1)
+write(sort(unlist(e060817terpi[["neuron 1"]][seq(1,19,2)])),file="e060817n1terpiOdd.txt",ncolumns = 1)
+write(sort(unlist(e060817terpi[["neuron 1"]][seq(2,20,2)])),file="e060817n1terpiEven.txt",ncolumns = 1)
+#+END_SRC
+
+#+RESULTS:
+
+** Kernel smoothing :export:
+
+#+BEGIN_CENTER
+#+ATTR_LATEX: :width 0.9\textheight
+[[file:figs/HastieEtAl2009Fig6_1.png]]
+#+END_CENTER
+
+From Hastie, Tibshirani & Friedman (2009) /The Elements of Statistical Learning/.
+
+** Error propagation 						     
++ Let us consider two random variables: $X$ and $Z$ such that:
++ $X \approx \mathcal{N}(\mu_X,\sigma^2_X)$ or $X \approx \mu_X + \sigma_X \, \epsilon$
++ $Z = G(X)$, with $f$ continuous and differentiable.
++ Using a first order Taylor expansion we then have:\[ \begin{array}{lcl} Z & \approx & G(\mu_X + \sigma_X \, \epsilon) \\ & \approx & G(\mu_X) + \sigma_X \, \epsilon \, \frac{d G}{d X}(\mu_X) \end{array}\]
++ $\mathrm{E}Z \approx G(\mu_X) = G(\mathrm{E}X)$
++ $\mathrm{Var}Z \equiv \mathrm{E}[(Z-\mathrm{E}Z)^2] \approx \sigma^2_X \, \frac{d G}{d X}^2(\mu_X)$
++ $Z \approx G(\mu_X) + \sigma_X\left| \frac{d G}{d X}(\mu_X)\right| \, \epsilon$
+
+** Variance stabilisation :export:
++ Following Brown, Cai and Zhou (2010), let's consider $X_1,\ldots,X_n$ IID from a Poisson distribution with parameter $\nu$.
++ Define $X = \sum_{j=1}^{n} X_j$, the CLT gives us: $$\sqrt{n}\left(X/n-\nu\right) \stackrel{L}{\rightarrow} \mathcal{N}(0,\nu) \quad \textrm{as} \; n \rightarrow \infty \, .$$
++ A variance stabilizing transformation is a function $G : \mathbb{R} \rightarrow \mathbb{R}$, such that:$$ G'(x) = 1/\sqrt{x}\, .$$
++ The delta method (or the error propagation method; a first order Taylor expansion) then yields:$$\sqrt{n}\left(G(X/n)-G(\nu)\right) \stackrel{L}{\rightarrow} \mathcal{N}(0,1)\, . $$
+
+** Variance stabilisation (2)				 :B_fullframe:export:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
++ It is known (Anscombe, 1948) that the variance stabilizing properties can be further improved by using transformation of the form:$$H_n(X) = G\left(\frac{X+a}{n+b}\right)$$ for suitable choices of $a$ and $b$.
++ In nonparametric regression we want to set $a$ and $b$ such that $\mathrm{E}\left(H_n(X)\right)$ optimally matches $G(\nu)$.
++ Brown, Cai and Zhou (2010) show that in all relevant PSTH estimation problems we have: $$\mathrm{Var}\left(2 \sqrt{(X+1/4)/n}\right) = \frac{1}{n} + O(n^{-2}) \, .$$
++ They also show that: $$\mathrm{E}\left(2 \sqrt{(X+1/4)/n}\right) - 2 \sqrt{\nu} = O(n^{-2}) \, .$$
++ They get similar transformations for binomial and negative binomial random variables.
+
+** Example
+
+#+name: first-python-set-up
+#+BEGIN_SRC python :exports none
+import numpy as np
+import matplotlib.pyplot as plt
+plt.ion()
+import scipy
+from __future__ import print_function, division, unicode_literals, absolute_import
+#+END_SRC   
+
+#+RESULTS: first-python-set-up
+
+#+name: load-e060817n1citron.txt
+#+BEGIN_SRC python :exports none
+f = open("e060817n1citron.txt")
+n1citron = np.array([float(x) for x in f.readlines()])
+f.close()
+#+END_SRC
+
+#+RESULTS: load-e060817n1citron.txt
+: 'org_babel_python_eoe'
+
+#+name: make-n1-citron-histogram
+#+BEGIN_SRC python :exports none
+n1citron = n1citron[np.logical_and(1 <= n1citron , n1citron <= 14)]
+n1citron_bin = np.arange(1,14.025,0.025)
+n1citron_count,n1citron_bin = np.histogram(n1citron,n1citron_bin)
+n1citron_y = 2*np.sqrt((n1citron_count+0.25)/20)
+n1citron_x = n1citron_bin[:-1]+0.0125
+#+END_SRC
+
+#+RESULTS: make-n1-citron-histogram
+: 'org_babel_python_eoe'
+
+#+name: make-n1citron-histos-figure
+#+BEGIN_SRC python :exports results :results file
+plt.subplot(121)
+plt.plot(n1citron_bin[1:],n1citron_count,ls='steps',color='black')
+plt.xlabel("Time (s)")
+plt.ylabel("Number of events ($Y_i$)")
+plt.title("Original")
+plt.subplot(122)
+plt.plot(n1citron_x,n1citron_y,ls='steps',color='black')
+plt.xlabel("Time (s)")
+plt.ylabel("$2 \sqrt{(Y_i + 1/4)/20}$")
+plt.title("Variance stabilized")
+plt.subplots_adjust(wspace=0.4)
+plt.savefig('figs/make-n1citron-histos-figure.png')
+plt.close()
+'figs/make-n1citron-histos-figure.png'
+#+END_SRC
+
+
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: make-n1citron-histos-figure
+[[file:figs/make-n1citron-histos-figure.png]]
+
+
+** Nonparametric estimation
++ Since our knowledge of the biophysics of these neurons and of the network they form is still in its infancy, we can hardly propose a reasonable parametric from for our PSTHs (or their variance stabilized versions).
++ We therefore model our stabilized PSTH by: $$Z_i \doteq 2 \sqrt{(Y_i+1/4)/n} = r(t_i) + \epsilon_i \sigma \, ,$$ where the $\epsilon_i \stackrel{\textrm{IID}}{\sim} \mathcal{N}(0,1)$, $r$ is assumed "smooth" and is estimated with a linear smoother (kernel regression, local polynomials, smoothing splines) or with wavelets (or with any nonparametric method you like).
+
+** Nonparametric estimation (2)					:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
++ Following Larry Wasserman (/All of Nonparametric Statistics/, 2006) we define a linear smoother by a collection of functions $l(t) = \left(l_1(t),\ldots,l_k(t)\right)^T$ such that: $$\hat{r}(t) = \sum_{i=1}^k l_i(t) Z_i\, . $$
++ The simplest smoother we are going to use is built from the tricube kernel: $$K(t) =  \frac{70}{81}\left(1 - \left|t\right|^3\right)^3 I(t) \, ,$$ where $I(t)$ is the indicator function of $[-1,1]$.
++ The functions $l_i$ are then defined by: $$l_i(t) = \frac{K\left(\frac{t-t_i}{h}\right)}{\sum_{j=1}^k K\left(\frac{t-t_j}{h}\right)}\, .$$ 
+
+** Nonparametric estimation (3) 				:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
++ When using this kind of approach the choice of the bandwidth $h$ is clearly critical.
++ Since after variance stabilization the variance is known we can set our bandwidth by minimizing Mallows' $C_p$ criterion instead of using cross-validation. For (soft) wavelet thresholding we use the universal threshold that requires the knowledge (or an estimation) of the variance.  
++ More explicitly, with linear smoothers our estimations $\left(\widehat{r}(t_1),\ldots,\widehat{r}(t_k)\right)^T$ can be written in matrix form as: $$\widehat{\mathbf{r}} = L(h) \, \mathbf{Z} \, ,$$ where $L(h)$ is the $k \times k$ symmetric matrix whose element $(i,j)$ is given by  $l_i(t_j)$.
+
+** Nonparametric estimation (4) 				:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
++ Ideally we would like to set $\widehat{h}$ as: $$\arg\min_{h} (1/k) \sum_{i=1}^k \left(r(t_i) - \hat{r}(t_i)\right)^2 \, .$$
++ But we don't know $r$ (that's what we want to estimate!) so we minimize Mallows' $C_p$ criterion: $$ (1/k) \sum_{i=1}^k \left(Z_i - \hat{r}(t_i)\right)^2 + 2 \sigma^2 \mathrm{tr}\left(L(h)\right)/k \, ,$$ where $\mathrm{tr}\left(L(h)\right)$ stands for the trace of $L(h)$.
++ If we don't know $\sigma^2$, we minimize the cross-validation criterion: $$\frac{1}{k} \sum_{i=1}^k \frac{\left(Z_i - \hat{r}(t_i)\right)^2}{1-L_{ii}(h)} \, .$$
+  
+** Nonparametric estimation (5)					:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: tricube-kernel-definition
+#+BEGIN_SRC python :exports none
+def tricube_kernel(x,bw=1.0):
+    ax = np.absolute(x/bw)
+    result = np.zeros(x.shape)
+    result[ax <= 1] = 70*(1-ax[ax <= 1]**3)**3/81
+    return result
+#+END_SRC
+
+#+RESULTS: tricube-kernel-definition
+: 'org_babel_python_eoe'
+
+#+name: Nadaraya-Watson-estimator-definition
+#+BEGIN_SRC python :exports none 
+def Nadaraya_Watson_Estimator(x,X,Y,kernel = lambda y: tricube_kernel(y,1.0)):
+    w = kernel(X-x)
+    return np.sum(w*Y)/np.sum(w)
+#+END_SRC
+
+#+RESULTS: Nadaraya-Watson-estimator-definition
+: 'org_babel_python_eoe'
+
+#+name: CV-score-definition
+#+BEGIN_SRC python :exports none
+def CV_score(X,Y,bw = 1.0, kernel = tricube_kernel):
+    L = np.zeros((len(X),len(X)))
+    ligne = np.zeros(len(X))
+    for i in range(len(X)):
+        ligne = kernel(X-X[i], bw)
+        L[i,:] = ligne/np.sum(ligne)
+    n = len(X)
+    trace = np.trace(L)
+    if trace == n: return None
+    return [trace, np.sum(np.square((Y-np.dot(L,Y))/(1-np.diag(L)))/n)]
+#+END_SRC
+
+#+RESULTS: CV-score-definition
+: u'org_babel_python_eoe'
+
+
+#+name: Cp-score-definition
+#+BEGIN_SRC python :exports none
+from numpy.matlib import identity
+def Cp_score(X,Y,
+             bw = 1.0,
+             kernel = tricube_kernel,sigma2=1/20):
+    L = np.zeros((len(X),len(X)))
+    ligne = np.zeros(len(X))
+    for i in range(len(X)):
+        ligne = kernel(X-X[i], bw)
+        L[i,:] = ligne/np.sum(ligne)
+    n = len(X)
+    trace = np.trace(L)
+    if trace == n: 
+        return None
+    Cp = np.dot(np.dot(Y,(identity(n)-L)),np.dot((identity(n)-L),Y).T)[0,0]/n + 2*sigma2*trace/n
+    return [trace, Cp]
+
+#+END_SRC
+
+#+RESULTS: Cp-score-definition
+: u'org_babel_python_eoe'
+
+#+name: n1citron-scores-computation
+#+BEGIN_SRC python :exports none
+bw_vector = np.arange(0.05,1,0.025)
+n1citron_CV_score = np.array([CV_score(n1citron_x,n1citron_y,bw) for bw in bw_vector])
+n1citron_Cp_score = np.array([Cp_score(n1citron_x,n1citron_y,bw) for bw in bw_vector])
+#+END_SRC
+
+#+RESULTS: n1citron-scores-computation
+: u'org_babel_python_eoe'
+
+#+name: n1citron-Nadaraya-Watson-estimator-preparation
+#+BEGIN_SRC python :exports none :results silent
+bw_best_Cp = bw_vector[np.argmin(n1citron_Cp_score[:,1])] 
+n1citron_y_NW_best = np.array([Nadaraya_Watson_Estimator(x,n1citron_x,n1citron_y,kernel = lambda y: tricube_kernel(y,bw_best_Cp)) for x in n1citron_x])
+#+END_SRC
+
+#+name: n1citron-Nadaraya-Watson-estimator
+#+BEGIN_SRC python :exports results :results file
+plt.subplot(121)
+plt.plot(bw_vector,n1citron_CV_score[:,1],color='black',lw=2)
+plt.plot(bw_vector,n1citron_Cp_score[:,1],color='red',lw=2)
+plt.xlabel('Bandwidth (s)')
+plt.ylabel('CV and Cp Scores')
+plt.title('Scores vs bandwidth')
+plt.subplot(122)
+plt.plot(n1citron_x,n1citron_y,ls='steps',color='black')
+plt.xlabel("Time (s)")
+plt.ylabel("$2 \sqrt{(Y_i + 1/4)/20}$")
+plt.title("Data and Nadaraya-Watson est.")
+plt.plot(n1citron_x,n1citron_y_NW_best,lw=2,color='red')
+plt.subplots_adjust(wspace=0.4)
+plt.savefig('figs/n1citron-Nadaraya-Watson-estimator.png')
+plt.close()
+'figs/n1citron-Nadaraya-Watson-estimator.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 0.9\textwidth
+#+RESULTS: n1citron-Nadaraya-Watson-estimator
+[[file:figs/n1citron-Nadaraya-Watson-estimator.png]]
+
+Left: CV score in black, Cp score in red. Right: Variance stabilized data (black) with Nadaraya-Watson estimator (red) with "best" bandwidth.
+
+** Nonparametric estimation (6)					:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: n1citron-Nadaraya-Watson-residual
+#+BEGIN_SRC python :exports results :results file
+plt.plot(n1citron_x,n1citron_y-n1citron_y_NW_best,ls='steps',color='black')
+plt.hlines([-np.sqrt(1/20),np.sqrt(1/20)],1,14,color='red',linestyle='dashed',lw=2)
+plt.xlabel("Time (s)")
+plt.ylabel("$Z_i - \hat{r}(t_i)$")
+plt.title("Nadaraya-Watson estimator residuals")
+plt.savefig('figs/n1citron-Nadaraya-Watson-residual.png')
+plt.close()
+'figs/n1citron-Nadaraya-Watson-residual.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 0.9\textwidth
+#+RESULTS: n1citron-Nadaraya-Watson-residual
+[[file:figs/n1citron-Nadaraya-Watson-residual.png]]
+
+Residuals obtained with the Nadaraya-Watson estimator. The red dashed lines correspond to $\pm \sigma$.
+
+** Nonparametric estimation (7) 				:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: n1citron-with-smoothing-splines
+#+BEGIN_SRC python :exports none :results silent
+from numpy.linalg import qr
+from scipy.linalg import solve
+
+def rk(x,z):
+    k2x = 0.5*((x-0.5)**2-1/12)
+    k2z = 0.5*((z-0.5)**2-1/12)
+    ad = np.absolute(x-z)
+    k4 = ((ad-0.5)**4-(ad-0.5)**2/2+7/240)/24
+    return k2x*k2z-k4
+
+def spl_all_in_one(X,Y,lbda,left=1,right=14,sigma2=1/20):
+    U = (X-left)/(right-left)
+    n = len(U)
+    S = np.ones((n,2))
+    S[:,1] = U
+    Q = np.zeros((n,n))
+    for i in range(n):
+        Q[i,i] = rk(U[i],U[i])
+        for j in range(i+1,n):
+            Q[i,j] = rk(U[i],U[j])
+            Q[j,i] = Q[i,j]
+    F,Rstar = qr(S,'complete')
+    F1 = F[:,:2]
+    F2 = F[:,2:]
+    Rtilde = Rstar[:2,:]
+    F2tQF2 = np.dot(np.dot(F2.T,Q),F2)
+    A = identity(n) - n*lbda*np.dot(F2,solve((F2tQF2+n*lbda*identity(n-2)),F2.T,sym_pos=True))
+    Y_hat = np.ravel(np.dot(A,Y))
+    Cl = np.dot(np.dot(Y,(identity(n)-A)),np.dot((identity(n)-A),Y).T)[0,0]/n + 2*sigma2*np.trace(A)/n
+    return (Y_hat,A,Cl) 
+
+def spl_Cl(lbda,X,Y,left=1,right=14,sigma2=1/20):
+    U = (X-left)/(right-left)
+    n = len(U)
+    S = np.ones((n,2))
+    S[:,1] = U
+    Q = np.zeros((n,n))
+    for i in range(n):
+        Q[i,i] = rk(U[i],U[i])
+        for j in range(i+1,n):
+            Q[i,j] = rk(U[i],U[j])
+            Q[j,i] = Q[i,j]
+    F,Rstar = qr(S,'complete')
+    F1 = F[:,:2]
+    F2 = F[:,2:]
+    Rtilde = Rstar[:2,:]
+    F2tQF2 = np.dot(np.dot(F2.T,Q),F2)
+    Cl = np.zeros(len(lbda))
+    for i in range(len(lbda)):
+        A = identity(n) - n*lbda[i]*np.dot(F2,solve((F2tQF2+n*lbda[i]*identity(n-2)),F2.T,sym_pos=True))
+        Cl[i] = np.dot(np.dot(Y,(identity(n)-A)),np.dot((identity(n)-A),Y).T)[0,0]/n + 2*sigma2*np.trace(A)/n
+    return Cl 
+
+lbda_v = np.logspace(-10,-7,51)
+n1citron_Cl_v = spl_Cl(lbda_v,n1citron_x,n1citron_y)
+n1citron_Cl_best = lbda_v[np.argmin(n1citron_Cl_v)]
+n1citron_Y_hat_spl,_,_ = spl_all_in_one(n1citron_x,n1citron_y,n1citron_Cl_best)
+
+#+END_SRC
+
+#+name: n1citron-with-wavelets
+#+BEGIN_SRC python :exports none :results silent
+import pywt
+w = pywt.Wavelet('Haar')
+max_level = pywt.dwt_max_level(data_len=len(n1citron_y), filter_len=w.dec_len)
+n1citron_wv_coefs = pywt.wavedec(n1citron_y,'Haar',level=max_level,mode='per')
+uthresh = np.sqrt(2*np.log(len(n1citron_y)))/np.sqrt(20)
+n1citron_wv_denoised = n1citron_wv_coefs[:]
+n1citron_wv_denoised[1:] = (pywt.thresholding.soft(i, value=uthresh) for i in n1citron_wv_denoised[1:])
+n1citron_wv_Y_hat = pywt.waverec(n1citron_wv_denoised,'Haar', mode='per')
+#+END_SRC
+
+#+name: n1citron-all-estimators
+#+BEGIN_SRC python :exports results :results file
+plt.plot(n1citron_x,n1citron_y_NW_best,lw=2,color='red')
+plt.plot(n1citron_x,n1citron_Y_hat_spl,lw=2,color='blue')
+plt.plot(n1citron_x,n1citron_wv_Y_hat,lw=2,color='black')
+plt.xlabel("Time (s)")
+plt.ylabel("$2 \sqrt{(Y_i + 1/4)/20}$")
+plt.title("Comparison of three estimators")
+plt.savefig('figs/n1citron-all-estimators.png')
+plt.close()
+'figs/n1citron-all-estimators.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 0.9\textwidth
+#+RESULTS: n1citron-all-estimators
+[[file:figs/n1citron-all-estimators.png]]
+
+Nadaraya-Watson estimator (red), smoothing splines estimator (blue) and wavelet estimator (black; Haar wavelets, soft thresholding, universal threshold).
+
+* Confidence sets :export:
+** Confidence sets
++ Keeping in line with Wasserman (2006), we consider that providing an estimate $\hat{r}$ of a curve $r$ is not sufficient for drawing scientific conclusions.
++ We would like to provide a \alert{confidence set} for $r$ in the form of a band: $$\mathcal{B}=\left\{s : l(t) \le s(t) \le u(t), \; \forall t \in [a,b]\right\}\, $$ based on a pair of functions $\left(l(t),u(t)\right)$.
++ We would like to have: $$\mathrm{Pr}\left\{r \in \mathcal{B} \right\} \ge 1 - \alpha $$ for all $r \in \mathcal{R}$ where $\mathcal{R}$ is a large class of functions.
+
+** Confidence sets (2)						:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
++ When working with smoothers, our estimators exhibit a bias that does not disappear even with large sample sizes.
++ We will therefore try to built sets around $\overline{r} = \mathrm{E}(\hat{r})$; that will be sufficient to address some of the questions we started with.
++ For a linear smoother, $\hat{r}(t) = \sum_{i=1}^k l_i(t) Z_i$, we have: $$\overline{r}(t) = \mathrm{E}\left(\hat{r}(t)\right) = \sum_{i=1}^k l_i(t) r(t_i)$$ and $$\mathrm{Var}\left(\hat{r}(t)\right) = \sigma^2 \, \sum_{i=1}^k l_i(t)^2 = (1/n) \|l(t)\|^2\, .$$ Remember that we stabilized the variance at $1/n$.
++ We will consider a confidence band for $\overline{r}(t)$ of the form: $$I(t) = \left(\hat{r}(t) - c \|l(t)\|/\sqrt{n},\hat{r}(t) + c \|l(t)\|/\sqrt{n}\right) \, ,$$ for some $c > 0$ and $a \le t \le b$.
+
+** Confidence set (3)						:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+ Following Sun and Loader (1994), we have:
+$$\begin{array}{l l l} \mathrm{Pr}\left\{\overline{r}(t) \notin I(t) \textrm{ for some } t \in [a,b]\right\} & = & \mathrm{Pr}\left\{\max_{t \in [a,b]} \frac{|\hat{r}(t)-\overline{r}(t)|}{\|l(t)\|/\sqrt{n}} > c\right\} \, ,\\ & = & \mathrm{Pr}\left\{\max_{t \in [a,b]} \frac{|\sum_{i=1}^k (\epsilon_i/\sqrt{n})  l_i(t)|}{\|l(t)\|/\sqrt{n}} > c\right\} \, ,\\ & = & \mathrm{Pr}\left\{\max_{t \in [a,b]} |W(t)| > c\right\} \, ,\end{array}$$
+where $W(t) = \sum_{i=1}^k \epsilon_i l_i(t)/\|l(t)\|$ is a *Gaussian process*. To find $c$ we need to know the distribution of the maximum of a Gaussian process. Sun and Loader (1994) showed the *tube formula*:
+$$\mathrm{Pr}\left\{\max_{t \in [a,b]} |\sum_{i=1}^k \epsilon_i l_i(t)/\|l(t)\|| > c\right\} \approx 2\left(1 - \Phi(c)\right) + \frac{\kappa_0}{\pi} \exp - \frac{c^2}{2} \, ,$$ for large $c$, where, in our case, $\kappa_0 \approx (b-a)/h \left(\int_a^b K'(t)^2 dt\right)^{1/2}$. We get $c$ by solving:
+$$2\left(1 - \Phi(c)\right) + \frac{\kappa_0}{\pi} \exp - \frac{c^2}{2} = \alpha \, .$$
+
+** Confidence set (4)						:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: get-kappa0
+#+BEGIN_SRC python :exports none :results silent
+import sympy as sy
+sx = sy.symbols('sx')
+K = 70*(1-sx**3)**3/81
+kappa0 = 13*(sy.sqrt(sy.integrate(sy.diff(K,sx)**2,(sx,0,1))*2)).evalf()/bw_best_Cp
+#+END_SRC
+
+#+name: define-tube-target
+#+BEGIN_SRC python :exports none :results silent
+from scipy.stats import norm
+def tube_target(x,alpha,kappa=kappa0):
+    return 2*(1-norm.cdf(x)) + kappa*np.exp(-x**2/2)/np.pi - alpha
+#+END_SRC
+
+#+name: get-c-values
+#+BEGIN_SRC python :exports none :results silent
+from scipy.optimize import brentq
+c_p95 = brentq(tube_target,a=3,b=4,args=(0.05,))
+c_p90 = brentq(tube_target,a=2,b=4,args=(0.1,))
+#+END_SRC
+
+#+name: n1citron-Nadaraya-Watson-Confidence-Bands-preparation
+#+BEGIN_SRC python :exports none :results silent
+def make_L(X,kernel = lambda y: tricube_kernel(y,1.0)):
+    result = np.zeros((len(X),len(X)))
+    ligne = np.zeros(len(X))
+    for i in range(len(X)):
+        ligne = kernel(X-X[i])
+        result[i,:] = ligne/np.sum(ligne)
+    return result 
+
+n1citron_NW_L_best = make_L(n1citron_x,kernel = lambda y: tricube_kernel(y,bw_best_Cp))
+n1citron_NW_L_best_norm = np.sqrt(np.sum(n1citron_NW_L_best**2,axis=1))
+#+END_SRC
+
+#+name: n1citron-Nadaraya-Watson-Confidence-Bands
+#+BEGIN_SRC python :exports results :results file
+plt.plot(n1citron_x,n1citron_y,color='black')
+plt.plot(n1citron_x,n1citron_y_NW_best,lw=2,color='blue')
+plt.plot(n1citron_x,n1citron_y_NW_best+c_p95*n1citron_NW_L_best_norm/np.sqrt(20),lw=2,color='red')
+plt.plot(n1citron_x,n1citron_y_NW_best-c_p95*n1citron_NW_L_best_norm/np.sqrt(20),lw=2,color='red')
+plt.xlabel("Time (s)")
+plt.ylabel("$2 \sqrt{(Y_i + 1/4)/20}$")
+plt.title("Nadaraya-Watson est. with 0.95 conf. bands")
+plt.savefig('figs/n1citron-Nadaraya-Watson-Confidence-Bands.png')
+plt.close()
+'figs/n1citron-Nadaraya-Watson-Confidence-Bands.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 0.9\textwidth
+#+RESULTS: n1citron-Nadaraya-Watson-Confidence-Bands
+[[file:figs/n1citron-Nadaraya-Watson-Confidence-Bands.png]]
+
+Variance stabilized data (black) Nadaraya-Watson estimator (blue) and 0.95 confidence band (red).
+
+** Do you remember this slide?
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: exemple-citronellal
+[[file:figs/exemple-exemple-citronellal.png]]
+
+20 stimulation with citronellal. Stimulation are delivered during 500 ms (gray background). *Is neuron 2 responding to the stimulation?*
+
+** Confidence set (5) 						:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: n2citron-preparation
+#+BEGIN_SRC python :exports none :results silent
+f = open("e060817n2citron.txt")
+n2citron = np.array([float(x) for x in f.readlines()])
+f.close()
+
+n2citron = n2citron[np.logical_and(1 <= n2citron , n2citron <= 14)]
+n2citron_bin = np.arange(1,14.01,0.01)
+n2citron_count,n2citron_bin = np.histogram(n2citron,n2citron_bin)
+n2citron_y = 2*np.sqrt((n2citron_count+0.1)/20)
+n2citron_x = n2citron_bin[:-1]+0.005
+n2_bw_vector = np.arange(0.02,0.5,0.01)
+n2citron_Cp_score = np.array([Cp_score(n2citron_x,n2citron_y,bw) for bw in n2_bw_vector])
+
+n2_citron_bw_best_Cp = n2_bw_vector[np.argmin(n2citron_Cp_score[:,1])] 
+n2citron_y_NW_best = np.array([Nadaraya_Watson_Estimator(x,n2citron_x,n2citron_y,kernel = lambda y: tricube_kernel(y,n2_citron_bw_best_Cp)) for x in n2citron_x])
+
+n2citron_y_NW_bestX10 = np.array([Nadaraya_Watson_Estimator(x,n2citron_x,n2citron_y,kernel = lambda y: tricube_kernel(y,10*n2_citron_bw_best_Cp)) for x in n2citron_x])
+n2citron_NW_L_bestX10 = make_L(n2citron_x,kernel = lambda y: tricube_kernel(y,10*n2_citron_bw_best_Cp))
+n2citron_NW_L_bestX10_norm = np.sqrt(np.sum(n2citron_NW_L_bestX10**2,axis=1))
+
+n2citron_NW_L_best = make_L(n2citron_x,kernel = lambda y: tricube_kernel(y,n2_citron_bw_best_Cp))
+n2citron_NW_L_best_norm = np.sqrt(np.sum(n2citron_NW_L_best**2,axis=1))
+#+END_SRC
+
+#+name: n2citron-figure
+#+BEGIN_SRC python :exports results :results file
+plt.subplot(121)
+plt.plot(n2citron_x,n2citron_y,color='black')
+#plt.plot(n2citron_x,n2citron_y_NW_best,lw=2,color='blue')
+plt.plot(n2citron_x,n2citron_y_NW_best+c_p95*n2citron_NW_L_best_norm/np.sqrt(20),lw=2,color='red')
+plt.plot(n2citron_x,n2citron_y_NW_best-c_p95*n2citron_NW_L_best_norm/np.sqrt(20),lw=2,color='red')
+plt.xlabel("Time (s)")
+plt.ylabel("$2 \sqrt{(Y_i + 1/4)/20}$")
+plt.title("Optimal bandwidth")
+plt.subplot(122)
+plt.plot(n2citron_x,n2citron_y,color='black')
+#plt.plot(n2citron_x,n2citron_y_NW_bestX10,lw=2,color='blue')
+plt.plot(n2citron_x,n2citron_y_NW_bestX10+c_p95*n2citron_NW_L_bestX10_norm/np.sqrt(20),lw=2,color='red')
+plt.plot(n2citron_x,n2citron_y_NW_bestX10-c_p95*n2citron_NW_L_bestX10_norm/np.sqrt(20),lw=2,color='red')
+plt.xlabel("Time (s)")
+plt.title("Optimal bandwidth x 10")
+plt.subplots_adjust(wspace=0.4)
+plt.savefig('figs/n2citron-figure.png')
+plt.close()
+'figs/n2citron-figure.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: n2citron-figure
+[[file:figs/n2citron-figure.png]]
+
+Since the null hypothesis is a constant, there is no bias and we can increase the bandwidth (right side) if necessary.
+* Second Tool :export:
+** Remember again?
+#+ATTR_LATEX: :width 0.9\textwidth
+#+RESULTS: exemple-n1-odeurs
+[[file:figs/exemple-n1-odeurs.png]]
+
+Neuron 1: 20 stimulation with citronellal, terpineol and a mixture of the two. \alert{Are the reponses any different?}
+
+** Setting the test
+
++ We start like previously by building a "classical" PSTH with very fine bins (25 ms) with the citronellal and  terpineol trials to get: $\{y_1^{citron},\ldots,y_k^{citron}\}$ and $\{y_1^{terpi},\ldots,y_k^{terpi}\}$.
++ We stabilize the variance as we did before ($z_i = 2 \sqrt{(y_i+0.25)/n}$) to get: $\{z_1^{citron},\ldots,z_k^{citron}\}$ and $\{z_1^{terpi},\ldots,z_k^{terpi}\}$. 
++ Our null hypothesis is that the two underlying inhomogeneous Poisson processes are the same, therefore: $$z_i^{citron} = r(t_i) + \epsilon_i^{citron} \sigma \quad \textrm{and} \quad z_i^{terpi} = r(t_i) + \epsilon_i^{terpi} \sigma \, ,$$ then $$z_i^{terpi} - z_i^{citron} = \sqrt{2} \epsilon_i \sigma \, .$$
++ We then want to test if our collection of observed differences $\{z_1^{terpi} - z_1^{citron},\ldots,z_k^{terpi} - z_k^{citron}\}$ is compatible with $k$ IID draws from $\mathcal{N}(0,2\sigma^2$).
+
+** Invariance principle / Donsker theorem
+*** Theorem 							    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+If $X_1, X_2,\ldots$ is a sequence of IID random variables such that $\mathrm{E}(X_i)=0$ and $\mathrm{E}(X_i^2)=1$, then the sequence of processes: $$ S_k(t) = \frac{1}{\sqrt{k}} \sum_{i=0}^{\lfloor k t \rfloor} X_i, \quad 0 \le t \le 1, \quad X_0=0$$ converges in law towards a canonical Brownian motion. 
+
+*** Proof 							    :B_block:
+    :PROPERTIES:
+    :BEAMER_env: block
+    :END:
+You can find a proof in:
+  - R Durrett (2009) /Probability: Theory and Examples/. CUP. Sec. 7.6, pp 323-329 ;
+  - P Billingsley (1999) /Convergence of Probability Measures/. Wiley. p 121.
+  
+
+
+** Recognizing a Brownian motion when we see one
++ Under our null hypothesis (same inhomogeneous Poisson process for citronellal and terpineol), the random variables: $$\frac{Z_i^{terpi} - Z_i^{citron}}{\sqrt{2} \sigma} \, ,$$ should correspond to the $X_i$ of Donsker's theorem.
++ We can then construct $S_k(t)$ and check if the observed trajectory looks Brownian or not.
++ Ideally, we would like to define a domain in $[0,1] \times \mathbb{R}$ containing the realizations of a canonical Brownian motion with a given probability.
++ To have a reasonable power, we would like the surface of this domain to be minimal.
+
+** Recognizing a Brownian motion when we see one (2)		:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: load-n1terpi-and-n1mix-and-make-histo
+#+BEGIN_SRC python :exports none :results silent
+f = open("e060817n1mix.txt")
+n1mix = np.array([float(x) for x in f.readlines()])
+f.close()
+n1mix = n1mix[np.logical_and(1 <= n1mix , n1mix <= 14)]
+n1mix_bin = np.arange(1,14.025,0.025)
+n1mix_count,n1mix_bin = np.histogram(n1mix,n1mix_bin)
+n1mix_y = 2*np.sqrt((n1mix_count+0.25)/20)
+n1mix_x = n1mix_bin[:-1]+0.0125
+
+f = open("e060817n1terpi.txt")
+n1terpi = np.array([float(x) for x in f.readlines()])
+f.close()
+n1terpi = n1terpi[np.logical_and(1 <= n1terpi , n1terpi <= 14)]
+n1terpi_bin = np.arange(1,14.025,0.025)
+n1terpi_count,n1terpi_bin = np.histogram(n1terpi,n1terpi_bin)
+n1terpi_y = 2*np.sqrt((n1terpi_count+0.25)/20)
+n1terpi_x = n1terpi_bin[:-1]+0.0125
+#+END_SRC
+
+#+name: n1-citron-terpi-comp0
+#+BEGIN_SRC python :exports results :results file
+xx = np.linspace(0,1,201)
+plt.plot((n1citron_x-1)/(np.max(n1citron_x)-1),np.cumsum(np.sqrt(10)*(n1terpi_y-n1citron_y))/np.sqrt(len(n1terpi_y)),color='black',lw=2)
+plt.xlabel("Normalized time")
+plt.ylabel("$S_k(t)$")
+plt.savefig('figs/n1-citron-terpi-comp0.png')
+plt.close()
+'figs/n1-citron-terpi-comp0.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 0.9\textwidth
+#+RESULTS: n1-citron-terpi-comp0
+[[file:figs/n1-citron-terpi-comp0.png]]
+
+Does this look like the realization of a canonical Brownian motion?
+
+** Recognizing a Brownian motion when we see one (3) 		:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
++ In a (non trivial) paper, Kendall, Marin et Robert (2007) showed that the upper boundary of this minimal surface domain is given by: $$u^{\ast}(t) \equiv \sqrt{-W_{-1}\left(-(\kappa t)^2) \right)} \, \sqrt{t}, \quad \mathrm{for} \quad \kappa \, t \le 1/\sqrt{e}$$ where W_{-1} is the secondary real branch of the Lambert W function (defined as the solution of $W(z) \exp W(z) = z$); $\kappa$ being adjusted to get the desired probability.
++ They also showed that a domain whose upper boundary is given by: $u(t) = a + b \sqrt{t}$ is almost of minimal surface ($a > 0$ and $b > 0$ being adjusted to get the correct probability).
++ Loader and Deely (1987) give a very efficient algorithm to adjust $a$ and $b$ or $\kappa$.
++ The =R= package =STAR= (Spike Train Analysis with R) provides all that (and much more) out of the box.
+
+** Recognizing a Brownian motion when we see one (4) 		:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+#+name: load-n1terpi-even-and-odd-and-make-histo
+#+BEGIN_SRC python :exports none :results silent
+f = open("e060817n1terpiOdd.txt")
+n1terpiOdd = np.array([float(x) for x in f.readlines()])
+f.close()
+n1terpiOdd = n1terpiOdd[np.logical_and(1 <= n1terpiOdd , n1terpiOdd <= 14)]
+n1terpiOdd_bin = np.arange(1,14.025,0.025)
+n1terpiOdd_count,n1terpiOdd_bin = np.histogram(n1terpiOdd,n1terpiOdd_bin)
+n1terpiOdd_y = 2*np.sqrt((n1terpiOdd_count+0.25)/10)
+n1terpiOdd_x = n1terpiOdd_bin[:-1]+0.0125
+
+f = open("e060817n1terpiEven.txt")
+n1terpiEven = np.array([float(x) for x in f.readlines()])
+f.close()
+n1terpiEven = n1terpiEven[np.logical_and(1 <= n1terpiEven , n1terpiEven <= 14)]
+n1terpiEven_bin = np.arange(1,14.025,0.025)
+n1terpiEven_count,n1terpiEven_bin = np.histogram(n1terpiEven,n1terpiEven_bin)
+n1terpiEven_y = 2*np.sqrt((n1terpiEven_count+0.25)/10)
+n1terpiEven_x = n1terpiEven_bin[:-1]+0.0125
+
+def c95(x): return 0.2999445959+2.34797019*np.sqrt(x)
+
+def c99(x): return 0.313071417065285+2.88963206734397*np.sqrt(x)
+
+#+END_SRC
+
+#+name: n1-citron-terpi-comp
+#+BEGIN_SRC python :exports results :results file
+plt.plot(xx,c95(xx),color='red',lw=2,linestyle='dashed')
+plt.plot(xx,-c95(xx),color='red',lw=2,linestyle='dashed')
+plt.plot(xx,c99(xx),color='red',lw=2)
+plt.plot(xx,-c99(xx),color='red',lw=2)
+plt.plot((n1citron_x-1)/(np.max(n1citron_x)-1),np.cumsum(np.sqrt(5)*(n1terpiOdd_y-n1terpiEven_y))/np.sqrt(len(n1terpi_y)),color='blue',lw=2)
+plt.plot((n1citron_x-1)/(np.max(n1citron_x)-1),np.cumsum(np.sqrt(10)*(n1terpi_y-n1citron_y))/np.sqrt(len(n1terpi_y)),color='black',lw=2)
+plt.xlabel("Normalized time")
+plt.ylabel("$S_k(t)$")
+plt.savefig('figs/n1-citron-terpi-comp.png')
+plt.close()
+'figs/n1-citron-terpi-comp.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 0.9\textwidth
+#+RESULTS: n1-citron-terpi-comp
+[[file:figs/n1-citron-terpi-comp.png]]
+
+Almost minimal surface domains with probabilities 0.95 (dashed red) and 0.99 (red) of containing an observed canonical Brownian motion. Black: terpineol - citronellal; blue: odd terpineol trials - even terpineol trials.
+** Alternative no-response test :noexport:
+#+BEGIN_SRC python 
+## Get the part of n2citron preceeding the stimulation
+np.sum(n2citron_x <= 6)
+n2citron_y_b = n2citron_y[:500]
+## Get the part of the SAME length coming just after
+n2citron_y_r = n2citron_y[500:1000]
+## Get the normalized partial sum of the difference process
+n2citron_y_d = np.cumsum((n2citron_y_r - n2citron_y_b))*np.sqrt(10/500)
+## Do the plot for the test
+yy = np.linspace(0,1,500)
+plt.plot(yy,n2citron_y_d)
+plt.plot(yy,c95(yy),color='red',lw=2,linestyle='dashed')
+plt.plot(yy,-c95(yy),color='red',lw=2,linestyle='dashed')
+plt.plot(yy,c99(yy),color='red',lw=2)
+plt.plot(yy,-c99(yy),color='red',lw=2)
+
+#+END_SRC
+
+** Confidence set (6) 						:noexport:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+#+name: n1-citron-terpi-mix-comp-preparation
+#+BEGIN_SRC python :exports none :results silent
+n1citron_y_NW_bestShort = np.array([Nadaraya_Watson_Estimator(x,n1citron_x[n1citron_x>=6],n1citron_y[n1citron_x>=6],kernel = lambda y: tricube_kernel(y,bw_best_Cp)) for x in n1citron_x[n1citron_x>=6]])
+n1citron_NW_L_bestShort = make_L(n1citron_x[n1citron_x>=6],kernel = lambda y: tricube_kernel(y,bw_best_Cp))
+n1citron_NW_L_bestShort_norm = np.sqrt(np.sum(n1citron_NW_L_bestShort**2,axis=1))
+
+n1mix_y_NW_bestShort = np.array([Nadaraya_Watson_Estimator(x,n1mix_x[n1mix_x>=6],n1mix_y[n1mix_x>=6],kernel = lambda y: tricube_kernel(y,bw_best_Cp)) for x in n1mix_x[n1mix_x>=6]])
+n1mix_NW_L_bestShort = make_L(n1mix_x[n1mix_x>=6],kernel = lambda y: tricube_kernel(y,bw_best_Cp))
+n1mix_NW_L_bestShort_norm = np.sqrt(np.sum(n1mix_NW_L_bestShort**2,axis=1))
+
+n1terpi_y_NW_bestShort = np.array([Nadaraya_Watson_Estimator(x,n1terpi_x[n1terpi_x>=6],n1terpi_y[n1terpi_x>=6],kernel = lambda y: tricube_kernel(y,bw_best_Cp)) for x in n1terpi_x[n1terpi_x>=6]])
+n1terpi_NW_L_bestShort = make_L(n1terpi_x[n1terpi_x>=6],kernel = lambda y: tricube_kernel(y,bw_best_Cp))
+n1terpi_NW_L_bestShort_norm = np.sqrt(np.sum(n1terpi_NW_L_bestShort**2,axis=1))
+
+κ1 = 8*κ0/13
+c_p90 = brentq(tube_target,a=2,b=4,args=(0.1,κ1))
+c_p78 = brentq(tube_target,a=2,b=4,args=(0.22,κ1))
+#+END_SRC
+
+#+name: n1-citron-terpi-mix-comp
+#+BEGIN_SRC python :exports results :results file
+plt.plot(n1citron_x[n1citron_x>=6],n1citron_y_NW_bestShort+c_p78*n1citron_NW_L_bestShort_norm/np.sqrt(20),lw=2,color='red')
+plt.plot(n1citron_x[n1citron_x>=6],n1citron_y_NW_bestShort-c_p78*n1citron_NW_L_bestShort_norm/np.sqrt(20),lw=2,color='red')
+plt.plot(n1mix_x[n1mix_x>=6],n1mix_y_NW_bestShort+c_p78*n1mix_NW_L_bestShort_norm/np.sqrt(20),lw=2,color='blue')
+plt.plot(n1mix_x[n1mix_x>=6],n1mix_y_NW_bestShort-c_p78*n1mix_NW_L_bestShort_norm/np.sqrt(20),lw=2,color='blue')
+plt.xlabel("Time (s)")
+plt.ylabel("$2 \sqrt{(Y_i + 1/4)/20}$")
+plt.xlim([6,8])
+plt.title("0.78 bands for citronellal and mixture")
+plt.savefig('figs/n1-citron-terpi-mix-comp.png')
+plt.close()
+'figs/n1-citron-terpi-mix-comp.png'
+#+END_SRC
+
+#+ATTR_LATEX: :width 1.0\textwidth
+#+RESULTS: n1-citron-terpi-mix-comp
+[[file:figs/n1-citron-terpi-mix-comp.png]]
+
+Confidence bands computed on [6,14]. 0.78 was chosen because $(1-0.78)^2 \approx 0.05$. We fail to establish a difference here. 
+
+* Conditional intensity :noexport:
+
+
+** Filtration, history and conditional intensity
+- Probabilists working on processes use the *filtration* or *history*: a family of increasing sigma algebras, $\left(\mathcal{F}_t\right)_{0\leq t \leq \infty}$, such that all the information related to the process at time $t$ can be represented by an element of $\mathcal{F}_t$.
+- The *conditional intensity* of a counting process $N(t)$ is then defined by: $$ \lambda(t \mid \mathcal{F}_t) \equiv \lim_{h \downarrow 0} \frac{\mathrm{Prob}\{N(t+h)-N(t)=1 \mid \mathcal{F}_t\}}{h} \; .$$
+- $\lambda$ constitutes an *exhaustive description* of process / spike train.     
+
+** Two problems
+As soon as we adopt a conditional intensity based formalism, we must:
+- Find an estimator $\hat{\lambda}$ of $\lambda$.
+- Find goodness of fit tests.
+
+* Time transformation :noexport:
+** What to do with $\lambda$: A summary
+We start by associating to $\lambda$, the *integrated intensity*: $$ \Lambda = \int_0^{t} \lambda(u \mid \mathcal{F}_u) du \, ,$$ it then easy---but a bit too long for such a brief talk---to show that:
+- *If our model is correct* ($\hat{\lambda} \approx \lambda$), the density of successive spikes after time transformation: $$\{t_1,\ldots,t_n\} \rightarrow \{\Lambda(t_1) = \Lambda_1,\ldots,\Lambda(t_n) = \Lambda_n\}$$ is *exponential with parameter 1*.
+- Stated differently, the point process $\{\Lambda_1,\ldots,\Lambda_n\}$ is *a homogeneous Poisson process with parameter 1*.
+
+The next slides illustrate this result. 
+
+** Time transformation illustration
+#+name: fonctions-pour-illustrer-la-transformation-du-temps
+#+BEGIN_SRC R :exports none :results silent
+set.seed(20061001,kind="Mersenne-Twister")
+
+stimulus <- function(t,
+                     df=5,
+                     tonset=5,
+                     timeFactor=5,
+                     peakFactor=20) {
+    dchisq((t-tonset)*timeFactor,df=df)*peakFactor
+}
+## Define the conditional intensity / hazard function
+hFct <- function(t,
+                 tlast,
+                 df=5,
+                 tonset=5,
+                 timeFactor=5,
+                 peakFactor=20,
+                 mu=0.075,
+                 sigma2=3
+                 ) {
+    
+    hinvgauss(t-tlast,mu=mu,sigma2=sigma2)*exp(stimulus(t,df,tonset,timeFactor,peakFactor))
+    
+}
+## define the function simulating the train with the thinning method
+makeTrain <- function(tstop=10,
+                      peakCI=400,
+                      preTime=5,
+                      df=5,
+                      tonset=4,
+                      timeFactor=5,
+                      peakFactor=20,
+                      mu=0.075,
+                      sigma2=3) {
+    
+    result <- numeric(500) - preTime - .Machine$double.eps
+    result.n <- 500
+    result[1] <- 0
+    idx <- 1
+    currentTime <- result[1]
+    while (currentTime < tstop+preTime) {
+        currentTime <- currentTime+rexp(1,peakCI)
+        p <- hFct(currentTime,
+                  result[idx],
+                  df=df,
+                  tonset=tonset+preTime,
+                  timeFactor=timeFactor,
+                  peakFactor=peakFactor,
+                  mu=mu,
+                  sigma2=sigma2)/peakCI
+        rthreshold <- runif(1)
+        if (p>1) stop("Wrong peakCI")
+        while(p < rthreshold) {
+            currentTime <- currentTime+rexp(1,peakCI)
+            p <- hFct(currentTime,
+                      result[idx],
+                      df=df,
+                      tonset=tonset+preTime,
+                      timeFactor=timeFactor,
+                      peakFactor=peakFactor,
+                      mu=mu,
+                      sigma2=sigma2)/peakCI
+            if (p>1) stop("Wrong peakCI")
+            rthreshold <- runif(1)
+        }
+        idx <- idx+1
+        if (idx > result.n) {
+            result <- c(result,numeric(500)) - preTime - .Machine$double.eps
+            result.n <- result.n + 500
+        }
+        result[idx] <- currentTime
+    }
+    
+    result[preTime < result & result <= tstop+preTime] - preTime
+    
+}
+## Define a function returning the conditional intensity function (cif)
+ciFct <- function(t,
+                  tlast,
+                  df=5,
+                  tonset=4,
+                  timeFactor=5,
+                  peakFactor=20,
+                  mu=0.075,
+                  sigma2=3
+                  ) {
+    
+    sapply(t, function(x) {
+        if (x <= tlast[1]) return(1/mu)
+        y <- x-max(tlast[tlast<x])
+        hinvgauss(y,mu=mu,sigma2=sigma2)*exp(stimulus(x,df,tonset,timeFactor,peakFactor))
+    }
+           )
+    
+}
+## define a function doing the time transformation / rescaling
+## by integrating the cif and returning another CountingProcessSamplePath
+transformCPSP <- function(cpsp,
+                          ciFct,
+                          CIFct,
+                          method=c("integrate","discrete"),
+                          subdivisions=100,
+                          ...
+                          ) {
+    
+    if (!inherits(cpsp,"CountingProcessSamplePath"))
+        stop("cpsp should be a CountingProcessSamplePath objet")
+    st <- cpsp$ppspFct()
+    n <- length(st)
+    from <- cpsp$from
+    to <- cpsp$to
+    if (missing(CIFct)) {
+        if (method[1] == "integrate") {
+            lwr <- c(from,st)
+            upr <- c(st,to)
+            Lambda <- sapply(1:(n+1),
+                             function(idx)
+                             integrate(ciFct,
+                                       lower=lwr[idx],
+                                       upper=upr[idx],
+                                       subdivisions=subdivisions,
+                                       ...)$value
+                             )
+            Lambda <- cumsum(Lambda)
+            st <- Lambda[1:n]
+            from <- 0
+            to <- Lambda[n+1]
+        } ## End of conditional on method[1] == "integrate"
+        if (method[1] == "discrete") {
+            lwr <- c(from,st)
+            upr <- c(st,to)
+            xx <- unlist(lapply(1:(n+1),
+                                function(idx) seq(lwr[idx],
+                                                  upr[idx],
+                                                  length.out=subdivisions)
+                                )
+                         )
+            Lambda <- cumsum(ciFct(xx[-length(xx)])*diff(xx))
+            Lambda <- Lambda - Lambda[1]
+            st <- Lambda[(1:n)*subdivisions]
+            from <- 0
+            to <- Lambda[length(Lambda)]
+        } ## End of conditional on method[1] == "discrete"
+    } else {
+        result <- CIFct(c(from,st,to))
+        result <- result-result[1]
+        from <- result[1]
+        to <- result[n+2]
+        st <- result[2:(n+1)]
+    } ## End of conditional on missing(CIFct)
+    mkCPSP(st,from,to)
+}
+
+t1 <- makeTrain()
+
+lwr <- c(0,t1)
+upr <- c(t1,10)
+xx <- unlist(lapply(1:(length(t1)+1),function(idx) seq(lwr[idx],upr[idx],length.out=100)))
+ll <- ciFct(xx,t1)
+LL <- c(0,cumsum(ll[-1]*diff(xx)))
+cpsp1 <- mkCPSP(t1)
+cpsp1t <- transformCPSP(cpsp1,function(t) ciFct(t,cpsp1$ppspFct()))
+#+END_SRC
+
+#+name: illustration-transformation-du-temps-1
+#+header: :width 2000 :height 1500 
+#+header: :file figs/illustration-transformation-du-temps-1.png
+#+BEGIN_SRC R :exports results :results output graphics
+par(cex=5)
+plot(xx,ll,type="n",xlim=c(0,10),ylim=c(0,max(ll)),
+     xlab="Time (s)",ylab="λ(t|F) (Hz)",
+     main="Intensity process and events' sequence")
+invisible(sapply(1:(length(t1)+1),
+                 function(idx)
+                 lines(xx[(2+(idx-1)*100):(idx*100+1)],
+                       ll[(2+(idx-1)*100):(idx*100+1)],
+                       lwd=5,col=2)
+                 )
+          )
+rug(t1,lwd=4)
+#+END_SRC
+
+#+RESULTS: illustration-transformation-du-temps-1
+[[file:figs/illustration-transformation-du-temps-1.png]]
+
+
+** Time transformation illustration (2)				:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+
+#+name: illustration-transformation-du-temps-2
+#+header: :width 2000 :height 1500 
+#+header: :file figs/illustration-transformation-du-temps-2.png
+#+BEGIN_SRC R :exports results :results output graphics
+par(cex=5)
+plot(cpsp1,xlab="Time (s)",
+     ylab="N(t) and Λ(t)",
+     ylim=c(0,max(length(t1),max(LL))),
+     main="N and Λ vs t",
+     lwd=5
+     )
+rug(t1,lwd=4)
+lines(xx,LL,col=2,lwd=5)
+#+END_SRC
+
+#+RESULTS: illustration-transformation-du-temps-2
+[[file:figs/illustration-transformation-du-temps-2.png]]
+
+** Time transformation illustration (3)				:B_fullframe:
+   :PROPERTIES:
+   :BEAMER_env: fullframe
+   :END:
+#+name: illustration-transformation-du-temps-3
+#+header: :width 2000 :height 1500 
+#+header: :file figs/illustration-transformation-du-temps-3.png
+#+BEGIN_SRC R :exports results :results output graphics
+par(cex=5)
+plot(cpsp1t,xlab="Λ",
+     ylab="N(Λ) and Λ",
+     xlim=c(0,max(length(t1),max(LL))),
+     ylim=c(0,max(length(t1),max(LL))),
+     main="N and Λ vs Λ",
+     lwd=3
+     )
+lines(c(0,max(LL)),c(0,max(LL)),col=2,lwd=5)
+rug(unclass(cpsp1t$ppspFct()),lwd=4)
+#+END_SRC
+
+#+RESULTS: illustration-transformation-du-temps-3
+[[file:figs/illustration-transformation-du-temps-3.png]]
+
+** Ogata's tests
+- If, for a good model, the transformed sequence of spike times, $\{\hat{\Lambda}_1,\ldots,\hat{\Lambda}_n\}$, is the realization of a homogeneous Poisson process with rate 1, we should test $\{\hat{\Lambda}_1,\ldots,\hat{\Lambda}_n\}$ against such a process.
+- This is what Yosihiko Ogata proposed in 1988 (Statistical models for earthquake occurrences and residual analysis for point processes, Journal of the American Statistical Association, 83: 9-27).
+- But an observation suggest nevertheless that another type of test could also be used...
+
+** A Brownian motion?
+#+name: mouvement-brownien-1
+#+header: :width 2000 :height 1700 
+#+header: :file figs/mouvement-brownien-1.png
+#+BEGIN_SRC R :exports results :results output graphics
+ttS <- seq(0,max(cpsp1t$cpspFct()),len=501)
+par(cex=5,mar=c(5,5,1,1))
+plot(ttS,cpsp1t$cpspFct(ttS)-ttS,
+     type="l",lwd=5,col=2,
+     xlab="Λ",
+     ylab="N(Λ)-Λ"
+     )
+abline(h=0,lwd=2,lty=5)
+#+END_SRC
+
+#+RESULTS: mouvement-brownien-1
+[[file:figs/mouvement-brownien-1.png]]
+
+* A test based on Donsker's theorem :noexport:
+
+** Donsker's theorem and minimal area region
+- The intuition of the convergence---of a properly normalized version---of the process $N(\Lambda) - \Lambda$ towards a Brownian motion is correct.
+- This is an easy consequence of Donsker's theorem as Vilmos Prokaj explained to me on the =R= mailing and as Olivier Faugeras and Jonathan Touboul explained to me directly.
+- It is moreover possible to find regions of minimal area having a given probability to contain the whole trajectory of a canonical Brownian motion (Kendall, Marin et Robert, 2007; Loader et Deely, 1987).
+- We get thereby a new goodness of fit test.
+
+** Minimal area region at 95%
+#+name: region-de-prediction-de-Lambert
+#+header: :width 2000 :height 1700 
+#+header: :file figs/region-de-prediction-de-Lambert.png
+#+BEGIN_SRC R :exports results :results output graphics
+ws2ld <- function(lambda,mu) c(a=as.vector(sqrt(lambda)),b=-as.vector(sqrt(lambda)/mu))
+ld2ws <- function(a,b) c(lambda=as.vector(a^2),mu=-as.vector(a/b))
+star2ws <- function(mu,sigma2) c(lambda=as.vector(1/sigma2),mu=as.vector(mu))
+ws2star <- function(lambda,mu) c(mu=as.vector(mu),sigma2=as.vector(1/lambda))
+
+dIG.ld <- function(t,a,b) a/sqrt(2*pi*t^3)*exp(-(a+b*t)^2/2/t)
+dIG.ws <- function(t,lambda,mu) sqrt(lambda/(2*pi*t^3))*exp(-0.5*lambda*(t-mu)^2/mu^2/t)
+
+rbm <- function(t=1,
+                h=0.0001,
+                drift) {
+    if (!is.function(drift)) {
+        result <- c(0,cumsum(rnorm(ceiling(t/h),drift*h,sqrt(h))))
+    } else {
+        n <- ceiling(t/h)
+        tt <- (1:n)*h
+        result <- c(0,cumsum(rnorm(n,drift(tt)*h,sqrt(h))))
+    }
+    attr(result,"h") <- h
+    attr(result,"drift") <- drift
+    class(result) <- "BrownianMotion"
+    result
+}
+
+plot.BrownianMotion <- function(x,y,...) {
+    
+    xx <- (0:(length(x)-1))*attr(x,"h")
+    plot(xx,x,type="l",...)
+}
+
+lines.BrownianMotion <- function(x,...) {
+    xx <- (0:(length(x)-1))*attr(x,"h")
+    lines(xx,x,...)
+}
+
+set.seed(135436,"Mersenne-Twister")
+bm100 <- lapply(1:100, function(i) rbm(drift=0))
+library(gsl)
+b95 <- function(x) sqrt(-lambert_Wm1(-(0.1052727*x)^2))*sqrt(x)
+xx <- (0:(length(bm100[[1]])-1))*attr(bm100[[1]],"h")
+myUBound2 <- b95(xx)
+myLBound2 <- -b95(xx)
+notInW95 <- sapply(bm100,function(b) any(abs(b)>myUBound2))
+par(cex=5,mar=c(5,5,5,1))
+plot(c(0,1),c(-3,3),type="n",
+     xlab="t",ylab="B(t)",
+     main="n = 100",xaxs="i",
+     yaxs="i")
+lines(xx,myUBound2,col=2,lwd=5)
+lines(xx,myLBound2,col=2,lwd=5)
+invisible(sapply(1:100,
+                 function(i)
+                 lines(bm100[[i]],col=ifelse(notInW95[i],4,1),lwd=2)
+                 )
+          )
+#+END_SRC
+
+#+RESULTS: region-de-prediction-de-Lambert
+[[file:figs/region-de-prediction-de-Lambert.png]]
+
