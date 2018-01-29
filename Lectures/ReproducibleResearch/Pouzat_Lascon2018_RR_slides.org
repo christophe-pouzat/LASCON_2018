@@ -1035,3 +1035,13 @@ Text files entered with a lightweight markup language get automatically formatte
 - Can manage modifications on several files at once.
 - A centralized version *copied* by each member of the project.
  
+
+** Acknowledgements
+This lecture owes a lot to feed-back from:
+#+BEGIN_EXPORT latex
+\vspace{0.25cm}
+#+END_EXPORT
+- Arnaud Legrand
+- Konrad Hinsen
+- Aurélie Bayle
+- Marie-Hélène Comte
