@@ -327,7 +327,7 @@ Example of simulated data with $b=10$, $\Delta=90$, $\tau=1$.
 - The log-likelihood is then a function of a single variable $\tau$. 
 - We will also do as if only two times add been used, $t_1$ and $t_2$ leading to observations $x_1$ and $x_2$ on the previous figure.
 - The log-likelihood is then: \[l(\tau) = x_1\, \log s(t_1,\tau) - s(t_1,\tau) + x_2\, \log s(t_2,\tau) - s(t_2,\tau) \, .\]
-- To make comparison with subsequent simulations in the same setting we will show the graph of: \[r(\tau) = l(\hat{\tau}) - l(\tau) \, ,\] where $\hat{\tau}$ is the location of the maximum of $l(\tau)$.
+- To make comparison with subsequent simulations in the same setting we will show the graph of: \[r(\tau) = l(\tau) - l(\hat{\tau}) \, ,\] where $\hat{\tau}$ is the location of the maximum of $l(\tau)$.
 
 **   
 #+ATTR_LATEX: :width 0.8\textwidth
@@ -368,7 +368,7 @@ As the sample size increase:
 * The Maximum Likelihood Estimator :export:
 
 ** The MLE
-- In 1922 Fischer proposed to take as an estimator $\hat{\theta}$ the $\theta$ that maximizes $l(\theta)$.
+- In 1922 Fisher proposed to take as an estimator $\hat{\theta}$ the $\theta$ that maximizes $l(\theta)$.
 - In that he was essentially following and generalizing Daniel Bernoulli, Lambert and Gauss.
 - But he went much farther claiming that when the maximum was a smooth maximum, obtained by taking the derivative / gradient with respect to $\theta$ and setting it equal to 0, then:
   + The accuracy (standard error of the estimate) can be found to a good approximation from the curvature of $l(\theta)$ at its maximum.
@@ -383,7 +383,7 @@ The [[https://en.wikipedia.org/wiki/Maximum_likelihood_estimation][Wikipedia]] p
  
 ** Some remarks
 - The MLE is just the value of the parameter that makes the observations most probable /a posteriori/.
-- Some technical precautions are required in order to fulfill all of Fischer's promises; they are referred to as "the appropriate smoothness conditions" in the literature.  
+- Some technical precautions are required in order to fulfill all of Fisher's promises; they are referred to as "the appropriate smoothness conditions" in the literature.  
 - They are heavy to state and a real pain to check (that's why no one checks them)!
 - My recommendation is to go ahead and after the MLE, $\hat{\theta}$, has been found, do a parametric bootstrap:
   + take $\hat{\theta}$ has the "true" value and simulate 500 to 1000 samples from $\mathcal{M}(\hat{\theta})$,
@@ -396,7 +396,7 @@ The [[https://en.wikipedia.org/wiki/Maximum_likelihood_estimation][Wikipedia]] p
 **  Functions associated with the Likelihood
 - The /score function/ is defined by: $S(\theta) \equiv \frac{\partial{}l(\theta)}{\partial{}\theta}$.
 - The /observed information/ is defined by: $\mathcal{J}(\theta) \equiv - \nabla \, \nabla^{T}l(\theta)$.
-- the /Fischer information/ is defined by: $\mathcal{I}(\theta) \equiv \mathtt{E} \mathcal{J}(\theta) / n$.
+- the /Fisher information/ is defined by: $\mathcal{I}(\theta) \equiv \mathtt{E} \mathcal{J}(\theta) / n$.
 
 ** Asymptotic properties of the MLE
 Under the "appropriate smoothness conditions" (see the [[https://en.wikipedia.org/wiki/Maximum_likelihood_estimation][Wikipedia]] page for a full statement), we have:
